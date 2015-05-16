@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "main": "server.js",
   "repository": "",
+  "private": true,
   "author": "Ryan Huynh <ryan.huyhuynh@gmail.com>",
   "dependencies": {
     "async": "~0.2.8",
     "express": "~3.2.4",
-    "socket.io": "~0.9.14"
+    "mysql": "^2.6.2",
+    "sequelize": "^2.1.3"
   }
 }
