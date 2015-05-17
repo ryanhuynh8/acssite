@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
-var db = require('./config/config-db');
-var Sequelize = require('sequelize');
+var sq = require("./db");
+var Model = require("./models/model");
 
 function andRestrictToSelf(req, res, next) {
   if (req.authenticatedUser.id == req.user.id) {
@@ -21,20 +21,21 @@ function andRestrictTo(role) {
   }
 }
 
-var connectionString = db.dialect+"://"+db.username+":"+db.password+"@"+db.host+":"+db.port+"/"+db.database;
-var sq = new Sequelize(connectionString);
 
 app.get('/', function(req, res){
-  console.log(connectionString);
-  sq.query("SELECT * FROM tbl_users")
-  .then(function(data) {
-    res.send(JSON.stringify(data));
-    res.end();
-  }).catch(function (err)
-  {
-    console.log(err);
-  })
+    
 });
+
+Model.initModels();
+
+// check if User model is already loaded
+if (Model.User !== undefined)   
+{
+  var User = Model.User;
+  User.find(48).then(function(user){
+    console.log(JSON.stringify(user));
+  });
+}
 
 app.listen(8080);
 console.log('Express started on port 8080');

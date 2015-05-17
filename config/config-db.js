@@ -1,4 +1,4 @@
-var db = {
+var config = {
     dialect: 'mysql',
     host: '45.63.124.13',
     port: '3306',
@@ -7,4 +7,4 @@ var db = {
     database: 'acsdb'
 };
 
-module.exports = db;
+module.exports = config;
