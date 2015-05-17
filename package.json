@@ -7,7 +7,7 @@
   "author": "Ryan Huynh <ryan.huyhuynh@gmail.com>",
   "dependencies": {
     "async": "~0.2.8",
-    "express": "~3.2.4",
+    "express": "^4.12.3",
     "mysql": "^2.6.2",
     "sequelize": "^2.1.3"
   }

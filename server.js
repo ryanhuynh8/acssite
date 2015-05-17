@@ -1,73 +1,40 @@
-var http = require('http');
-var path = require('path');
-
-var async = require('async');
-var socketio = require('socket.io');
 var express = require('express');
+var app = express();
+var db = require('./config/config-db');
+var Sequelize = require('sequelize');
 
-var router = express();
-var server = http.createServer(router);
-var io = socketio.listen(server);
+function andRestrictToSelf(req, res, next) {
+  if (req.authenticatedUser.id == req.user.id) {
+    next();
+  } else {
+    next(new Error('Unauthorized'));
+  }
+}
 
-router.use(express.static(path.resolve(__dirname, 'client')));
-var messages = [];
-var sockets = [];
-
-io.on('connection', function (socket) {
-    messages.forEach(function (data) {
-      socket.emit('message', data);
-    });
-
-    sockets.push(socket);
-
-    socket.on('disconnect', function () {
-      sockets.splice(sockets.indexOf(socket), 1);
-      updateRoster();
-    });
-
-    socket.on('message', function (msg) {
-      var text = String(msg || '');
-
-      if (!text)
-        return;
-
-      socket.get('name', function (err, name) {
-        var data = {
-          name: name,
-          text: text
-        };
-
-        broadcast('message', data);
-        messages.push(data);
-      });
-    });
-
-    socket.on('identify', function (name) {
-      socket.set('name', String(name || 'Anonymous'), function (err) {
-        updateRoster();
-      });
-    });
-  });
-
-function updateRoster() {
-  async.map(
-    sockets,
-    function (socket, callback) {
-      socket.get('name', callback);
-    },
-    function (err, names) {
-      broadcast('roster', names);
+function andRestrictTo(role) {
+  return function(req, res, next) {
+    if (req.authenticatedUser.role == role) {
+      next();
+    } else {
+      next(new Error('Unauthorized'));
     }
-  );
+  }
 }
 
-function broadcast(event, data) {
-  sockets.forEach(function (socket) {
-    socket.emit(event, data);
-  });
-}
+var connectionString = db.dialect+"://"+db.username+":"+db.password+"@"+db.host+":"+db.port+"/"+db.database;
+var sq = new Sequelize(connectionString);
 
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Chat server listening at", addr.address + ":" + addr.port);
+app.get('/', function(req, res){
+  console.log(connectionString);
+  sq.query("SELECT * FROM tbl_users")
+  .then(function(data) {
+    res.send(JSON.stringify(data));
+    res.end();
+  }).catch(function (err)
+  {
+    console.log(err);
+  })
 });
+
+app.listen(8080);
+console.log('Express started on port 8080');
