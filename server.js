@@ -1,41 +1,29 @@
 var express = require('express');
 var app = express();
-var sq = require("./db");
-var Model = require("./models/model");
+var Models = require("./models/models");
 
-function andRestrictToSelf(req, res, next) {
-  if (req.authenticatedUser.id == req.user.id) {
-    next();
-  } else {
-    next(new Error('Unauthorized'));
-  }
-}
+//Models.initModels();
+var Task = Models.Task;
+var User = Models.User;
 
-function andRestrictTo(role) {
-  return function(req, res, next) {
-    if (req.authenticatedUser.role == role) {
-      next();
-    } else {
-      next(new Error('Unauthorized'));
-    }
-  }
-}
-
-
-app.get('/', function(req, res){
-    
+app.get('/', function(req, res) {
+  // Task.findAll({
+  //   include: [{
+  //     model: User,
+  //     attributes: ['email']
+  //   }],
+  //   where: {
+  //     readed: false
+  //   }
+  // }).then(function(result) {
+  //   res.send(JSON.stringify(result));
+  //   res.end();
+  // });
+  var tasks = Task.findByUserCreated(69);
+  res.send(JSON.stringify(tasks));
+  res.send(Task.Foo);
+  res.end();
 });
-
-Model.initModels();
-
-// check if User model is already loaded
-if (Model.User !== undefined)   
-{
-  var User = Model.User;
-  User.find(48).then(function(user){
-    console.log(JSON.stringify(user));
-  });
-}
 
 app.listen(8080);
 console.log('Express started on port 8080');

@@ -1,7 +1,7 @@
 var sq = require("../db");
 var Sequelize = require("sequelize");
 
-var User = sq.define('User',{
+var User = module.exports = sq.define('User',{
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -89,5 +89,3 @@ var User = sq.define('User',{
     tableName: 'tbl_users',
     timestamps: false
 });
-
-module.exports.User = User;
