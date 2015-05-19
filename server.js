@@ -61,7 +61,7 @@ router.post('/auth/:user_name/:password', function(req, res) {
 });
 
 app.use('/api', router);
-app.use(express.static('web'));
+app.use(express.static('public'));
 
 app.listen(8080);
 console.log('Express started on port 8080');
