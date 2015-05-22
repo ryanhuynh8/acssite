@@ -4,26 +4,28 @@
 <div class="login_register_form">
     <div class="form_wrapper animated-short" id="login_form" ng-class="{'fadeOutDownBig': !loginForm}">
         <h3 class="sepH_c"><span>Login</span> \ <a href="javascript:void(0)" ng-click="switchForm('register_form')">Register</a></h3>
-        <form action="">
+        <form class="loginForm" action="" ng-submit="login()">
             <div class="input-group input-group-lg sepH_a">
                 <span class="input-group-addon"><span class="icon_profile"></span></span>
-                <input type="text" class="form-control" placeholder="Username">
+                <input type="text" class="form-control" placeholder="Username" ng-model="user.user_name">
             </div>
             <div class="input-group input-group-lg">
                 <span class="input-group-addon"><span class="icon_key_alt"></span></span>
-                <input type="password" class="form-control" placeholder="Password">
+                <input type="password" class="form-control" placeholder="Password" ng-model="user.password">
             </div>
             <div class="sepH_c text-right">
                 <a href="javascript:void(0)" class="small">Forgot password?</a>
             </div>
             <div class="form-group sepH_c">
-                <a ui-sref="auth.home" class="btn btn-lg btn-primary btn-block">Log in</a>
+                <a class="btn btn-lg btn-primary btn-block" onclick="$('form.loginForm').submit()">Log in</a>
             </div>
+            <input type="submit" style="visibility: hidden;" />
         </form>
     </div>
+    
     <div class="form_wrapper animated-short" id="register_form" style="display:none" ng-class="{'fadeOutDownBig': loginForm}">
         <h3 class="sepH_c"><span>Register</span> \ <a href="javascript:void(0)" ng-click="switchForm('login_form')">Login</a></h3>
-        <form action="">
+        <form class="loginForm" action="" ng-submit="login()">
             <div class="input-group input-group-lg sepH_a">
                 <span class="input-group-addon"><span class="icon_profile"></span></span>
                 <input type="text" class="form-control" placeholder="Username">
@@ -37,8 +39,18 @@
                 <input type="email" class="form-control" placeholder="Email">
             </div>
             <div class="form-group sepH_c">
-                <a ui-sref="auth.home" class="btn btn-lg btn-success btn-block">Register</a>
+                <a ui-sref="auth.home" class="btn btn-lg btn-success btn-block" id="main-button">Register</a>
             </div>
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('form').keydown(function(event) {
+            if (event.keyCode == 13) {
+                $('#login-button')[0].click();
+         }
+    });
+  });
+</script>
