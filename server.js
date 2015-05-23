@@ -11,35 +11,24 @@ var Models = require("./models/models");
 var Task = Models.Task;
 var User = Models.User;
 
-/* authentication array */
-var auth_required = ['/tasks','/profile'];
-
-router.use(authenticateInterceptor);
-
-function authenticateInterceptor(req, res, next)
+function auth_require(req,res,roles)
 {
-  if (_.contains(auth_required, req.url))
+  if (req.session.uid == null)
   {
-    if (!req.session.uid)
-    {
-      res.status(404);
-      res.json({message: "Access denied"});
-      res.end();
-    }
-    else 
-    {
-      next();
-    }
+    res.json({message: "Access denied"});
+    res.status(404);
+    res.end();
   }
-  next();
+  else return true;
 }
-
 
 // LIST ALL INCOMPLETED TASK: /api/task/incompleted
 router.get('/task/incompleted', function(req, res) {
+  // DEBUG ONLY - REMOVE COMMENT LATER
+  // if (!auth_require(req, res, 'admin')) return;
+    
   Task.findAll({
     include: {
-      model: User,
       as: 'assignee',
       attributes: ['first_name', 'last_name']
     },
@@ -55,12 +44,20 @@ router.get('/task/incompleted', function(req, res) {
 
 // LIST ALL TASK: /api/task/list
 router.get('/task/list', function(req, res) {
+  // DEBUG ONLY - REMOVE COMMENT LATER
+  // if (!auth_require(req, res, 'admin')) return;
+  
   Task.findAll({
-    include: {
+    include: [{
       model: User,
       as: 'assignee',
       attributes: ['first_name', 'last_name']
-    }
+    },
+    {
+      model: User,
+      as: 'poster',
+      attributes: ['first_name', 'last_name']
+    }]
   }).then(function(tasks) {
     res.json(tasks);
     res.end();
@@ -73,7 +70,7 @@ router.post('/auth/:user_name/:password', function(req, res) {
     where: {
       user_name: req.params.user_name
     },
-    attributes: ['user_name', 'password']
+    attributes: ['id', 'password']
   })
   .then(function (user) {
     if (!user) {
@@ -85,10 +82,9 @@ router.post('/auth/:user_name/:password', function(req, res) {
     var hashed = md5Hash.digest('hex');
     if (hashed === user.password)
     {
-      req.session.uid = user.user_id;
+      req.session.uid = user.id;
       req.session.loggedin = true;
       res.json({ message: 'authorized'});
-      //res.json(req.session);
     }
     else
       res.json({ message : 'unauthorized' });
