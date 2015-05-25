@@ -87,12 +87,21 @@ yukonApp
                 })
                 .state('auth.task_view', {
                     page_title: "ACS Absolute Comfort - Task Details",
-                    url: '/task',
+                    url: '/task/view',
                     data: {
                         ncyBreadcrumbLabel: 'Tasks Details'
                     },
                     templateUrl: 'views/task_view.html',
                     controller: 'taskViewController'
+                })
+                .state('auth.task_edit', {
+                    page_title: "ACS Absolute Comfort - Edit Task",
+                    url: '/task/edit',
+                    data: {
+                        ncyBreadcrumbLabel: 'Task Editin'
+                    },
+                    templateUrl: 'views/task_edit.html',
+                    controller: 'taskEditController'
                 })
                 // Forms (parent state)
                 .state('auth.forms', {

@@ -1,3 +1,17 @@
 <div>
-Posted by: {{ task.poster.first_name + " " + task.poster.last_name }} for {{ task.assignee.first_name + " " + task.assignee.last_name }}
+Posted by: 
+<b>{{ task.poster.first_name + " " + task.poster.last_name }} </b>
+for <b>{{ task.assignee.first_name + " " + task.assignee.last_name }}</b>
+on <b>{{ task.created_on | date }} </b>
+</div>
+
+<div style='white-space: pre-line'>
+<b>Task description:</b>
+<br/>
+{{ task.task_description }}
+</div>
+
+<br/>
+<div>
+    <b>Due date: </b>{{ task.due_date | date}}
 </div>

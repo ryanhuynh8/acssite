@@ -16,9 +16,10 @@ var Task = module.exports = sq.define('Task', {
         type: Sequelize.BIGINT(20),
         allowNull: true,
     },
-    create_on: {
+    created_on: {
         type: Sequelize.DATE,
         allowNull: true,
+        field: 'create_on' // LMAO
     },
     due_date: {
         type: Sequelize.DATE,

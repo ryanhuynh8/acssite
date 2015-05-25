@@ -240,7 +240,7 @@ yukonApp
                     enableColumnMenus: false,
                     rowHeight: 100,
                     columnDefs: [{
-                        field: 'create_on',
+                        field: 'created_on',
                         cellFilter: 'date',
                         displayName: 'Created On',
                         width: 120
@@ -288,6 +288,10 @@ yukonApp
 
             $scope.buttonClickHandler = function(row, action) {
                 dataService.set('task_to_view', row);
+                if (action === 'view')
+                    $state.go('auth.task_view')
+                else if (action === 'edit')
+                    $state.go('auth.task_edit')
             };
 
             initGrid();
@@ -302,6 +306,22 @@ yukonApp
         'dataService',
         function($scope, $timeout, $http, $state, dataService) {
             $scope.task = dataService.get('task_to_view');
-            console.log(JSON.stringify($scope.task));
+        }
+    ])
+    .controller('taskEditController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$state',
+        'dataService',
+        function($scope, $timeout, $http, $state, dataService) {
+            $scope.open = function($event)
+            {
+                $event.preventDefault();
+                $event.stopPropagation();
+                // toggle
+                if ($scope.opened) $scope.opened = false;
+                else $scope.opened = true;
+            }
         }
     ])
