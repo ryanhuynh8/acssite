@@ -1,2 +1,9 @@
 #ignore html asset folder
-public/assets
+public/data
+public/assets/bootstrap
+public/assets/css
+public/assets/icons
+public/assets/img
+public/assets/js
+public/assets/less
+public/assets/lib
