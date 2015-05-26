@@ -1,114 +1,295 @@
 <!DOCTYPE html>
-<html ng-app="yukonApp" controller="mainCtrl">
-    <head>
-		<meta charset="UTF-8">
-		<title update-title></title>
-		<meta name="viewport" content="initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Maverick</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Maverick">
+	<meta name="author" content="nDevr Studios & The Red Team">
 
-    <!-- favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="icon" type="image/png" href="favicon.png">
 
-	<!-- bootstrap framework -->
-		<link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-		
-	<!-- icon sets -->
-		<!-- elegant icons -->
-			<link href="assets/icons/elegant/style.css" rel="stylesheet" media="screen">
-		<!-- elusive icons -->
-			<link href="assets/icons/elusive/css/elusive-webfont.css" rel="stylesheet" media="screen">
-		<!-- flags -->
-			<link rel="stylesheet" href="assets/icons/flags/flags.css">
+	<!-- prochtml:remove:dist -->
+	<link href="assets/less/styles.less" rel="stylesheet/less" media="all"> 
+	<!-- /prochtml -->
 
-	<!-- google webfonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' media="screen">
-    <!-- source code pro google fonts -->
-        <link href="http://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" media="screen">
+	<link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700' rel='stylesheet' type='text/css'>     
 
-    <!-- moment.js (date library) -->
-        <script src="assets/js/moment-with-langs.min.js"></script>
-    <!-- jQuery -->
-        <script src="assets/js/jquery.min.js"></script>
-    <!-- smart resize -->
-        <script src="assets/js/jquery.smartresize.min.js"></script>
-    <!-- angularjs -->
-        <script src="assets/angular/angularjs/angular.js"></script>
-        <script src="assets/angular/angularjs/angular-animate.js"></script>
-        <script src="assets/angular/angularjs/angular-cookies.js"></script>
-        <script src="assets/angular/angularjs/angular-sanitize.js"></script>
-    <!-- ui-router -->
-        <script src="assets/angular/plugins/ui-router/angular-ui-router.js"></script>
-    <!-- breadcrumbs -->
-        <script src="assets/angular/plugins/breadcrumbs/angular-breadcrumb.js"></script>
-    <!-- ui-bootstrap -->
-        <script src="assets/angular/plugins/ui-bootstrap/ui-bootstrap-tpls-0.12.0.js"></script>
-        <script id="template/accordion/accordion-group.html" type="text/ng-template">
-            <div class="panel panel-default" ng-class="{'panel-active': isOpen}">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a class="accordion-toggle" ng-click="toggleOpen()" accordion-transclude="heading"><span ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
-                    </h4>
-                </div>
-                <div class="panel-collapse" collapse="!isOpen">
-                    <div class="panel-body" ng-transclude></div>
-                </div>
-            </div>
-        </script>
-    <!-- retina images -->
-        <script src="assets/angular/plugins/retina/angular-retina.js"></script>
-    <!-- angular growl -->
-        <link href="assets/angular/plugins/angular-growl/build/angular-growl.min.css" rel="stylesheet" media="screen">
-        <script src="assets/angular/plugins/angular-growl/build/angular-growl.js"></script>
-    <!-- switchery -->
-        <script src="assets/lib/switchery/dist/switchery.js"></script>
-        <script src="assets/angular/plugins/switchery/ng-switchery.js"></script>
-    <!-- fastclick -->
-        <script src="assets/js/fastclick.js"></script>
-    <!-- match height -->
-        <script src="assets/lib/jquery-match-height/jquery.matchHeight-min.js"></script>
-    <!-- scrollbar -->
-        <link rel="stylesheet" href="assets/lib/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css">
-        <script src="assets/lib/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
-    <!-- textAngular -->
-        <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-        <script src="assets/angular/plugins/textAngular/dist/textAngular-sanitize.min.js"></script>
-        <script src="assets/angular/plugins/textAngular/dist/textAngular.min.js"></script>
+	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries. Placeholdr.js enables the placeholder attribute -->
+	<!--[if lte IE 9]>
+	  <link rel="stylesheet" href="assets/css/ie8.css">
+	  <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/respond.js/1.1.0/respond.min.js"></script>
+	  <script type="text/javascript" src="bower_components/flot/excanvas.min.js"></script>
+	  <script type='text/javascript' src='assets/plugins/misc/placeholdr.js'></script>
+	  <script type="text/javascript" src="assets/plugins/misc/media.match.min.js"></script>
+	<![endif]-->
 
-    <!-- yukonApp -->
-        <script src="assets/angular/app.js"></script>
-        <script src="assets/angular/factory.js"></script>
-        <script src="assets/angular/service.js"></script>
-        <script src="assets/angular/directive.js"></script>
-        <script src="assets/angular/state.js"></script>
-        <script src="assets/angular/myControllers.js"></script>
-        <script src="assets/angular/controller.js"></script>
-        
-    <!-- google maps api-->
-        <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+	
+	<link rel="stylesheet" href="assets/css/vendor.css"/>
 
-    <!-- ui-grid -->
-        <link rel="styleSheet" href="assets/angular/plugins/ui-grid/ui-grid.min.css"/>
-        <script src="assets/angular/plugins/ui-grid/ui-grid.min.js"></script>
-        
-    <!-- main stylesheet -->
-        
-		<link href="assets/css/main.css" rel="stylesheet" media="screen" id="mainCss">
+	<link rel="stylesheet" href="assets/css/main.css"/>
+	<link rel="stylesheet" href="assets/css/styles.css"/>
+</head>
 
-    </head>
-    <body class="{{siteBg}}" ng-class="{
-        'side_menu_active' : sideMenuAct && !$state.includes('error.404'),
-        'side_menu_collapsed' : sideNavCollapsed && sideMenuAct,
-        'side_menu_expanded' :  !sideNavCollapsed && sideMenuAct,
-        'login_page': $state.is('login'),
-        'login_page2': $state.is('login2'),
-        'error_page': $state.includes('error.404'),
-        'fixed_layout': fixedLayout && !$state.includes('error.404') && !$state.is('login') && !$state.is('login2'),
-        'hide_breadcrumbs': hideBreadcrumbs && !$state.includes('error.404'),
-        'top_menu_active': topMenuAct && !$state.includes('error.404')
-    }">
+<body
+  ng-app="themesApp"
+  ng-controller="MainController"
+  class="{{getLayoutOption('sidebarThemeClass')}} {{getLayoutOption('topNavThemeClass')}}"
+  ng-class="{
+			  'static-header': !getLayoutOption('fixedHeader'),
+			  'focusedform': getLayoutOption('fullscreen'),
+			  'layout-horizontal': getLayoutOption('layoutHorizontal'),
+			  'fixed-layout': getLayoutOption('layoutBoxed'),
+			  'sidebar-collapsed': getLayoutOption('leftbarCollapsed') && !getLayoutOption('leftbarShown'),
+			  'show-infobar': getLayoutOption('rightbarCollapsed'),
+			  'show-sidebar': getLayoutOption('leftbarShown')
+			}"
+  ng-click="hideHeaderBar();hideChatBox()"
+  to-top-on-load
+>
 
-        <div ui-view autoscroll="false" class="mainView-animate"></div>
 
-        <div page-loader></div>
-    </body>
+	<div ng-include="'views/templates/custom-styles.html'"></div>
+
+	<ng-include src="'views/layout/header.html'"></ng-include>
+
+	<nav id="headernav" class="navbar ng-hide" role="navigation" ng-show="getLayoutOption('layoutHorizontal') && !layoutLoading">
+		<div class="nav">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<i class="fa fa-reorder"></i>
+			</button>
+		</div>
+		<div class="collapse navbar-collapse navbar-ex1-collapse" ng-class="{'large-icons-nav': getLayoutOption('layoutHorizontalLargeIcons')}" id="horizontal-navbar">
+			  <ul ng-controller="NavigationController" id="top-nav" class="nav navbar-nav">
+				  <li ng-repeat="item in menu"
+					  ng-if="!item.hideOnHorizontal"
+					  ng-class="{ hasChild: (item.children!==undefined),
+									active: item.selected,
+									  open: (item.children!==undefined) && item.open,
+						   'nav-separator': item.separator==true }"
+					  ng-include="'templates/nav_renderer_horizontal.html'"
+					></li>
+			  </ul>
+		</div>
+	</nav>
+
+
+	<div id="wrapper">
+		<div id="layout-static">
+			<div class="static-sidebar-wrapper" ng-show="!layoutLoading">
+				<nav class="static-sidebar" role="navigation">
+					<ul ng-controller="NavigationController" id="sidebar" sticky-scroll="50">
+				  	  <li id="search" ng-cloak>
+		                <a href="">
+		                	<i class="fa fa-binoculars opacity-control"></i>
+		                </a>
+						<form
+						ng-click="$event.stopPropagation()"
+						ng-submit="goToSearch()">
+							<input type="text" ng-model="searchQuery" class="search-query" placeholder="Type to filter..." />
+							<button type="submit" ng-click="goToSearch()"><i class="fa fa-binoculars"></i></button>
+						</form>
+		              </li>
+					  <li ng-repeat="item in menu"
+						  ng-class="{ hasChild: (item.children!==undefined),
+										active: item.selected,
+										  open: (item.children!==undefined) && item.open,
+							   'nav-separator': item.separator==true,
+		            			'search-focus': (searchQuery.length>0 && item.selected) }" 
+		            		ng-show="!(searchQuery.length && !item.selected)"
+						  ng-include="'templates/nav_renderer.html'"
+						></li>
+					</ul>
+				</nav> <!-- #sidebar-->
+			</div>
+			<div class="static-content-wrapper">
+				<div class="static-content">
+					<div id="wrap" ng-view="" class="mainview-animation animated">
+					</div> <!--wrap -->
+				</div>
+				<footer role="contentinfo" ng-show="!layoutLoading">
+					<div class="clearfix">
+						<ul class="list-unstyled list-inline pull-left">
+							<li>MAVERICK &copy; 2015</li>
+						</ul>
+						<button class="pull-right btn btn-default btn-sm hidden-print" back-to-top style="padding: 1px 10px;"><i class="fa fa-angle-up"></i></button>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</div>
+
+	<div ng-include="'views/layout/infobar.html'" class="infobar-wrapper"></div>
+
+	<!--[if lt IE 9]>
+	<script src="bower_components/es5-shim/es5-shim.js"></script>
+	<script src="bower_components/json3/lib/json3.min.js"></script>
+	<![endif]-->
+
+	<script type='text/javascript' src='http://maps.google.com/maps/api/js?sensor=true'></script> 
+
+	<!-- build:js scripts/vendor.js -->
+	<!-- bower:js -->
+	<script src="bower_components/modernizr/modernizr.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="bower_components/underscore/underscore.js"></script>
+	<script src="scripts/angular.min.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/seiyria-bootstrap-slider/js/bootstrap-slider.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="bower_components/jquery.ui/ui/jquery.ui.core.js"></script>
+	<script src="bower_components/jquery.ui/ui/jquery.ui.widget.js"></script>
+	<script src="bower_components/jquery.ui/ui/jquery.ui.mouse.js"></script>
+	<script src="bower_components/jquery.ui/ui/jquery.ui.draggable.js"></script>
+	<script src="bower_components/jquery.ui/ui/jquery.ui.resizable.js"></script>
+	<script src="bower_components/jquery.easing/js/jquery.easing.js"></script>
+	<script src="bower_components/flot/jquery.flot.js"></script>
+	<script src="bower_components/flot/jquery.flot.stack.js"></script>
+	<script src="bower_components/flot/jquery.flot.pie.js"></script>
+	<script src="bower_components/flot/jquery.flot.resize.js"></script>
+	<script src="bower_components/flot.tooltip/js/jquery.flot.tooltip.js"></script>
+	<script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="bower_components/jqvmap/jqvmap/jquery.vmap.js"></script>
+	<script src="bower_components/jqvmap/jqvmap/maps/jquery.vmap.world.js"></script>
+	<script src="bower_components/jqvmap/jqvmap/data/jquery.vmap.sampledata.js"></script>
+	<script src="bower_components/ng-grid/build/ng-grid.js"></script>
+	<script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
+	<script src="bower_components/iCheck/icheck.min.js"></script>
+	<script src="bower_components/google-code-prettify/src/prettify.js"></script>
+	<script src="bower_components/bootbox.js/bootbox.js"></script>
+	<script src="bower_components/jquery-autosize/jquery.autosize.js"></script>
+	<script src="bower_components/gmaps/gmaps.js"></script>
+	<script src="bower_components/jquery.pulsate/jquery.pulsate.js"></script>
+	<script src="bower_components/jquery.knob/js/jquery.knob.js"></script>
+	<script src="bower_components/jquery.sparkline/index.js"></script>
+	<script src="bower_components/flow.js/dist/flow.js"></script>
+	<script src="bower_components/ng-flow/dist/ng-flow.js"></script>
+	<script src="bower_components/enquire/dist/enquire.js"></script>
+	<script src="bower_components/shufflejs/dist/jquery.shuffle.js"></script>
+	<script src="bower_components/pnotify/pnotify.core.js"></script>
+	<script src="bower_components/pnotify/pnotify.buttons.js"></script>
+	<script src="bower_components/pnotify/pnotify.callbacks.js"></script>
+	<script src="bower_components/pnotify/pnotify.confirm.js"></script>
+	<script src="bower_components/pnotify/pnotify.desktop.js"></script>
+	<script src="bower_components/pnotify/pnotify.history.js"></script>
+	<script src="bower_components/pnotify/pnotify.nonblock.js"></script>
+	<script src="bower_components/nanoscroller/bin/javascripts/jquery.nanoscroller.js"></script>
+	<script src="bower_components/angular-nanoscroller/scrollable.js"></script>
+	<script src="bower_components/rangy/rangy-core.min.js"></script>
+	<script src="bower_components/rangy/rangy-cssclassapplier.min.js"></script>
+	<script src="bower_components/rangy/rangy-selectionsaverestore.min.js"></script>
+	<script src="bower_components/rangy/rangy-serializer.min.js"></script>
+	<script src="bower_components/textAngular/src/textAngular.js"></script>
+	<script src="bower_components/textAngular/src/textAngular-sanitize.js"></script>
+	<script src="bower_components/textAngular/src/textAngularSetup.js"></script>
+	<script src="bower_components/rangy/rangy-selectionsaverestore.js"></script>
+	<script src="https://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.20/ui-grid.min.js"></script>
+	<script src="bower_components/transitionize/dist/transitionize.js"></script>
+	<script src="bower_components/fastclick/lib/fastclick.js"></script>
+	<script src="bower_components/switchery/dist/switchery.js"></script>
+	<script src="bower_components/ng-switchery/src/ng-switchery.js"></script>
+	<script src="bower_components/ng-sortable/dist/ng-sortable.js"></script>
+	<script src="bower_components/angular-meditor/dist/meditor.min.js"></script>
+	<script src="bower_components/angular-ui-select/dist/select.js"></script>
+	<script src="bower_components/skycons/skycons.js"></script>
+	<script src="bower_components/angular-skycons/angular-skycons.js"></script>
+	<script src="bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.js"></script>
+	<script src="bower_components/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
+	<script src="bower_components/oclazyload/dist/ocLazyLoad.min.js"></script>
+	<script src="bower_components/skylo/vendor/scripts/skylo.js"></script>
+	<script src="bower_components/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+	<script src="bower_components/jquery.easy-pie-chart/dist/angular.easypiechart.js"></script>
+	<script src="bower_components/bootstrap-datepaginator/dist/bootstrap-datepaginator.min.js"></script>
+	<!-- endbower -->
+
+	<script type='text/javascript' src='assets/plugins/form-colorpicker/js/bootstrap-colorpicker.min.js'></script> 
+	<script type='text/javascript' src='assets/plugins/form-fseditor/jquery.fseditor-min.js'></script> 
+	<script type='text/javascript' src='assets/plugins/form-jasnyupload/fileinput.min.js'></script> 
+	<script type='text/javascript' src='assets/plugins/flot/jquery.flot.spline.js'></script> 
+	
+	<!-- endbuild -->
+
+	  <!-- build:js({.tmp,app}) scripts/scripts.js -->
+	<script src="scripts/core/controllers/mainController.js"></script>
+	<script src="scripts/core/controllers/messagesController.js"></script>
+	<script src="scripts/core/controllers/navigationController.js"></script>
+	<script src="scripts/core/controllers/notificationsController.js"></script>
+	<script src="scripts/core/directives/directives.js"></script>
+	<script src="scripts/core/directives/form.js"></script>
+	<script src="scripts/core/directives/ui.js"></script>
+	<script src="scripts/core/modules/templateOverrides.js"></script>
+	<script src="scripts/core/modules/templates.js"></script>
+	<script src="scripts/core/modules/panels/ngDraggable.js"></script>
+	<script src="scripts/core/modules/panels/panels.js"></script>
+	<script src="scripts/core/modules/panels/directives.js"></script>
+	<script src="scripts/core/services/services.js"></script>
+	<script src="scripts/core/services/theme.js"></script>
+	<script src="scripts/core/theme.js"></script>
+	<script src="scripts/controllers.js"></script>
+	<script src="scripts/calendar/calendar.js"></script>
+	<script src="scripts/chart/canvas.js"></script>
+	<script src="scripts/chart/flot.js"></script>
+	<script src="scripts/chart/morris.js"></script>
+	<script src="scripts/chart/sparklines.js"></script>
+	<script src="scripts/gallery/gallery.js"></script>
+	<script src="scripts/map/googleMaps.js"></script>
+	<script src="scripts/map/vectorMaps.js"></script>
+	<script src="scripts/demos/modules/basicTables.js"></script>
+	<script src="scripts/demos/modules/boxedLayout.js"></script>
+	<script src="scripts/demos/modules/calendar.js"></script>
+	<script src="scripts/demos/modules/canvasCharts.js"></script>
+	<script src="scripts/demos/modules/nvd3Charts.js"></script>
+	<script src="scripts/demos/modules/chatBox.js"></script>
+	<script src="scripts/demos/modules/editableTable.js"></script>
+	<script src="scripts/demos/modules/flotCharts.js"></script>
+	<script src="scripts/demos/modules/form/form.js"></script>
+	<script src="scripts/demos/modules/form/controllers/angularFormValidationController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/datepickerDemoController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/dateRangePickerDemoController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/formComponentsController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/imageCropController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/inlineEditableController.js"></script>
+	<script src="scripts/demos/modules/form/controllers/timepickerDemoController.js"></script>
+	<script src="scripts/demos/modules/gallery.js"></script>
+	<script src="scripts/demos/modules/googleMaps.js"></script>
+	<script src="scripts/demos/modules/horizontalLayout.js"></script>
+	<script src="scripts/demos/modules/mail/controllers/composeController.js"></script>
+	<script src="scripts/demos/modules/mail/controllers/inboxController.js"></script>
+	<script src="scripts/demos/modules/mail/mail.js"></script>
+	<script src="scripts/demos/modules/morrisCharts.js"></script>
+	<script src="scripts/demos/modules/sparklineCharts.js"></script>
+	<script src="scripts/demos/modules/ngGrid.js"></script>
+	<script src="scripts/demos/modules/panels.js"></script>
+	<script src="scripts/demos/modules/registrationPage.js"></script>
+	<script src="scripts/demos/modules/signupPage.js"></script>
+	<script src="scripts/demos/modules/notFoundController.js"></script>
+	<script src="scripts/demos/modules/errorPageController.js"></script>
+	<script src="scripts/demos/modules/tasks.js"></script>
+	<script src="scripts/demos/modules/ui-components/uiComponents.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/alertsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/carouselController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/modalsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/nestableController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/paginationsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/progressbarsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/ratingsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/slidersController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/tabsController.js"></script>
+	<script src="scripts/demos/modules/ui-components/controllers/tilesController.js"></script>
+	<script src="scripts/demos/modules/vectorMaps.js"></script>
+	<script src="scripts/demos/modules/dashboard.js"></script>
+	<script src="scripts/demos/demos.js"></script>
+	<script src="scripts/app.js"></script>
+	  <!-- endbuild -->
+</body>
 </html>

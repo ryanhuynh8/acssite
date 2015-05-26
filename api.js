@@ -18,7 +18,7 @@ function auth_require(req,res,roles)
 // LIST ALL INCOMPLETED TASK: /api/task/incompleted
 router.get('/task/incompleted', function(req, res) {
   // DEBUG ONLY - REMOVE COMMENT LATER
-  if (!auth_require(req, res, 'admin')) return;
+  //if (!auth_require(req, res, 'admin')) return;
     
   Task.findAll({
     include: {
@@ -38,7 +38,7 @@ router.get('/task/incompleted', function(req, res) {
 // LIST ALL TASK: /api/task/list
 router.get('/task/list', function(req, res) {
   // DEBUG ONLY - REMOVE COMMENT LATER
-  if (!auth_require(req, res, 'admin')) return;
+  //if (!auth_require(req, res, 'admin')) return;
   
   Task.findAll({
     include: [{
