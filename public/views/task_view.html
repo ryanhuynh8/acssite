@@ -1,0 +1,41 @@
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="#/">Dashboard</a>
+        </li>
+        <li class="active">Task List</li>
+        <li class="active">Task Details</li>
+    </ol>
+
+
+    <h1>Task Details</h1>
+    <div class="container-fluid" ng-controller="taskViewController">
+        <div class="row">
+            <div class="col-md-12">
+                <panel panel-class="panel-primary" heading="Information">
+                    <panel-controls></panel-controls>
+                    <p>
+                    <h4>
+                        <div>
+                            <small>Posted by:</small>
+                            <b>{{ task.poster.first_name + " " + task.poster.last_name }} </b> for <b>{{ task.assignee.first_name + " " + task.assignee.last_name }}</b> on <b>{{ task.created_on | date }} </b>
+                        </div>                            
+    
+                        <div style='white-space: pre-line'>
+                            <b>Task description:</b>
+                            <br/> {{ task.task_description }}
+                        </div>
+    
+                        <br/>
+                        <div>
+                            <b>Due date: </b>{{ task.due_date | date}}
+                        </div>
+                    </h4>
+                    </p>
+                    <a href="#/tasks"><button class="btn btn-primary">Back to task list</button></a>
+            </div>
+        </div>
+        </panel>
+    </div>
+</div>
+</div>
+</div>

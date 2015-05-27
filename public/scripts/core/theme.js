@@ -11,6 +11,7 @@ angular
     'sun.scrollable',
     'ui.bootstrap',
     'ui.select',
+    'oc.lazyLoad',
     'theme.core.templates',
     'theme.core.template_overrides',
     'theme.core.panels',

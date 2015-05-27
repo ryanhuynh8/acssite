@@ -30,8 +30,9 @@ angular.module('themeApp.controllers', ['ui.grid'])
         '$scope',
         '$timeout',
         '$http',
+        '$location',
         'dataService',
-        function($scope, $timeout, $http, dataService) {
+        function($scope, $timeout, $http, $location, dataService) {
             var initGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -86,13 +87,29 @@ angular.module('themeApp.controllers', ['ui.grid'])
             $scope.buttonClickHandler = function(row, action) {
                 if (action === 'view') {
                     dataService.set('task_to_view', row);
+                    $location.path('/task_view');
                 }
                 else if (action === 'edit') {
                     dataService.set('task_to_edit', row);
+                    $location.path('/task_edit');
                 }
             };
+
+            $scope.check = function () {
+                alert(JSON.stringify($scope.task));
+            }
 
             initGrid();
             loadData();
         }
     ])
+    .controller('taskViewController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+            $scope.task = dataService.get('task_to_view');
+        }
+    ]);

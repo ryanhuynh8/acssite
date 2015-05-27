@@ -11,22 +11,10 @@ angular
       iconClasses: 'glyphicon glyphicon-home',
       url: '#/'
     }, {
-      label: 'Layouts',
-      iconClasses: 'glyphicon glyphicon-th-list',
-      html: '<span class="badge badge-warning">2</span>',
-      children: [{
-        label: 'Grids',
-        url: '#/layout-grid'
-      }, {
-        label: 'Horizontal Navigation',
-        url: '#/layout-horizontal'
-      }, {
-        label: 'Horizontal Navigation 2',
-        url: '#/layout-horizontal2'
-      }, {
-        label: 'Fixed Boxed Layout',
-        url: '#/layout-fixed'
-      }]
+      label: 'Tasks',
+      iconClasses: 'glyphicon glyphicon-ok',
+      html: '<span class="badge badge-info">7</span>',
+      url: '#/tasks'
     }, {
       label: 'Bonus Apps',
       iconClasses: '',
@@ -45,11 +33,6 @@ angular
         label: 'Read',
         url: '#/read-mail'
       }]
-    }, {
-      label: 'Tasks',
-      iconClasses: 'glyphicon glyphicon-ok',
-      html: '<span class="badge badge-info">7</span>',
-      url: '#/tasks'
     }, {
       label: 'Calendar',
       iconClasses: 'glyphicon glyphicon-calendar',
