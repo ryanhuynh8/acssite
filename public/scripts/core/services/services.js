@@ -108,28 +108,55 @@ angular
       return promise;
     };
   }])
-  .service('dataService', function() {
-    var data = {};
+  .service('dataService', ['$http', function($http) {
+      var data = {};
 
-    this.get = function(key) {
-      return data[key];
-    }
+      this.get = function(key) {
+        return data[key];
+      }
 
-    this.set = function(key, value) {
-      data[key] = value;
-    }
-  })
-  .filter('safe_html', ['$sce', function($sce) {
-    'use strict';
-    return function(val) {
-      return $sce.trustAsHtml(val);
-    };
-  }])
-  .filter('taskStatusFilter', function() {
-    return function(value) {
-      if (value === 19)
-        return 'In-Progress'
-      else
-        return 'Not done'
-    }
-  });
+      this.set = function(key, value) {
+        data[key] = value;
+      }
+
+      this.getUserList = function(cb) {
+        var result, err;
+        $http.get('/api/user/list')
+          .success(function(data) {
+            result = [];
+            data.forEach(function(c, i, a) {
+              var user_info = { id: c.id, full_name: c.first_name + ' ' + c.last_name };
+              result.push(user_info);
+            });
+          })
+          .catch(function(error) {
+            err = error;
+          })
+          .finally(function() {
+            cb(result, err);
+          });
+      };  
+    }])
+    .filter('safe_html', ['$sce', function($sce) {
+      'use strict';
+      return function(val) {
+        return $sce.trustAsHtml(val);
+      };
+    }])
+    .filter('taskStatusFilter', function() {
+      return function(value) {
+        if (value === 19)
+          return 'In-Progress';
+        else
+          return 'Not done';
+      };
+    })
+    .filter('readStatusFilter', function() {
+      return function (value) {
+        if (value === true)
+          return 'Yes';
+        else
+          return 'No';
+      };
+    });
+    

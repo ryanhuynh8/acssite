@@ -5,7 +5,7 @@ angular
     this.settings = {
       fixedHeader: true,
       headerBarHidden: true,
-      leftbarCollapsed: false,
+      leftbarCollapsed: true,
       leftbarShown: false,
       rightbarCollapsed: false,
       fullscreen: false,

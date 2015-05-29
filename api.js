@@ -6,19 +6,19 @@ var User = Models.User;
 
 function auth_require(req,res,roles)
 {
-  if (req.session.uid == null)
-  {
-    res.json({message: "Access denied"});
-    res.status(404);
-    res.end();
-  }
-  else return true;
+  // if (req.session.uid == null)
+  // {
+  //   res.json({message: "Access denied"});
+  //   res.status(404);
+  //   res.end();
+  // }
+  // else 
+  return true;
 }
 
 // LIST ALL INCOMPLETED TASK: /api/task/incompleted
 router.get('/task/incompleted', function(req, res) {
-  // DEBUG ONLY - REMOVE COMMENT LATER
-  //if (!auth_require(req, res, 'admin')) return;
+  if (!auth_require(req, res, 'admin')) return;
     
   Task.findAll({
     include: {
@@ -37,8 +37,7 @@ router.get('/task/incompleted', function(req, res) {
 
 // LIST ALL TASK: /api/task/list
 router.get('/task/list', function(req, res) {
-  // DEBUG ONLY - REMOVE COMMENT LATER
-  //if (!auth_require(req, res, 'admin')) return;
+  if (!auth_require(req, res, 'admin')) return;
   
   Task.findAll({
     include: [{
@@ -53,6 +52,17 @@ router.get('/task/list', function(req, res) {
     }]
   }).then(function(tasks) {
     res.json(tasks);
+    res.end();
+  });
+});
+
+router.get('/user/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+      
+  User.findAll({
+    attributes: ['id','role_id', 'first_name', 'last_name']
+  }).then(function(users) {
+    res.json(users);
     res.end();
   });
 });
@@ -84,6 +94,38 @@ router.post('/auth/:user_name/:password', function(req, res) {
 
     res.end();
   });
+});
+
+router.post('/task/update', function(req, res) {
+    var task_to_update = req.body; 
+    Task.findOne({
+      attributes: ['id', 'row_version'],
+      where: { 
+        id : task_to_update.id
+      }
+    })
+    .then(function(task_original) {
+      if (task_to_update.row_version === task_original.row_version)
+      {
+        Task.update({
+          'task_description': task_to_update.task_description,
+          'assign_by': task_to_update.assign_by,
+          'due_date': task_to_update.due_date
+          },{
+          where: {
+            id: task_to_update.id
+          }
+        }).then(function(result){
+          res.json({ message: 'success'})  ;
+        }).catch(function(err) {
+          res.json({ message: err });
+        }).finally(function(result){
+          res.end(); 
+        });
+      } else {
+        res.json({ message: 'error_modified'});
+      }
+    });
 });
 
 exports = module.exports = router;

@@ -1,6 +1,8 @@
 var sq = require("../db");
 var User = require("./user");
 var Task = require("./task");
+var Announcement = require("./announcement");
+var Employee = require("./employee");
 
 Task.belongsTo(User, {
     foreignKey: 'posted_by',
@@ -18,3 +20,4 @@ User.hasMany(Task, {
 
 exports.User = User;
 exports.Task = Task;
+exports.Announcement = Announcement;

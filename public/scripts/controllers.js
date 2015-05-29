@@ -81,6 +81,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                             }
                         });
                         $scope.gridOptions.data = data.data;
+                        $scope.dataLoaded = true;
                     })
             }
 
@@ -95,10 +96,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 }
             };
 
-            $scope.check = function () {
-                alert(JSON.stringify($scope.task));
-            }
-
+            $scope.dataLoaded = false;
             initGrid();
             loadData();
         }
@@ -111,5 +109,91 @@ angular.module('themeApp.controllers', ['ui.grid'])
         'dataService',
         function($scope, $timeout, $http, $location, dataService) {
             $scope.task = dataService.get('task_to_view');
+        }
+    ])
+    .controller('taskEditController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+            $scope.task = dataService.get('task_to_edit');
+            $scope.user_list = [];
+            $scope.dt = $scope.task.due_date;
+
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+                $scope.selected_user = $scope.task.assign_by;
+            });
+
+            $scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                if ($scope.opened) $scope.opened = false;
+                else
+                    $scope.opened = true;
+            };
+
+            $scope.updateTask = function() {
+                $http.post('/api/task/update', $scope.task);
+            }
+        }
+    ])
+    .controller('announcementController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+            var initGrid = function() {
+                $scope.gridOptions = {
+                    enableColumnMenus: false,
+                    rowHeight: 100,
+                    columnDefs: [{
+                        field: 'created_on',
+                        cellFilter: 'date',
+                        displayName: 'Created On',
+                        width: 120
+                    }, {
+                        field: 'getAssigneeFullName()',
+                        displayName: 'Assigned To',
+                        width: 150
+                    }, {
+                        field: 'task_description',
+                        width: '*',
+                    }, {
+                        field: 'status_task_id',
+                        cellFilter: 'taskStatusFilter',
+                        width: 100,
+                        displayName: 'Status'
+                    }, {
+                        field: 'due_date',
+                        cellFilter: 'date',
+                        width: 120
+                    }, {
+                        name: 'button',
+                        displayName: 'Action',
+                        width: 200
+                    }],
+                    data: [] // HACK: so that the browser won't give a warning complain
+                }
+            }
+
+            var loadData = function() {
+                $http.get('/api/announcement/list')
+                    .then(function(data) {
+                        $scope.gridOptions.data = data.data;
+                        $scope.dataLoaded = true;
+                    })
+            }
+
+
+            $scope.dataLoaded = false;
+
+            initGrid();
+            loadData();
         }
     ]);

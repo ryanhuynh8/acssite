@@ -82,10 +82,4 @@ yukonApp.service('dataService', function() {
             this.set = function(key, value) {
                 data[key] = value;
             }
-
-            this.loadTaskList = function() {
-                $http.get('/api/task/list')
-                    .then(function(data) {
-                        
-                        }
-                    }})
+})

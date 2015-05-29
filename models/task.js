@@ -2,11 +2,12 @@ var sq = require("../db");
 var Sequelize = require("sequelize");
 
 var Task = module.exports = sq.define('Task', {
-    task_id: {
+    id: {
         type: Sequelize.BIGINT(20),
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
+        allowNull: false,
+        field: 'task_id'
     },
     posted_by: {
         type: Sequelize.BIGINT(20),
@@ -41,9 +42,13 @@ var Task = module.exports = sq.define('Task', {
         type: Sequelize.BOOLEAN,
         allowNull: true,
         defaultValue: false
+    },
+    row_version: {
+        type: Sequelize.INTEGER(10),
+        defaultValue: 1,
     }
 },{
     tableName: 'tbl_task',
-    timestamps: false
+    timestamps: false,
 });
 

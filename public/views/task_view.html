@@ -8,12 +8,13 @@
 
 
     <h1>Task Details</h1>
-    <div class="container-fluid" ng-controller="taskViewController">
-        <div class="row">
-            <div class="col-md-12">
-                <panel panel-class="panel-primary" heading="Information">
-                    <panel-controls></panel-controls>
-                    <p>
+</div>
+<div class="container-fluid" ng-controller="taskViewController">
+    <div class="row">
+        <div class="col-md-12">
+            <panel panel-class="panel-primary" heading="Information">
+                <panel-controls></panel-controls>
+                <p>
                     <h4>
                         <div>
                             <small>Posted by:</small>
@@ -30,12 +31,11 @@
                             <b>Due date: </b>{{ task.due_date | date}}
                         </div>
                     </h4>
-                    </p>
-                    <a href="#/tasks"><button class="btn btn-primary">Back to task list</button></a>
-            </div>
+                </p>
+                <a href="#/tasks">
+                    <button class="btn btn-primary">Back to task list</button>
+                </a>
+            </panel>
         </div>
-        </panel>
     </div>
-</div>
-</div>
 </div>

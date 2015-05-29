@@ -320,6 +320,7 @@ yukonApp
         function($scope, $timeout, $http, $state, dataService) {
             $scope.task = dataService.get('task_to_edit');
 
+            var user_list = dataService.getUserList();
             $scope.open = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
