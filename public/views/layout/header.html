@@ -82,7 +82,7 @@
 	role="banner"
 	ng-show="!layoutLoading"
 	ng-cloak
-	style='visibility: hidden'>
+	style=''>
 	<a id="leftmenu-trigger" ng-click="toggleLeftBar()"></a>
 	<a id="rightmenu-trigger" ng-click="toggleRightBar()"></a>
 
@@ -125,6 +125,9 @@
 		  </li>
 		</ul>
 	  </li>
+	  <li class="dropdown">
+	  	<a href><span>Welcome, Patricia</span></a>
+	  </li>
 	  <li class="dropdown hidden-xs" dropdown ng-controller="MessagesController" ng-show="isLoggedIn">
 		<a href class="dropdown-toggle" dropdown-toggle>
 		 <i class="glyphicon glyphicon-envelope"></i><span class="badge badge-danger" ng-if="unseenCount>0" ng-bind="unseenCount"></span>
@@ -147,7 +150,7 @@
 					</div>
 				  </a>
 				</li>
-			  </div>
+			  </>
 		  <li class="dd-footer"><a href="#" ng-click="setReadAll($event)">Mark all read</a></li>
 		</ul>
 	  </li>

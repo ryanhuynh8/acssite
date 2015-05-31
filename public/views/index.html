@@ -31,12 +31,17 @@
 
     <div class="row">
         <div class="col-md-8" ng-controller="announcementController">
-			<div id="mainGrid" ui-grid="gridOptions" style="width: 1000px; height: 500px">
+            <panel heading="Announcements" panel-class="panel-danger" >
+                <panel-controls>
+                    <panel-control-collapse></panel-control-collapse>
+                </panel-controls>
+                <div id="mainGrid" ui-grid="gridOptions" style="width: auto; height: 450px" >
 
-			</div>
-			<div class="panel-loading" ng-hide="dataLoaded">
-				<div class="panel-loader-circular"></div>
-			</div>
+                </div>
+                <div class="panel-loading" ng-hide="dataLoaded">
+                    <div class="panel-loader-circular"></div>
+                </div>
+            </panel>
         </div>
         <div class="col-md-4">
             <div class="row">
@@ -288,52 +293,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <!-- <panel panel-class="panel-default no-padding" heading="User Statistics">
-                <panel-controls>
-                    <panel-control-collapse></panel-control-collapse>
-                    <panel-control-title></panel-control-title>
-                    <panel-control-colors></panel-control-colors>
-                </panel-controls>
-
-                <ul class="recent-activities">
-                    <li>
-                        <span class="icon"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span class="avatar"><img src="assets/demo/avatar/aniss.png" alt=""></span>
-                        <span class="msg"><span class="person">Cooper Scott</span> is now following you.</span>
-                        </span>
-                        <span class="time">4m</span>
-                    </li>
-                    <li>
-                        <span class="icon"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span class="avatar"><img src="assets/demo/avatar/aniss.png" alt=""></span>
-                        <span class="msg"><span class="person">Cooper Scott</span> is now following you.</span>
-                        </span>
-                        <span class="time">4m</span>
-                    </li>
-                    <li>
-                        <span class="icon"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span class="avatar"><img src="assets/demo/avatar/aniss.png" alt=""></span>
-                        <span class="msg"><span class="person">Cooper Scott</span> is now following you.</span>
-                        </span>
-                        <span class="time">4m</span>
-                    </li>
-                    <li>
-                        <span class="icon"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span class="avatar"><img src="assets/demo/avatar/aniss.png" alt=""></span>
-                        <span class="msg"><span class="person">Cooper Scott</span> is now following you.</span>
-                        </span>
-                        <span class="time">4m</span>
-                    </li>
-                    <li>
-                        <span class="icon"><i class="glyphicon glyphicon-ok"></i></span>
-                        <span class="avatar"><img src="assets/demo/avatar/aniss.png" alt=""></span>
-                        <span class="msg"><span class="person">Cooper Scott</span> is now following you.</span>
-                        </span>
-                        <span class="time">4m</span>
-                    </li>
-                </ul>
-            </panel> -->
-
+        
 
     </div>
     <div class="col-md-6" ng-drop="true">

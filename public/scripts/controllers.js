@@ -151,44 +151,36 @@ angular.module('themeApp.controllers', ['ui.grid'])
             var initGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
+                    enableVerticalScrollbar: 2,
+                    enableHorizontalScrollbar: 0,
                     rowHeight: 100,
                     columnDefs: [{
-                        field: 'created_on',
+                        field: 'post_on_date',
                         cellFilter: 'date',
-                        displayName: 'Created On',
+                        displayName: 'Posted Date',
                         width: 120
                     }, {
-                        field: 'getAssigneeFullName()',
-                        displayName: 'Assigned To',
-                        width: 150
-                    }, {
-                        field: 'task_description',
+                        field: 'announcements_description',
                         width: '*',
+                        displayName: 'Description',
+                        cellTemplate: 'views/grid_template/cell.text.template.html'
                     }, {
-                        field: 'status_task_id',
-                        cellFilter: 'taskStatusFilter',
-                        width: 100,
-                        displayName: 'Status'
-                    }, {
-                        field: 'due_date',
+                        field: 'expired_date',
                         cellFilter: 'date',
+                        displayName: 'Expired Date',
                         width: 120
-                    }, {
-                        name: 'button',
-                        displayName: 'Action',
-                        width: 200
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
-                }
-            }
+                };
+            };
 
             var loadData = function() {
                 $http.get('/api/announcement/list')
                     .then(function(data) {
                         $scope.gridOptions.data = data.data;
                         $scope.dataLoaded = true;
-                    })
-            }
+                    });
+            };
 
 
             $scope.dataLoaded = false;

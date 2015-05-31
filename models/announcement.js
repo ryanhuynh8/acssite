@@ -1,7 +1,7 @@
 var sq = require("../db");
 var Sequelize = require("sequelize");
 
-var Announcement = sq.define('Announcement', {
+var Announcement = module.exports = sq.define('Announcement', {
   id: {
     type: Sequelize.BIGINT(20),
     primaryKey: true,

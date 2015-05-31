@@ -1,8 +1,10 @@
 var router = require('express').Router();
 var crypto = require('crypto');
+var moment = require('moment');
 var Models = require("./models/models");
 var Task = Models.Task;
 var User = Models.User;
+var Announcement = Models.Announcement;
 
 function auth_require(req,res,roles)
 {
@@ -12,19 +14,19 @@ function auth_require(req,res,roles)
   //   res.status(404);
   //   res.end();
   // }
-  // else 
+  // else
   return true;
 }
 
 // LIST ALL INCOMPLETED TASK: /api/task/incompleted
 router.get('/task/incompleted', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
-    
+
   Task.findAll({
     include: {
       as: 'assignee',
       attributes: ['first_name', 'last_name']
-    },  
+    },
     where:{
       status_task_id: 19
     }
@@ -38,7 +40,7 @@ router.get('/task/incompleted', function(req, res) {
 // LIST ALL TASK: /api/task/list
 router.get('/task/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
-  
+
   Task.findAll({
     include: [{
       model: User,
@@ -56,9 +58,10 @@ router.get('/task/list', function(req, res) {
   });
 });
 
+// LIST ALL USER: /api/user/list
 router.get('/user/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
-      
+
   User.findAll({
     attributes: ['id','role_id', 'first_name', 'last_name']
   }).then(function(users) {
@@ -96,11 +99,15 @@ router.post('/auth/:user_name/:password', function(req, res) {
   });
 });
 
+// UPDATE TASK DETAILS: /api/task/update
 router.post('/task/update', function(req, res) {
-    var task_to_update = req.body; 
+    if (!auth_require(req, res, 'admin')) return;
+    // TODO: confirm task's owner or admin
+
+    var task_to_update = req.body;
     Task.findOne({
       attributes: ['id', 'row_version'],
-      where: { 
+      where: {
         id : task_to_update.id
       }
     })
@@ -120,12 +127,25 @@ router.post('/task/update', function(req, res) {
         }).catch(function(err) {
           res.json({ message: err });
         }).finally(function(result){
-          res.end(); 
+          res.end();
         });
       } else {
         res.json({ message: 'error_modified'});
       }
     });
+});
+
+router.get('/announcement/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Announcement.findAll({
+    where: {
+      expired_date: { $gte: moment().format() }
+    }
+  }).then(function(list){
+    res.json(list);
+    res.end();
+  });
 });
 
 exports = module.exports = router;
