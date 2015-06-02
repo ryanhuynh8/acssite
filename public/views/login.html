@@ -19,7 +19,7 @@
 				<div class="clearfix">
 					<div class="pull-right"><label><input type="checkbox"> Remember Me</label></div>
 				</div>
-				<a href="#" class="btn btn-primary btn-block" ng-click="login()">Log In</a>
+				<a href class="btn btn-primary btn-block" ng-click="login()">Log In</a>
 			</form>
 		</div>
 		<div class="panel-footer">
@@ -31,3 +31,12 @@
 		</div>
 	</div>
  </div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('form').keydown(function(event) {
+            if (event.keyCode == 13) {
+                $('.btn-primary')[0].click();
+         }
+    });
+  });
+</script>

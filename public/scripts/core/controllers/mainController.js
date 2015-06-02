@@ -1,5 +1,5 @@
-angular.module('theme.core.main_controller', ['theme.core.services'])
-  .controller('MainController', ['$scope', '$theme', '$timeout', 'progressLoader', '$location', function($scope, $theme, $timeout, progressLoader, $location) {
+angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'])
+  .controller('MainController', ['$scope', '$theme', '$timeout', 'progressLoader', '$location','$cookies', function($scope, $theme, $timeout, progressLoader, $location, $cookies) {
     'use strict';
     // $scope.layoutIsSmallScreen = false;
     $scope.layoutFixedHeader = $theme.get('fixedHeader');
@@ -236,4 +236,14 @@ angular.module('theme.core.main_controller', ['theme.core.services'])
         $scope.layoutLoading = false;
       }
     });
+    
+    String.prototype.capitalize = function(){
+        return this.toLowerCase().replace( /\b\w/g, function (m) {
+            return m.toUpperCase();
+        });
+    };
+    
+    $scope.getCookieName = function () {
+      return $cookies.name.capitalize();
+    }
   }]);

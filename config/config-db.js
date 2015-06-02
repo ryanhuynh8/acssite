@@ -1,6 +1,6 @@
 var config = {
     dialect: 'mysql',
-    host: '45.63.124.13',
+    host: 'acsdev.ddns.net',
     port: '3306',
     username: 'root',
     password: '1convit=))',

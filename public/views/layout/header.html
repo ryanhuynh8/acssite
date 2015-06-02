@@ -126,7 +126,7 @@
 		</ul>
 	  </li>
 	  <li class="dropdown">
-	  	<a href><span>Welcome, Patricia</span></a>
+	  	<a href><span>Welcome, {{ getCookieName() }} </span></a>
 	  </li>
 	  <li class="dropdown hidden-xs" dropdown ng-controller="MessagesController" ng-show="isLoggedIn">
 		<a href class="dropdown-toggle" dropdown-toggle>
@@ -150,7 +150,7 @@
 					</div>
 				  </a>
 				</li>
-			  </>
+			  </div>
 		  <li class="dd-footer"><a href="#" ng-click="setReadAll($event)">Mark all read</a></li>
 		</ul>
 	  </li>

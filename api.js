@@ -37,8 +37,30 @@ router.get('/task/incompleted', function(req, res) {
   });
 });
 
-// LIST ALL TASK: /api/task/list
+// LIST TASKS FOR CURRENT LOGGED IN USER: /api/task/list
 router.get('/task/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  var user_id = req.session.user_id;
+  Task.findAll({
+    include: [{
+      model: User,
+      as: 'assignee',
+      attributes: ['id'],
+      where: { 'id' : user_id }
+    },
+    {
+      model: User,
+      as: 'poster',
+      attributes: ['first_name', 'last_name']
+    }],
+  }).then(function(tasks) {
+    res.json(tasks);
+    res.end();
+  });
+});
+
+// LIST ALL TASK: /api/task/list/all
+router.get('/task/list/all', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
   Task.findAll({
@@ -76,7 +98,7 @@ router.post('/auth/:user_name/:password', function(req, res) {
     where: {
       user_name: req.params.user_name
     },
-    attributes: ['id', 'password']
+    attributes: ['id', 'password', 'first_name', 'last_name']
   })
   .then(function (user) {
     if (!user) {
@@ -88,14 +110,22 @@ router.post('/auth/:user_name/:password', function(req, res) {
     var hashed = md5Hash.digest('hex');
     if (hashed === user.password)
     {
-      req.session.uid = user.id;
-      req.session.loggedin = true;
-      res.json({ message: 'authorized'});
+      // issue new session and invalidate the old one to prevent session-fixation
+      req.session.regenerate(function() {
+        req.session.user_id = user.id;
+        req.session.loggedin = true;
+        res.json({
+          message: 'authorized',
+          name: user.first_name + ' ' + user.last_name
+        });
+        res.end();
+      });
     }
     else
+    {
       res.json({ message : 'unauthorized' });
-
-    res.end();
+      res.end();
+    }
   });
 });
 

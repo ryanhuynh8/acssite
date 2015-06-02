@@ -5,7 +5,7 @@
         <li class="active">Dashboard</li>
     </ol>
 
-    <h1>Dashboard</h1>
+    <h1>Announcements</h1>
     <div class="options">
         <div class="btn-toolbar">
             <div class="btn-group" dropdown>
@@ -31,133 +31,26 @@
 
     <div class="row">
         <div class="col-md-8" ng-controller="announcementController">
-            <panel heading="Announcements" panel-class="panel-danger" >
+            <panel ng-repeat="item in list" heading="{{ item.heading }}" panel-class="panel-danger">
                 <panel-controls>
                     <panel-control-collapse></panel-control-collapse>
                 </panel-controls>
-                <div id="mainGrid" ui-grid="gridOptions" style="width: auto; height: 450px" >
-
-                </div>
-                <div class="panel-loading" ng-hide="dataLoaded">
-                    <div class="panel-loader-circular"></div>
-                </div>
+                <strong ng-bind-html="item.announcements_description">
+                </strong>
             </panel>
         </div>
         <div class="col-md-4">
-            <div class="row">
-                <div class="col-xs-6">
-                    <tile-simple data="{ title: 'Orders', href: '#/ui-tiles',text: '9', color: 'danger'}"></tile-simple>
-                </div>
-                <div class="col-xs-6">
-                    <tile-simple data="{ title: 'Sales', href: '#/ui-tiles',text: '41', color: 'indigo'}"></tile-simple>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <tile-simple data="{ title: 'Profits', href: '#/ui-tiles',text: '$1,138', color: 'success'}"></tile-simple>
-                </div>
-                <div class="col-xs-6">
-                    <tile-simple data="{ title: 'Members', href: '#/ui-tiles',text: '27', color: 'midnightblue'}"></tile-simple>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <a class="info-tiles tiles-facebook" href>
-                        <div class="tiles-heading"><span class="text-center">Facebook</span>
-                        </div>
-                        <div class="tiles-body">
-                            <div class="pull-left"><i class="fa fa-thumbs-o-up"></i>
-                            </div>
-                            <div class="pull-right">215</div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-xs-6">
-                    <a class="info-tiles tiles-twitter">
-                        <div class="tiles-heading"><span class="text-center">Twitter</span>
-                        </div>
-                        <div class="tiles-body">
-                            <div class="pull-left"><i class="fa fa-twitter"></i>
-                            </div>
-                            <div class="pull-right">964</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <tile type="default" heading="Disk Space">
-                        <div easypiechart class="easypiechart" data-percent="25" data-options="epDiskSpace"><span class="percent">25</span>
-                        </div>
-                    </tile>
-                </div>
-                <div class="col-md-6" ng-drop="true">
-                    <tile type="default" heading="Bandwidth" ng-drag="true">
-                        <div easypiechart class="easypiechart" data-percent="23" data-options="epBandwidth"><span class="percent">23</span>
-                        </div>
-                    </tile>
-                </div>
-
-            </div>
+            <iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" 
+                    src="https://forecast.io/embed/#lat=29.7141&lon=-95.5920&name=Houston, TX&units=uk"> 
+            </iframe>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-8">
-            <div ng-controller="TasksController">
-                <script type="text/ng-template" id="items_renderer.html">
-                    <div class="task-container" as-sortable-item-handle>
-                        <!-- <input type="checkbox"> -->
-                        <span class="label label-{{item.color || 'primary'}}" ng-show="!item.editing"></span>
-                        <span class="task-description" ng-show="!item.editing">{{item.title}}</span>
-
-                        <form class="form-horizontal" ng-submit="doneEditing(item)" ng-show="item.editing" data-nodrag>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        <div class="input-group-btn">
-                                            <div class="btn-group" dropdown style="">
-                                                <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                                                    <div class="label label-{{item.color||'primary'}} color-block"></div>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-colors" role="menu">
-                                                    <li><span class="label label-success" ng-click="item.color='success'"></span>
-                                                    </li>
-                                                    <li><span class="label label-primary" ng-click="item.color='primary'"></span>
-                                                    </li>
-                                                    <li><span class="label label-warning" ng-click="item.color='warning'"></span>
-                                                    </li>
-                                                    <li><span class="label label-danger" ng-click="item.color='danger'"></span>
-                                                    </li>
-                                                    <li><span class="label label-info" ng-click="item.color='info'"></span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <input type="text" class="form-control no-validate" ng-model="item.title" placeholder="Task title..." ng-keyup="cancelEdit($event, item)">
-                                        <div class="input-group-btn">
-                                            <input type="submit" class="btn btn-primary" value="Save" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="options todooptions">
-                        <div class="btn-group" ng-show="!item.editing">
-                            <button data-nodrag class="btn btn-default btn-xs" ng-click="complete(this, item)"><i class="glyphicon glyphicon-ok"></i>
-                            </button>
-                            <button data-nodrag class="btn btn-default btn-xs" ng-click="edit(item)"><i class="glyphicon glyphicon-edit"></i>
-                            </button>
-                            <button data-nodrag class="btn btn-default btn-xs" ng-click="remove(this)"><i class="glyphicon glyphicon-remove"></i>
-                            </button>
-                        </div>
-                    </div>
-                </script>
-
+            <div ng-controller="taskController">
                 <div class="row">
                     <div class="col-xs-12" id="tasks-demo">
-
                         <panel heading="Tasks" panel-class="panel-default">
                             <panel-controls>
                                 <panel-control-collapse></panel-control-collapse>
@@ -165,76 +58,13 @@
                                 <panel-control-colors></panel-control-colors>
                                 <button class="btn btn-primary btn-sm mr10" ng-click="showForm=true;showTasksTab=true;showCompletedTab=false" style="margin-top: -5px;">Add Task</button>
                             </panel-controls>
-
-                            <div>
-
-                                <form class="form-horizontal" name="create_task" ng-submit="newItem(newTaskTitle, newTaskLabelText, newTaskColor)" ng-show="showForm">
-                                    <div class="form-group">
-
-
-                                        <div class="col-xs-12">
-                                            <div class="input-group">
-                                                <div class="input-group-btn">
-                                                    <div class="btn-group" dropdown style="">
-                                                        <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
-                                                            <div class="label label-{{newTaskColor||'primary'}} color-block"></div>
-                                                        </button>
-                                                        <ul class="dropdown-menu dropdown-colors" role="menu">
-                                                            <li><span class="label label-success" ng-click="newTaskColor='success'"></span>
-                                                            </li>
-                                                            <li><span class="label label-primary" ng-click="newTaskColor='primary'"></span>
-                                                            </li>
-                                                            <li><span class="label label-warning" ng-click="newTaskColor='warning'"></span>
-                                                            </li>
-                                                            <li><span class="label label-danger" ng-click="newTaskColor='danger'"></span>
-                                                            </li>
-                                                            <li><span class="label label-info" ng-click="newTaskColor='info'"></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <input type="text" class="form-control no-validate" ng-model="newTaskTitle" placeholder="Task title..." ng-keyup="cancelAdd($event)">
-
-                                                <div class="input-group-btn">
-                                                    <input class="btn btn-success btn-block" value="Add Task" type="submit" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <div class="col-xs-3 col-md-2">
-
-                                        </div>
-                                    </div>
-
-                                </form>
-                            </div>
-
-                            <div class="tasklist">
-                                <ul ng-model="tasks" as-sortable="{containerPositioning: 'relative', containment: '#tasks-demo'}" class="panel-tasks">
-                                    <li as-sortable-item ng-repeat="item in tasks" ng-include="'items_renderer.html'" ng-style="{'border-left': item.color? '2px solid '+item.color:''}">
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="tasklist">
-                                <ul ng-model="tasksComplete" as-sortable="{containerPositioning: 'relative', containment: '#tasks-demo'}" class="panel-tasks completed">
-                                    <li as-sortable-item ng-repeat="item in tasksComplete" ng-style="{'border-left': item.color? '2px solid '+item.color:''}">
-                                        <div class="task-container">
-                                            <span class="label label-{{item.color || 'primary'}}" ng-show="item.label"></span>
-                                            <span class="task-description">{{item.title}}</span>
-                                        </div>
-                                        <div class="options todooptions">
-                                            <div class="btn-group" ng-show="!item.editing">
-                                                <button data-nodrag class="btn btn-default btn-xs" ng-click="incomplete(item, $index)"><i class="glyphicon glyphicon-repeat"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div id="mainGrid" ui-grid="gridOptions" class="grid" style="width: 100%">
 
                             </div>
+                			<div class="panel-loading" ng-hide="dataLoaded">
+                				<div class="panel-loader-circular"></div>
+                			</div>
                         </panel>
-
                     </div>
                 </div>
             </div>
@@ -293,7 +123,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        
+
 
     </div>
     <div class="col-md-6" ng-drop="true">
@@ -350,7 +180,5 @@
     <div class="col-md-6">
 
     </div>
-</div>
-
 </div>
 <!-- container-fluid -->

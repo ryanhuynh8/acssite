@@ -5,7 +5,8 @@ angular.module('themeApp.controllers', ['ui.grid'])
         '$http',
         '$location',
         '$theme',
-        function($scope, $timeout, $http, $location, $theme) {
+        '$cookies',
+        function($scope, $timeout, $http, $location, $theme, $cookies) {
             $theme.set('fullscreen', true);
 
             $scope.$on('$destroy', function() {
@@ -17,7 +18,8 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 $http.post(request).success(function(res) {
                     if (res.message) {
                         if (res.message === "authorized") {
-                            $location.path('/tasks');
+                            $cookies.name = res.name;
+                            $location.path('/');
                         }
                     }
                 }).catch(function(err) {
@@ -37,14 +39,15 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 $scope.gridOptions = {
                     enableColumnMenus: false,
                     rowHeight: 100,
+                    rowTemplate: 'views/grid_template/row.task.template.html',
                     columnDefs: [{
                         field: 'created_on',
                         cellFilter: 'date',
                         displayName: 'Created On',
                         width: 120
                     }, {
-                        field: 'getAssigneeFullName()',
-                        displayName: 'Assigned To',
+                        field: 'poster_fullname',
+                        displayName: 'Assigned By',
                         width: 150
                     }, {
                         field: 'task_description',
@@ -60,45 +63,56 @@ angular.module('themeApp.controllers', ['ui.grid'])
                         cellFilter: 'date',
                         width: 120
                     }, {
-                        name: 'button',
+                        field: 'readed',
+                        cellFilter: 'readStatusFilter',
+                        width: 100
+                    }, {
+                        name: ' button',
                         displayName: 'Action',
-                        cellTemplate: 'views/grid_template/cell.button.template.html',
+                        cellTemplate: 'views/grid_template/cell.read.unread.button.template.html',
                         width: 200
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 }
             }
-
-            var loadData = function() {
-                $http.get('/api/task/list')
-                    .then(function(data) {
-                        angular.forEach(data.data, function(row) {
-                            row.getAssigneeFullName = function() {
-                                if (row.assignee)
-                                    return row.assignee.first_name + ' ' + row.assignee.last_name;
-                                else
-                                    return "none";
-                            }
-                        });
-                        $scope.gridOptions.data = data.data;
-                        $scope.dataLoaded = true;
-                    })
+            
+            $scope.getRowStyle = function(row) {
+                if (row.entity.readed === false)
+                    return {
+                        'background-color': 'white',
+                        'color' : 'black',
+                        'font-weight' : 'bold'
+                    }
+                else
+                    return {
+                        // 'background-color': '#707980',
+                        'color' : 'gray',
+                        'font-weight' : 'lighter'
+                    }
+                   
             }
-
-            $scope.buttonClickHandler = function(row, action) {
-                if (action === 'view') {
-                    dataService.set('task_to_view', row);
-                    $location.path('/task_view');
-                }
-                else if (action === 'edit') {
-                    dataService.set('task_to_edit', row);
-                    $location.path('/task_edit');
-                }
+            
+            $scope.buttonClickHandler = function($event, row, action) {
+                var el = angular.element($event.toElement);
+                el.attr('disabled', '');
+                row.entity.readed = true;
+                // if (action === 'view') {
+                //     dataService.set('task_to_view', row);
+                //     $location.path('/task_view');
+                // }
+                // else if (action === 'edit') {
+                //     dataService.set('task_to_edit', row);
+                //     $location.path('/task_edit');
+                // }
             };
 
             $scope.dataLoaded = false;
             initGrid();
-            loadData();
+            
+            dataService.getTaskByUser(function(result, err) {
+                $scope.gridOptions.data = result;
+                $scope.dataLoaded = true;
+            });
         }
     ])
     .controller('taskViewController', [
@@ -148,44 +162,10 @@ angular.module('themeApp.controllers', ['ui.grid'])
         '$location',
         'dataService',
         function($scope, $timeout, $http, $location, dataService) {
-            var initGrid = function() {
-                $scope.gridOptions = {
-                    enableColumnMenus: false,
-                    enableVerticalScrollbar: 2,
-                    enableHorizontalScrollbar: 0,
-                    rowHeight: 100,
-                    columnDefs: [{
-                        field: 'post_on_date',
-                        cellFilter: 'date',
-                        displayName: 'Posted Date',
-                        width: 120
-                    }, {
-                        field: 'announcements_description',
-                        width: '*',
-                        displayName: 'Description',
-                        cellTemplate: 'views/grid_template/cell.text.template.html'
-                    }, {
-                        field: 'expired_date',
-                        cellFilter: 'date',
-                        displayName: 'Expired Date',
-                        width: 120
-                    }],
-                    data: [] // HACK: so that the browser won't give a warning complain
-                };
-            };
-
-            var loadData = function() {
-                $http.get('/api/announcement/list')
-                    .then(function(data) {
-                        $scope.gridOptions.data = data.data;
-                        $scope.dataLoaded = true;
-                    });
-            };
-
-
-            $scope.dataLoaded = false;
-
-            initGrid();
-            loadData();
+            $scope.list = [];
+            dataService.getAnnoucementList(function(result, err) {
+                $scope.list = result;
+                //$scope.$apply();
+            });
         }
     ]);
