@@ -14,7 +14,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
             });
 
             $scope.login = function() {
-                var request = '/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
+                var request = 'https://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
                 $http.post(request).success(function(res) {
                     if (res.message) {
                         if (res.message === "authorized") {
@@ -80,14 +80,12 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 if (row.entity.readed === false)
                     return {
                         'background-color': 'white',
-                        'color' : 'black',
-                        'font-weight' : 'bold'
+                        'font-weight' : 'normal'
                     }
                 else
                     return {
-                        // 'background-color': '#707980',
+                        'background-color': '#ebeef0',
                         'color' : 'gray',
-                        'font-weight' : 'lighter'
                     }
                    
             }
@@ -151,7 +149,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
             };
 
             $scope.updateTask = function() {
-                $http.post('/api/task/update', $scope.task);
+                $http.post('https://acsdemo-yuhuynh.c9.io/api/task/update', $scope.task);
             }
         }
     ])

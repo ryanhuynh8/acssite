@@ -28,24 +28,22 @@
 
 
 <div class="container-fluid" ng-controller="DashboardController">
-
     <div class="row">
         <div class="col-md-8" ng-controller="announcementController">
-            <panel ng-repeat="item in list" heading="{{ item.heading }}" panel-class="panel-danger">
-                <panel-controls>
-                    <panel-control-collapse></panel-control-collapse>
-                </panel-controls>
-                <strong ng-bind-html="item.announcements_description">
-                </strong>
+            <panel panel-class="panel-warning" data-heading="New announcements">
+                <div ng-repeat="item in list">
+                    {{ item.heading }}
+                    <br/>
+                    <p><strong ng-bind-html="item.announcements_description" /></p>
+                </div>
             </panel>
         </div>
         <div class="col-md-4">
-            <iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" 
-                    src="https://forecast.io/embed/#lat=29.7141&lon=-95.5920&name=Houston, TX&units=uk"> 
-            </iframe>
+            <a href="http://www.accuweather.com/en/us/houston-tx/77002/current-weather/351197" class="aw-widget-legal"></a>
+            <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true"></div>
+            <script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
         </div>
     </div>
-
     <div class="row">
         <div class="col-md-8">
             <div ng-controller="taskController">
