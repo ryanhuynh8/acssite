@@ -160,7 +160,27 @@ angular
     this.getTaskByUser = function(cb) {
       var result, err;
       $http.get('https://acsdemo-yuhuynh.c9.io/api/task/list/')
-      .success(function(data) {
+        .success(function(data) {
+          result = data;
+          angular.forEach(result, function(row) {
+              if (row.poster)
+                row.poster_fullname = row.poster.first_name + ' ' + row.poster.last_name;
+              else
+                return "none";
+          });
+        })
+        .catch(function(error) {
+          err = error;
+        })
+        .finally(function() {
+          cb(result, err);
+        });
+    };
+
+    this.getAllTask = function(cb) {
+      var result, err;
+      $http.get('https://acsdemo-yuhuynh.c9.io/api/task/list/all')
+        .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {
               if (row.poster)

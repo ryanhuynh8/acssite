@@ -29,12 +29,19 @@
 
 <div class="container-fluid" ng-controller="DashboardController">
     <div class="row">
-        <div class="col-md-8" ng-controller="announcementController">
-            <panel panel-class="panel-warning" data-heading="New announcements">
-                <div ng-repeat="item in list">
-                    {{ item.heading }}
-                    <br/>
-                    <p><strong ng-bind-html="item.announcements_description" /></p>
+        <div class="col-sm-8" ng-controller="announcementController">
+            <panel panel-class="panel-warning" data-heading="New announcements">                
+                <div class="row" ng-repeat="item in list">
+                    <div class="col-sm-1">
+                        <i class="fa fa-bullhorn fa-2x" style="color: red"></i>
+                    </div>
+                    <div class="col-sm-11">
+                        <h4 style="margin-top: 0px; margin-bottom: 40px; font-family: Verdana, Menlo">
+                            <span ng-bind-html="item.announcements_description"/>
+                            <br>   
+                            <small>{{ item.heading }}</small>
+                        </h4>
+                    </div>
                 </div>
             </panel>
         </div>

@@ -28,6 +28,74 @@ angular.module('themeApp.controllers', ['ui.grid'])
             }
         }
     ])
+    .controller('taskAdminController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+            var initGrid = function() {
+                $scope.gridOptions = {
+                    enableColumnMenus: false,
+                    rowHeight: 100,
+                    rowTemplate: 'views/grid_template/row.task.template.html',
+                    columnDefs: [{
+                        field: 'created_on',
+                        cellFilter: 'date',
+                        displayName: 'Created On',
+                        width: 120
+                    }, {
+                        field: 'poster_fullname',
+                        displayName: 'Assigned By',
+                        width: 150
+                    }, {
+                        field: 'task_description',
+                        width: '*',
+                        cellTemplate: 'views/grid_template/cell.text.template.html'
+                    }, {
+                        field: 'status_task_id',
+                        cellFilter: 'taskStatusFilter',
+                        width: 100,
+                        displayName: 'Status'
+                    }, {
+                        field: 'due_date',
+                        cellFilter: 'date',
+                        width: 120
+                    }, {
+                        field: 'readed',
+                        cellFilter: 'readStatusFilter',
+                        width: 100
+                    }, {
+                        name: ' button',
+                        displayName: 'Action',
+                        cellTemplate: 'views/grid_template/cell.button.template.html',
+                        width: 200
+                    }],
+                    data: [] // HACK: so that the browser won't give a warning complain
+                }
+            }
+           
+            $scope.buttonClickHandler = function($event, row, action) {
+                if (action === 'view') {
+                    dataService.set('task_to_view', row.entity);
+                    $location.path('/task_view');
+                }
+                else if (action === 'edit') {
+                    dataService.set('task_to_edit', row.entity);
+                    $location.path('/task_edit');
+                }
+            };
+
+            $scope.dataLoaded = false;
+            initGrid();
+            
+            dataService.getAllTask(function(result, err) {
+                $scope.gridOptions.data = result;
+                $scope.dataLoaded = true;
+            });
+        }
+    ])
     .controller('taskController', [
         '$scope',
         '$timeout',
