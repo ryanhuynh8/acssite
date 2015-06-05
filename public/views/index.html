@@ -48,20 +48,17 @@
         <div class="col-md-4">
             <a href="http://www.accuweather.com/en/us/houston-tx/77002/current-weather/351197" class="aw-widget-legal"></a>
             <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true"></div>
-            <script type="text/javascript" src="http://oap.accuweather.com/launch.js"></script>
+            <script type="text/javascript" src="scripts/launch.js"></script>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div ng-controller="taskController">
                 <div class="row">
                     <div class="col-xs-12" id="tasks-demo">
-                        <panel heading="Tasks" panel-class="panel-default">
+                        <panel heading="Tasks assigned to you" panel-class="panel-default">
                             <panel-controls>
                                 <panel-control-collapse></panel-control-collapse>
-                                <panel-control-title></panel-control-title>
-                                <panel-control-colors></panel-control-colors>
-                                <button class="btn btn-primary btn-sm mr10" ng-click="showForm=true;showTasksTab=true;showCompletedTab=false" style="margin-top: -5px;">Add Task</button>
                             </panel-controls>
                             <div id="mainGrid" ui-grid="gridOptions" class="grid" style="width: 100%">
 
@@ -73,7 +70,7 @@
                     </div>
                 </div>
             </div>
-            <panel panel-class="panel-default" heading="Map">
+            <!-- <panel panel-class="panel-default" heading="Map">
                 <panel-controls>
                     <panel-control-collapse></panel-control-collapse>
                     <panel-control-title></panel-control-title>
@@ -83,7 +80,7 @@
                 <div ng-controller="VectorMapsController">
                     <div style="height: 350px" jqvmap options="jqvmapWorld"></div>
                 </div>
-            </panel>
+            </panel> -->
         </div>
 
     </div>

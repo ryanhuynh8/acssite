@@ -14,8 +14,8 @@ angular.module('themeApp.controllers', ['ui.grid'])
             });
 
             $scope.login = function() {
-                var request = 'https://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
-                $http.post(request).success(function(res) {
+                var request = 'https://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;                
+                $http.post(request).success(function(res) {                    
                     if (res.message) {
                         if (res.message === "authorized") {
                             $cookies.name = res.name;
@@ -40,6 +40,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     enableColumnMenus: false,
                     rowHeight: 100,
                     rowTemplate: 'views/grid_template/row.task.template.html',
+                    enableHorizontalScrollbar: 0,
                     columnDefs: [{
                         field: 'created_on',
                         cellFilter: 'date',
@@ -52,7 +53,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     }, {
                         field: 'task_description',
                         width: '*',
-                        cellTemplate: 'views/grid_template/cell.text.template.html'
+                        cellTemplate: 'views/grid_template/cell.text.template.html'                        
                     }, {
                         field: 'status_task_id',
                         cellFilter: 'taskStatusFilter',
@@ -108,6 +109,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     enableColumnMenus: false,
                     rowHeight: 100,
                     rowTemplate: 'views/grid_template/row.task.template.html',
+                    enableHorizontalScrollbar: 0,
                     columnDefs: [{
                         field: 'created_on',
                         cellFilter: 'date',
