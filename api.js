@@ -171,7 +171,8 @@ router.get('/announcement/list', function(req, res) {
   Announcement.findAll({
     where: {
       expired_date: { $gte: moment().format() }
-    }
+    },
+    order: 'post_on_date DESC'
   }).then(function(list){
     res.json(list);
     res.end();

@@ -121,7 +121,7 @@ angular
 
     this.getUserList = function(cb) {
       var result, err;
-      $http.get('https://acsdemo-yuhuynh.c9.io/api/user/list')
+      $http.get('http://acsdemo-yuhuynh.c9.io/api/user/list')
         .success(function(data) {
           result = [];
           data.forEach(function(c, i, a) {
@@ -142,7 +142,7 @@ angular
 
     this.getAnnoucementList = function(cb) {
       var result, err;
-      $http.get('https://acsdemo-yuhuynh.c9.io/api/announcement/list')
+      $http.get('http://acsdemo-yuhuynh.c9.io/api/announcement/list')
         .success(function(data) {
           result = data;
           result.forEach(function(item, index, array) {
@@ -159,7 +159,7 @@ angular
 
     this.getTaskByUser = function(cb) {
       var result, err;
-      $http.get('https://acsdemo-yuhuynh.c9.io/api/task/list/')
+      $http.get('http://acsdemo-yuhuynh.c9.io/api/task/list/')
         .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {
@@ -179,7 +179,7 @@ angular
 
     this.getAllTask = function(cb) {
       var result, err;
-      $http.get('https://acsdemo-yuhuynh.c9.io/api/task/list/all')
+      $http.get('http://acsdemo-yuhuynh.c9.io/api/task/list/all')
         .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {
