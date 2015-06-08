@@ -16,6 +16,9 @@
 						<input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
 					</div>
 				</div>
+				<div class="form-group">
+					<alert ng-show="isError" type="danger">{{ errorMsg }}</alert>
+				</div>
 				<div class="clearfix">
 					<div class="pull-right"><label><input type="checkbox"> Remember Me</label></div>
 				</div>

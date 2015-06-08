@@ -13,6 +13,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 $theme.set('fullscreen', false);
             });
 
+            $scope.isError = false;
             $scope.login = function() {
                 var request = 'http://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
                 $http.post(request).success(function(res) {
@@ -20,10 +21,15 @@ angular.module('themeApp.controllers', ['ui.grid'])
                         if (res.message === "authorized") {
                             $cookies.name = res.name;
                             $location.path('/');
+                        } else { 
+                            $scope.isError = true;
+                            $scope.errorMsg = "Wrong username or password, please try again.";
                         }
                     }
                 }).catch(function(err) {
-                    console.log(err)
+                    $scope.errorMsg = "Cannot connect to server. Please contact website administrator.";
+                    $scope.isError = true;
+                    console.log(err);
                 })
             }
         }
@@ -97,6 +103,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     rowHeight: 150,
                     rowTemplate: 'views/grid_template/row.task.template.html',
                     enableHorizontalScrollbar: 0,
+                    minRowsToShow: 1,
                     columnDefs: [{
                         field: 'poster_fullname',
                         displayName: 'Assigned By',

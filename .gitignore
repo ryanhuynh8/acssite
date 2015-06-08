@@ -1,7 +1,6 @@
 #ignore html asset folder
 public/data
 public/assets/bootstrap
-public/assets/css
 public/assets/icons
 public/assets/img
 public/assets/js

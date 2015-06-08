@@ -2,7 +2,7 @@ angular
   .module('theme.demos.chatbox', [])
   .controller('ChatRoomController', ['$scope', '$timeout', '$window', function($scope, $t, $window) {
     'use strict';
-    var avatars = ['potter.png', 'tennant.png', 'johansson.png', 'jackson.png', 'jobs.png'];
+    var avatars = [];
     $scope.messages = [];
     $scope.userText = '';
     $scope.userTyping = false;
