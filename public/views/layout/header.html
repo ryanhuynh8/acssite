@@ -6,12 +6,12 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-xs-6 col-sm-2">
-				<a href="#" class="shortcut-tiles tiles-brown">
+				<a href="#/task_new" class="shortcut-tiles tiles-brown">
 					<div class="tiles-body">
 						<div class="pull-left"><i class="glyphicon glyphicon-star"></i></div>
 					</div>
 					<div class="tiles-footer">
-						Create Post
+						New Task
 					</div>
 				</a>
 			</div>
@@ -179,10 +179,7 @@
 	  </li>
 	  <li class="visible-xs-block">
 		  <a href="#" ng-click="toggleSearchBar($event)"><i class="glyphicon glyphicon-search"></i></a>
-	  </li>
-	  <li ng-click="showHeaderBar($event)" class="hidden-xs">
-		  <a href="" id="headerbardropdown"><i class="glyphicon glyphicon-th"></i></a>
-	  </li>
+	  </li>	  
 	  <li class="dropdown demodrop" dropdown>
 		  <a href dropdown-toggle class="dropdown-toggle tooltips"><i class="glyphicon glyphicon-cog"></i></a>
 		  <ul class="dropdown-menu animated arrow dropdown-menu-form" id="demo-dropdown">
@@ -269,6 +266,9 @@
 				</div>
 			</div>
 		  </ul>
+	  </li>
+	  <li ng-click="showHeaderBar($event)" class="hidden-xs">
+		  <a href="" id="headerbardropdown"><i class="glyphicon glyphicon-edit"></i></a>
 	  </li>
 	</ul>
 </header>

@@ -2,7 +2,8 @@
      class="ui-grid-cell" 
      ng-class="{ 'ui-grid-row-header-cell': col.isRowHeader }"
      ui-grid-cell
-     style="color: black; font-weight: bold">
+     style="color: black; font-weight: bold"
+     ng-style="grid.appScope.getRowStyle(row)">
 </div>
 
 

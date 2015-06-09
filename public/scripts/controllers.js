@@ -13,10 +13,19 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 $theme.set('fullscreen', false);
             });
 
+            
             $scope.isError = false;
-            $scope.login = function() {
-                var request = 'http://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
-                $http.post(request).success(function(res) {
+            $scope.login = function($event) {
+                // disable login button
+                var el = angular.element($event.toElement);
+                el.attr('disabled', '');
+
+                // var request = 'http://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
+                var request = 'http://acsdemo-yuhuynh.c9.io/api/auth/';
+                $http.post(request, { 
+                    user_name: $scope.user.user_name, 
+                    password: $scope.user.password 
+                }).success(function(res) {
                     if (res.message) {
                         if (res.message === "authorized") {
                             $cookies.name = res.name;
@@ -24,6 +33,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                         } else { 
                             $scope.isError = true;
                             $scope.errorMsg = "Wrong username or password, please try again.";
+                            el.removeAttr('disabled');
                         }
                     }
                 }).catch(function(err) {
@@ -103,7 +113,7 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     rowHeight: 150,
                     rowTemplate: 'views/grid_template/row.task.template.html',
                     enableHorizontalScrollbar: 0,
-                    minRowsToShow: 1,
+                    minRowsToShow: 5,
                     columnDefs: [{
                         field: 'poster_fullname',
                         displayName: 'Assigned By',
@@ -123,17 +133,11 @@ angular.module('themeApp.controllers', ['ui.grid'])
             }
 
             $scope.getRowStyle = function(row) {
-                if (row.entity.readed === false)
+                if (row.entity.readed === true)
                     return {
-                        'background-color': 'white',
+                        // 'background-color': 'white',
                         'font-weight': 'normal'
                     }
-                else
-                    return {
-                        'background-color': '#ebeef0',
-                        'color': 'gray',
-                    }
-
             }
 
             $scope.buttonClickHandler = function($event, row, action) {
