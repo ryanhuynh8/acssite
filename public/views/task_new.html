@@ -9,30 +9,49 @@
     <h1>New Task</h1>
 </div>
 
-<div class="container-fluid" ng-controller="taskEditController">
+<div class="container-fluid" ng-controller="taskCreateController">
     <form class="form-horizontal">
     <fieldset>
+        <!-- Form Name -->
+        <legend>Create a new task</legend>
 
-    <!-- Form Name -->
-    <legend>Create a new task</legend>
+        <!-- Select Basic -->
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="assign_to">Assign to</label>
+          <div class="col-sm-5">
+            <select ng-model="task.assign_by" ng-options="user.id as user.full_name for user in user_list" class="form-control">
+            </select>
+          </div>
+        </div>
 
-    <!-- Select Basic -->
-    <div class="form-group">
-      <label class="col-sm-1 control-label" for="assign_to">Assign to</label>
-      <div class="col-sm-5">
-        <select ng-model="task.assign_by" ng-options="user.id as user.full_name for user in user_list" class="form-control">
-        </select>
-      </div>
-    </div>
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-sm-1 control-label" for="task_description">Task description</label>
+          <div class="col-sm-5">                     
+            <textarea rows="10" class="form-control" id="task_description" name="task_description" ng-model="task.task_description"></textarea>
+          </div>
+        </div>
 
-    <!-- Textarea -->
-    <div class="form-group">
-      <label class="col-sm-1 control-label" for="task_description">Task description</label>
-      <div class="col-sm-5">                     
-        <textarea rows="10" class="form-control" id="task_description" name="task_description"></textarea>
-      </div>
-    </div>
+        <div class="form-group">
+            <label class="col-sm-1 control-label">Due date</label>
+            <div class="col-sm-5">
+                <div class="input-group">
+                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="Close" />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+       <div class="form-group">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
+                <button class="btn btn-primary" ng-click="submit()">Create task</button>
+                <button class="btn btn-default" ng-click="reset()">Reset fields</button>
+            </div>
+        </div>        
     </fieldset>
     </form>
 

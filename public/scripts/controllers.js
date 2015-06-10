@@ -209,6 +209,40 @@ angular.module('themeApp.controllers', ['ui.grid'])
             }
         }
     ])
+    .controller('taskCreateController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+            $scope.task = {};
+            $scope.user_list = [];
+            $scope.dt = new Date();
+            $scope.task.due_date = Date.now();
+
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+            });
+
+            $scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                if ($scope.opened) $scope.opened = false;
+                else
+                    $scope.opened = true;
+            };
+
+            $scope.submit = function() {
+                $http.post('http://acsdemo-yuhuynh.c9.io/api/task/new', $scope.task);
+            }
+
+            $scope.reset = function() {
+                $scope.task = {};
+            };
+        }
+    ])    
     .controller('announcementController', [
         '$scope',
         '$timeout',
