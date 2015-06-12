@@ -58,8 +58,24 @@
                     <div class="col-md-12" id="tasks-demo">
                         <panel heading="Tasks assigned to you" panel-class="panel-default">
                             <panel-controls>
+                                <button ng-click="displaySearch()" class="btn btn-info">Search</button>
                                 <panel-control-collapse></panel-control-collapse>
                             </panel-controls>
+                            <div id="searchForm">
+                                <form class="form-horizontal">
+                                <fieldset>
+
+                                <!-- Text input-->
+                                <div class="form-group">
+                                  <label class="col-sm-1 control-label" for="textinput">Task Description</label>
+                                  <div class="col-md-4">
+                                  <input id="textinput" name="textinput" type="text" class="form-control">
+                                  </div>
+                                </div>
+
+                                </fieldset>
+                                </form>
+                            </div>
                             <div id="mainGrid" ui-grid="gridOptions" class="grid">
 
                             </div>
