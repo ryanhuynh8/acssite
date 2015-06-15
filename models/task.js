@@ -33,6 +33,7 @@ var Task = module.exports = sq.define('Task', {
     status_task_id: {
         type: Sequelize.INTEGER(11),
         allowNull: true,
+        defaultValue: '19'
     },
     task_description: {
         type: Sequelize.TEXT,
@@ -49,6 +50,9 @@ var Task = module.exports = sq.define('Task', {
     }
 },{
     tableName: 'tbl_task',
-    timestamps: false,
+    timestamps: true,
+    deletedAt: false,
+    updatedAt: false,
+    createdAt: 'create_on'
 });
 
