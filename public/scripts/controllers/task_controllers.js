@@ -1,4 +1,21 @@
 angular.module('themeApp.controllers')
+    /* route setup */
+    .config(['$routeProvider', function($routeProvider) {
+        $routeProvider
+            .when('/tasks', { 
+                templateUrl: 'views/tasks.html' 
+            })
+            .when('/tasks/new', {
+                templateUrl: 'views/task_new.html' 
+            })
+            .when('/tasks/edit', { 
+                templateUrl: 'views/task_edit.html' 
+            })
+            .when('/tasks/view', { 
+                templateUrl: 'views/task_view.html' 
+            });
+        }
+    ])
     .controller('taskAdminController', [
         '$scope',
         '$timeout',
@@ -32,8 +49,8 @@ angular.module('themeApp.controllers')
                         width: 200
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
-                }
-            }
+                };
+            };
 
             $scope.buttonClickHandler = function($event, row, action) {
                 if (action === 'view') {
@@ -84,8 +101,8 @@ angular.module('themeApp.controllers')
                         width: 150
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
-                }
-            }
+                };
+            };
 
             $scope.getRowStyle = function(row) {
                 if (row.entity.readed === true)
@@ -93,7 +110,7 @@ angular.module('themeApp.controllers')
                         // 'background-color': 'white',
                         'font-weight': 'normal'
                     }
-            }
+            };
 
             $scope.buttonClickHandler = function($event, row, action) {
                 var el = angular.element($event.toElement);
@@ -197,7 +214,6 @@ angular.module('themeApp.controllers')
                     .then(function(result) {
                         if (result.data.message !== 'success'){
                             throw result.data;
-                            return;
                         }
                         // display successfully alert
                         $scope.showAlert = true;
@@ -219,19 +235,27 @@ angular.module('themeApp.controllers')
             };
         }
     ])
-    /* route setup */
-    .config(['$routeProvider', function($routeProvider) {
-        $routeProvider
-            .when('/tasks', { 
-                templateUrl: 'views/tasks.html' 
-            })
-            .when('/tasks/new', { 
-                templateUrl: 'views/task_new.html' 
-            })
-            .when('/tasks/edit', { 
-                templateUrl: 'views/task_edit.html' 
-            })
-            .when('/tasks/view', { 
-                templateUrl: 'views/task_view.html' 
+    .controller('taskSearchController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        'dataService',
+        function($scope, $timeout, $http, $location, dataService) {
+
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
             });
-    }]);
+
+            $scope.status_list = ["In-progress", "Completed", "Cancelled"];
+            
+            $scope.open = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+
+                if ($scope.opened) $scope.opened = false;
+                else
+                    $scope.opened = true;
+            };
+        }
+    ]);
