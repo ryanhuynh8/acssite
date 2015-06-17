@@ -197,6 +197,17 @@ angular
         });
     };
 
+    this.findTaskWithOptions = function (params, cb) {
+      var result, err;
+      $http.post('http://acsdemo-yuhuynh.c9.io/api/task/search', params)
+        .success(function(data) {
+          console.log(data);
+        })
+        .catch(function(error) {
+
+        })
+        .finally();
+    };
   }])
   .filter('safe_html', ['$sce', function($sce) {
     'use strict';

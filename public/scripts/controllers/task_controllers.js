@@ -2,17 +2,17 @@ angular.module('themeApp.controllers')
     /* route setup */
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
-            .when('/tasks', { 
-                templateUrl: 'views/tasks.html' 
+            .when('/tasks', {
+                templateUrl: 'views/tasks.html'
             })
             .when('/tasks/new', {
-                templateUrl: 'views/task_new.html' 
+                templateUrl: 'views/task_new.html'
             })
-            .when('/tasks/edit', { 
-                templateUrl: 'views/task_edit.html' 
+            .when('/tasks/edit', {
+                templateUrl: 'views/task_edit.html'
             })
-            .when('/tasks/view', { 
-                templateUrl: 'views/task_view.html' 
+            .when('/tasks/view', {
+                templateUrl: 'views/task_view.html'
             });
         }
     ])
@@ -79,6 +79,20 @@ angular.module('themeApp.controllers')
         '$location',
         'dataService',
         function($scope, $timeout, $http, $location, dataService) {
+            $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
+            // populate the user list combobox
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+            });
+
+            $scope.status_list = ["In-progress", "Completed", "Cancelled"];
+
+            $timeout(function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    'placement': 'top'
+                });
+            });
+
             var initGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -127,7 +141,7 @@ angular.module('themeApp.controllers')
                     //         opacity: '0.0',
                     //     }, 1000, function() {
                     //         console.log('completed');
-                            
+
                     //     });
                 }
             };
@@ -135,10 +149,21 @@ angular.module('themeApp.controllers')
             $scope.dataLoaded = false;
             initGrid();
 
-            dataService.getTaskByUser(function(result, err) {
+            dataService.getTaskByUser(function (result, err) {
                 $scope.gridOptions.data = result;
                 $scope.dataLoaded = true;
             });
+
+            $scope.quickSearch = function() {
+                $scope.dataLoaded = false;
+                dataService.findTaskWithOptions($scope.search_params, function (result, err) {
+                    console.log(result);
+                });
+            };
+
+            $scope.reset = function() {
+                $scope.search_params = {};
+            };
         }
     ])
     .controller('taskViewController', [
@@ -232,30 +257,6 @@ angular.module('themeApp.controllers')
 
             $scope.reset = function() {
                 $scope.task = {};
-            };
-        }
-    ])
-    .controller('taskSearchController', [
-        '$scope',
-        '$timeout',
-        '$http',
-        '$location',
-        'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
-
-            dataService.getUserList(function(result, err) {
-                $scope.user_list = result;
-            });
-
-            $scope.status_list = ["In-progress", "Completed", "Cancelled"];
-            
-            $scope.open = function($event) {
-                $event.preventDefault();
-                $event.stopPropagation();
-
-                if ($scope.opened) $scope.opened = false;
-                else
-                    $scope.opened = true;
             };
         }
     ]);

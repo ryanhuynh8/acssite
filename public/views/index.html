@@ -30,7 +30,7 @@
 <div class="container-fluid" ng-controller="DashboardController">
     <div class="row">
         <div class="col-sm-8" ng-controller="announcementController">
-            <panel panel-class="panel-warning" data-heading="New announcements">                
+            <panel panel-class="panel-warning" data-heading="New announcements">
                 <div class="row" ng-repeat="item in list">
                     <div class="col-sm-1">
                         <i class="fa fa-bullhorn fa-2x" style="color: red"></i>
@@ -38,7 +38,7 @@
                     <div class="col-sm-11">
                         <h4 style="margin-top: 0px; margin-bottom: 40px; font-family: Verdana, Menlo">
                             <span ng-bind-html="item.announcements_description"/>
-                            <br>   
+                            <br>
                             <small>{{ item.heading }}</small>
                         </h4>
                     </div>
@@ -57,43 +57,39 @@
                 <div class="row">
                     <div class="col-md-12" id="tasks-demo">
                         <panel heading="Tasks assigned to you" panel-class="panel-default">
-                            <panel-controls>                                
+                            <panel-controls>
                                 <panel-control-collapse></panel-control-collapse>
                             </panel-controls    >
-                            <div id="searchForm" ng-controller="taskSearchController">
+                            <div id="searchForm">
                                 <form class="form-horizontal">
                                     <div class="form-group">
                                         <div class="row">
+                                            <!-- Task Description textbox -->
                                             <label class="col-sm-1 control-label" for="textinput">Task Description</label>
-                                            <div class="col-md-4">
-                                                <input type="text" class="form-control" ng-model="task_description"/>
+                                            <div class="col-md-3">
+                                                <input type="text" class="form-control" ng-model="search_params.task_description"/>
                                             </div>
+                                            <!-- Assigned By combobox -->
                                             <label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
                                             <div class="col-sm-2">
-                                                <select ng-model="assign_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
+                                                <select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
                                             </div>
+
+                                            <!-- Status combobox -->
                                             <label class="col-sm-1 control-label" for="selectbasic">Status</label>
                                             <div class="col-sm-1">
-                                                <select class="form-control">
+                                                <select class="form-control" ng-model="search_params.status_type">
                                                     <option ng-repeat="status_type in status_list">{{ status_type }}</option>
                                                 </select>
                                             </div>
+
+                                            <!-- Search button -->
+                                            <button ng-click="quickSearch()" class="btn btn-info col-sm-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
+                                            <button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
                                         </div>
                                         <br/>
                                         <div class="row">
-                                            <div class="col-sm-1"></div>
-                                            <label class="col-sm-4 radio-inline">
-                                                <input type="radio" name="radios" id="radios-0" value="1" checked="checked">
-                                                Due Date
-                                            </label> 
-                                            <label class="col-sm-4 radio-inline">
-                                                <input type="radio" name="radios" id="radios-1" value="2">
-                                                Posted Date
-                                            </label>                                             
-                                        </div>
-                                        <br/>
-                                        <div class="row">                                            
-                                            <label class="col-sm-1 control-label">From</label>
+                                            <!-- <label class="col-sm-1 control-label">From</label>
                                             <div class="col-sm-2">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="N/A" />
@@ -112,8 +108,7 @@
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <button ng-click="displaySearch()" class="btn btn-info">Search</button>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </form>
@@ -131,7 +126,7 @@
        </div>
     </div>
     <div class="col-md-4">
-        
+
     </div>
 
 
