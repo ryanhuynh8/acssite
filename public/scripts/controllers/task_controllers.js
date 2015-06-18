@@ -77,9 +77,12 @@ angular.module('themeApp.controllers')
         '$timeout',
         '$http',
         '$location',
+        '$bootbox',
         'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
+            $scope.showResult = false;
+
             // populate the user list combobox
             dataService.getUserList(function(result, err) {
                 $scope.user_list = result;
@@ -152,18 +155,39 @@ angular.module('themeApp.controllers')
             dataService.getTaskByUser(function (result, err) {
                 $scope.gridOptions.data = result;
                 $scope.dataLoaded = true;
+                if (err !== undefined)
+                {
+                    $bootbox.alert({
+                        size: 'small',
+                        message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                    });
+                }
             });
 
             $scope.quickSearch = function() {
                 $scope.dataLoaded = false;
                 dataService.findTaskWithOptions($scope.search_params, function (result, err) {
-                    console.log(result);
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    $scope.showResult = true;
+                    $scope.resultMsg = 'Found ' + result.length + ' record(s).';
+
+                    if (err !== undefined)
+                    {
+                        $bootbox.alert({
+                            size: 'small',
+                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                        });
+                    }
                 });
             };
 
             $scope.reset = function() {
                 $scope.search_params = {};
+                $scope.showResult = false;
             };
+
+
         }
     ])
     .controller('taskViewController', [

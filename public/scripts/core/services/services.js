@@ -110,7 +110,7 @@ angular
   }])
   .service('dataService', ['$http', function($http) {
     var data = {};
-
+    var HOST_URL = 'http://acsdemo-yuhuynh.c9.io';
     this.get = function(key) {
       return data[key];
     }
@@ -121,7 +121,7 @@ angular
 
     this.getUserList = function(cb) {
       var result, err;
-      $http.get('http://acsdemo-yuhuynh.c9.io/api/user/list')
+      $http.get(HOST_URL + '/api/user/list')
         .success(function(data) {
           result = [];
           data.forEach(function(c, i, a) {
@@ -142,7 +142,7 @@ angular
 
     this.getAnnoucementList = function(cb) {
       var result, err;
-      $http.get('http://acsdemo-yuhuynh.c9.io/api/announcement/list')
+      $http.get(HOST_URL + '/api/announcement/list')
         .success(function(data) {
           result = data;
           result.forEach(function(item, index, array) {
@@ -159,7 +159,7 @@ angular
 
     this.getTaskByUser = function(cb) {
       var result, err;
-      $http.get('http://acsdemo-yuhuynh.c9.io/api/task/list/')
+      $http.get(HOST_URL + '/api/task/list/')
         .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {
@@ -179,7 +179,7 @@ angular
 
     this.getAllTask = function(cb) {
       var result, err;
-      $http.get('http://acsdemo-yuhuynh.c9.io/api/task/list/all')
+      $http.get(HOST_URL + '/api/task/list/all')
         .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {
@@ -199,14 +199,23 @@ angular
 
     this.findTaskWithOptions = function (params, cb) {
       var result, err;
-      $http.post('http://acsdemo-yuhuynh.c9.io/api/task/search', params)
+      $http.post(HOST_URL + '/api/task/search', params)
         .success(function(data) {
-          console.log(data);
+          result = data;
+          angular.forEach(result, function(row) {
+              if (row.poster)
+                row.poster_fullname = row.poster.first_name + ' ' + row.poster.last_name;
+              else
+                return "none";
+          });
         })
-        .catch(function(error) {
-
+        .catch(function(error){
+          err = error;
         })
-        .finally();
+        .finally(function()
+        {
+          cb(result, err);
+        });
     };
   }])
   .filter('safe_html', ['$sce', function($sce) {

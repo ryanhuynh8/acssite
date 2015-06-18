@@ -88,6 +88,10 @@
                                             <button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
                                         </div>
                                         <br/>
+                                        <div class="row" style="margin-left: 10px">
+                                            <div class="col-sm-3"><alert ng-show="showResult" type="success">{{ resultMsg }}</alert></div>
+                                        </div>
+                                        <br/>
                                         <div class="row">
                                             <!-- <label class="col-sm-1 control-label">From</label>
                                             <div class="col-sm-2">
