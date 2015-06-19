@@ -119,6 +119,10 @@ angular
       data[key] = value;
     }
 
+    this.getApiUrl = function(path_to_api) {
+      return HOST_URL + path_to_api;
+    }
+
     this.getUserList = function(cb) {
       var result, err;
       $http.get(HOST_URL + '/api/user/list')
@@ -185,6 +189,11 @@ angular
           angular.forEach(result, function(row) {
               if (row.poster)
                 row.poster_fullname = row.poster.first_name + ' ' + row.poster.last_name;
+              else
+                return "none";
+
+              if (row.poster)
+                row.assignee_fullname = row.assignee.first_name + ' ' + row.assignee.last_name;
               else
                 return "none";
           });

@@ -30,19 +30,30 @@ angular.module('themeApp.controllers')
                     rowTemplate: 'views/grid_template/row.task.template.html',
                     enableHorizontalScrollbar: 0,
                     columnDefs: [{
+                        field: 'created_on',
+                        displayName: 'Posted On',
+                        cellFilter: 'date : \'medium\'',
+                        width: 200
+                    }, {
                         field: 'poster_fullname',
-                        displayName: 'Assigned By',
+                        displayName: 'Posted By',
+                        width: 150
+                    }, {
+                        field: 'assignee_fullname',
+                        displayName: 'Assigned To',
                         width: 150
                     }, {
                         field: 'task_description',
                         width: '*',
                         cellTemplate: 'views/grid_template/cell.text.template.html'
-                    }, {
-                        field: 'status_task_id',
-                        cellFilter: 'taskStatusFilter',
-                        width: 100,
-                        displayName: 'Status'
-                    }, {
+                    },
+                    // {
+                    //     field: 'status_task_id',
+                    //     cellFilter: 'taskStatusFilter',
+                    //     width: 100,
+                    //     displayName: 'Status'
+                    // },
+                    {
                         name: 'button',
                         displayName: 'Action',
                         cellTemplate: 'views/grid_template/cell.button.template.html',
@@ -104,6 +115,11 @@ angular.module('themeApp.controllers')
                     enableHorizontalScrollbar: 0,
                     minRowsToShow: 5,
                     columnDefs: [{
+                        field: 'created_on',
+                        displayName: 'Posted On',
+                        cellFilter: 'date : \'medium\'',
+                        width: 200
+                    }, {
                         field: 'poster_fullname',
                         displayName: 'Assigned By',
                         width: 150
@@ -226,7 +242,7 @@ angular.module('themeApp.controllers')
             };
 
             $scope.updateTask = function() {
-                $http.post('http://acsdemo-yuhuynh.c9.io/api/task/update', $scope.task);
+                $http.post(dataService.getApiUrl('/api/task/update'), $scope.task);
             }
         }
     ])
@@ -259,7 +275,7 @@ angular.module('themeApp.controllers')
             };
 
             $scope.submit = function() {
-                $http.post('http://acsdemo-yuhuynh.c9.io/api/task/new', $scope.task)
+                $http.post(dataService.getApiUrl('/api/task/new'), $scope.task)
                     .then(function(result) {
                         if (result.data.message !== 'success'){
                             throw result.data;
@@ -276,6 +292,7 @@ angular.module('themeApp.controllers')
                         $scope.showAlert = true;
                         $scope.alertType = 'danger';
                         $scope.alertMsg = 'Error creating a new task!';
+                        $('#create_task_button').removeAttr('disabled');
                     });
             }
 

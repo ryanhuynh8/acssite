@@ -186,15 +186,16 @@ angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'
         $scope.layoutLoading = false;
       }
     });
-    
+
     String.prototype.capitalize = function(){
         return this.toLowerCase().replace( /\b\w/g, function (m) {
             return m.toUpperCase();
         });
     };
-    
+
     $scope.getCookieName = function () {
-      return $cookies.name.capitalize();
+      if ($cookies.name !== undefined)
+        return $cookies.name.capitalize();
     }
 
     if ($cookies.name === undefined) {

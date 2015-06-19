@@ -55,7 +55,7 @@
         <div class="col-md-12">
             <div ng-controller="taskController">
                 <div class="row">
-                    <div class="col-md-12" id="tasks-demo">
+                    <div class="col-md-12">
                         <panel heading="Tasks assigned to you" panel-class="panel-default">
                             <panel-controls>
                                 <panel-control-collapse></panel-control-collapse>
@@ -73,14 +73,6 @@
                                             <label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
                                             <div class="col-sm-2">
                                                 <select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
-                                            </div>
-
-                                            <!-- Status combobox -->
-                                            <label class="col-sm-1 control-label" for="selectbasic">Status</label>
-                                            <div class="col-sm-1">
-                                                <select class="form-control" ng-model="search_params.status_type">
-                                                    <option ng-repeat="status_type in status_list">{{ status_type }}</option>
-                                                </select>
                                             </div>
 
                                             <!-- Search button -->

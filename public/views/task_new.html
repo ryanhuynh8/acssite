@@ -27,7 +27,7 @@
         <!-- Textarea -->
         <div class="form-group">
           <label class="col-sm-1 control-label" for="task_description">Task description</label>
-          <div class="col-sm-5">                     
+          <div class="col-sm-5">
             <textarea rows="10" class="form-control" id="task_description" name="task_description" ng-model="task.task_description"></textarea>
           </div>
         </div>
@@ -55,10 +55,10 @@
        <div class="form-group">
             <div class="col-sm-1"></div>
             <div class="col-sm-3">
-                <button class="btn btn-primary" ng-click="submit()">Create task</button>
+                <button id="create_task_button" class="btn btn-primary" ng-click="submit()" onclick="$('#create_task_button').attr('disabled','')">Create task</button>
                 <button class="btn btn-default" ng-click="reset()">Reset fields</button>
             </div>
-        </div>        
+        </div>
     </fieldset>
     </form>
 
