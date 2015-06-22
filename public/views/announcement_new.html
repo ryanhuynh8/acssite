@@ -1,0 +1,55 @@
+<div id="page-heading">
+    <ol class="breadcrumb">
+        <li><a href="#/">Dashboard</a>
+        </li>
+        <li class="active">New Announcement</li>
+    </ol>
+
+    <h1>New Annoucement</h1>
+</div>
+
+<div class="container-fluid" ng-controller="announcementCreateController">
+    <form class="form-horizontal">
+    <fieldset>
+        <!-- Form Name -->
+        <legend>Create a new annoucement</legend>
+
+        <!-- Textarea -->
+        <div class="form-group">
+          <label class="col-md-1 control-label" for="task_description">Announcement description</label>
+          <div class="col-md-5">
+            <textarea rows="10" class="form-control" id="task_description" name="task_description" ng-model="model.task_description"></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-1 control-label">Expiring date</label>
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="model.expired_date" is-open="opened" close-text="Close" />
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <alert ng-show="showAlert" type="{{ alertType }}">{{ alertMsg }}</alert>
+            </div>
+        </div>
+
+       <div class="form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-3">
+                <button id="create_button" class="btn btn-primary" ng-click="submit()" onclick="$('#create_button').attr('disabled','')">Create announcement</button>
+                <button class="btn btn-default" ng-click="reset()">Reset fields</button>
+            </div>
+        </div>
+    </fieldset>
+    </form>
+
+</div>

@@ -44,18 +44,4 @@ angular.module('themeApp.controllers', ['ui.grid'])
                 })
             }
         }
-    ])
-    .controller('announcementController', [
-        '$scope',
-        '$timeout',
-        '$http',
-        '$location',
-        'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
-            $scope.list = [];
-            dataService.getAnnoucementList(function(result, err) {
-                $scope.list = result;
-                //$scope.$apply();
-            });
-        }
     ]);

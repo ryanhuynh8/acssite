@@ -13,8 +13,16 @@ angular
     }, {
       label: 'Tasks',
       iconClasses: 'glyphicon glyphicon-ok',
-      html: '<span class="badge badge-info">7</span>',
-      url: '#/tasks'
+      children: [{
+          label: 'View all tasks',
+          url: '#/tasks'
+        }, {
+          label: 'View all archived tasks',
+          url: '#/tasks/all/completed'
+        }, {
+          label: 'View your archived tasks',
+          url: '#/tasks/completed'
+        }]
     }, {
       label: 'Bonus Apps',
       iconClasses: '',
