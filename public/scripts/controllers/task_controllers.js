@@ -12,7 +12,10 @@ angular.module('themeApp.controllers')
                 templateUrl: 'views/task_edit.html'
             })
             .when('/tasks/view', {
-                templateUrl: 'views/task_view.html'
+                templateUrl: 'views/tasks_archived.html'
+            })
+            .when('/tasks/archived', {
+                templateUrl: 'views/tasks_archived.html'
             });
         }
     ])
@@ -21,8 +24,9 @@ angular.module('themeApp.controllers')
         '$timeout',
         '$http',
         '$location',
+        '$bootbox',
         'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, dataService) {
             var initGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -46,14 +50,7 @@ angular.module('themeApp.controllers')
                         field: 'task_description',
                         width: '*',
                         cellTemplate: 'views/grid_template/cell.text.template.html'
-                    },
-                    // {
-                    //     field: 'status_task_id',
-                    //     cellFilter: 'taskStatusFilter',
-                    //     width: 100,
-                    //     displayName: 'Status'
-                    // },
-                    {
+                    }, {
                         name: 'button',
                         displayName: 'Action',
                         cellTemplate: 'views/grid_template/cell.button.template.html',
@@ -65,8 +62,17 @@ angular.module('themeApp.controllers')
 
             $scope.buttonClickHandler = function($event, row, action) {
                 if (action === 'view') {
-                    dataService.set('task_to_view', row.entity);
-                    $location.path('/tasks/view');
+                    var msg = '<h4><span style="white-space: pre-line">';
+                    msg += row.entity.task_description;
+                    msg += '</span></h4>';
+                    $bootbox.dialog({
+                        size: 'large',
+                        title: 'Task Detail',
+                        message: msg,
+                        onEscape: true,
+                        buttons: {ok:{label: 'OK'}}
+                    });
+
                 }
                 else if (action === 'edit') {
                     dataService.set('task_to_edit', row.entity);
@@ -93,21 +99,39 @@ angular.module('themeApp.controllers')
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
             $scope.showResult = false;
+            $scope.is_archived = false;
 
-            // populate the user list combobox
-            dataService.getUserList(function(result, err) {
-                $scope.user_list = result;
-            });
+            $scope.setLoadMode = function(is_archived) {
+                $scope.is_archived = is_archived;
+            };
 
-            $scope.status_list = ["In-progress", "Completed", "Cancelled"];
+            $scope.loadArchivedGrid = function () {
+                $scope.gridOptions = {
+                    enableColumnMenus: false,
+                    rowHeight: 150,
+                    rowTemplate: 'views/grid_template/row.task.template.html',
+                    enableHorizontalScrollbar: 0,
+                    minRowsToShow: 5,
+                    columnDefs: [{
+                        field: 'created_on',
+                        displayName: 'Posted On',
+                        cellFilter: 'date : \'medium\'',
+                        width: 200
+                    }, {
+                        field: 'poster_fullname',
+                        displayName: 'Assigned By',
+                        width: 150
+                    }, {
+                        field: 'task_description',
+                        width: '*',
+                        cellTemplate: 'views/grid_template/cell.text.template.html'
+                    }],
+                    data: [] // HACK: so that the browser won't give a warning complain
+                };
+                alert('foo');
+            }
 
-            $timeout(function() {
-                $('[data-toggle="tooltip"]').tooltip({
-                    'placement': 'top'
-                });
-            });
-
-            var initGrid = function() {
+            var loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
                     rowHeight: 150,
@@ -135,6 +159,18 @@ angular.module('themeApp.controllers')
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
+
+                dataService.getTaskByUser(function (result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    if (err !== undefined)
+                    {
+                        $bootbox.alert({
+                            size: 'small',
+                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                        });
+                    }
+                });
             };
 
             $scope.getRowStyle = function(row) {
@@ -149,35 +185,42 @@ angular.module('themeApp.controllers')
                 var el = angular.element($event.toElement);
 
                 if (action === 'mark_as_read') {
+                    // note: we are not handling any error here
+                    $http.post(dataService.getApiUrl('/api/task/readed'), row.entity);
                     row.entity.readed = true;
                     el.attr('disabled', '');
                 }
                 else if (action === 'mark_as_completed') {
-                    var index = $scope.gridOptions.data.indexOf(row.entity);
-                    $scope.gridOptions.data.splice(index, 1);
-                    // el.closest('.ui-grid-row')
-                    //   .animate({
-                    //         opacity: '0.0',
-                    //     }, 1000, function() {
-                    //         console.log('completed');
-
-                    //     });
+                    row.entity.task_description = 'Archiving, please wait...';
+                    $http.post(dataService.getApiUrl('/api/task/archive'), row.entity)
+                        .then(function(result){
+                            var index = $scope.gridOptions.data.indexOf(row.entity);
+                            $scope.gridOptions.data.splice(index, 1);
+                        })
                 }
             };
 
             $scope.dataLoaded = false;
-            initGrid();
+            if ($scope.is_archived)
+            {
+                loadArchivedGrid();
+            }
+            else
+            {
+                loadGrid();
+            }
 
-            dataService.getTaskByUser(function (result, err) {
-                $scope.gridOptions.data = result;
-                $scope.dataLoaded = true;
-                if (err !== undefined)
-                {
-                    $bootbox.alert({
-                        size: 'small',
-                        message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                    });
-                }
+            // populate the user list combobox
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+            });
+
+            $scope.status_list = ["In-progress", "Completed", "Cancelled"];
+
+            $timeout(function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    'placement': 'top'
+                });
             });
 
             $scope.quickSearch = function() {
@@ -202,7 +245,6 @@ angular.module('themeApp.controllers')
                 $scope.search_params = {};
                 $scope.showResult = false;
             };
-
 
         }
     ])

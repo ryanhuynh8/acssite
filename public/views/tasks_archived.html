@@ -1,0 +1,32 @@
+<div id="page-heading">
+	<ol class="breadcrumb">
+		<li><a href="#/">Dashboard</a>
+		</li>
+		<li class="active">Archived Task List</li>
+	</ol>
+
+	<h1>Task List</h1>
+	<div class="options">
+		<div class="btn-toolbar">
+			<div class="btn-group" dropdown>
+				<button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+					Export as <span class="caret"></span>
+				</button>
+			</div>
+			<a href="#" class="btn btn-default hidden-xs"><i class="glyphicon glyphicon-cog"></i></a>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid" ng-controller="taskController">
+	<div class="row">
+		<div class="col-md-12">
+			<div id="mainGrid" ui-grid="gridOptions" class="grid" ng-init="setLoadMode(true)">
+
+			</div>
+			<div class="panel-loading" ng-hide="dataLoaded">
+				<div class="panel-loader-circular"></div>
+			</div>
+		</div>
+	</div>
+</div>

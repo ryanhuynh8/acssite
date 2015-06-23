@@ -18,10 +18,10 @@ angular
           url: '#/tasks'
         }, {
           label: 'View all archived tasks',
-          url: '#/tasks/all/completed'
+          url: '#/tasks/all/archived'
         }, {
           label: 'View your archived tasks',
-          url: '#/tasks/completed'
+          url: '#/tasks/archived'
         }]
     }, {
       label: 'Bonus Apps',
