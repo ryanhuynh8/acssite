@@ -11,12 +11,13 @@ angular.module('themeApp.controllers')
             .when('/tasks/edit', {
                 templateUrl: 'views/task_edit.html'
             })
-            .when('/tasks/view', {
-                templateUrl: 'views/tasks_archived.html'
-            })
             .when('/tasks/archived', {
                 templateUrl: 'views/tasks_archived.html'
+            })
+            .when('/tasks/all/archived', {
+                templateUrl: 'views/tasks_archived_all.html'
             });
+
         }
     ])
     .controller('taskAdminController', [
@@ -102,10 +103,21 @@ angular.module('themeApp.controllers')
             $scope.is_archived = false;
 
             $scope.setLoadMode = function(is_archived) {
-                $scope.is_archived = is_archived;
+                if (is_archived)
+                {
+                    loadArchivedGrid();
+                }
+                else
+                {
+                    loadGrid();
+                }
             };
 
-            $scope.loadArchivedGrid = function () {
+            $scope.foo = function() {
+                console.log('aa');
+            };
+
+            var loadArchivedGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
                     rowHeight: 150,
@@ -128,7 +140,17 @@ angular.module('themeApp.controllers')
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
-                alert('foo');
+                dataService.getArchivedTaskByUser(function (result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    if (err !== undefined)
+                    {
+                        $bootbox.alert({
+                            size: 'small',
+                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                        });
+                    }
+                });
             }
 
             var loadGrid = function() {
@@ -201,14 +223,6 @@ angular.module('themeApp.controllers')
             };
 
             $scope.dataLoaded = false;
-            if ($scope.is_archived)
-            {
-                loadArchivedGrid();
-            }
-            else
-            {
-                loadGrid();
-            }
 
             // populate the user list combobox
             dataService.getUserList(function(result, err) {
@@ -223,8 +237,13 @@ angular.module('themeApp.controllers')
                 });
             });
 
-            $scope.quickSearch = function() {
+            $scope.quickSearch = function(is_search_archive) {
                 $scope.dataLoaded = false;
+                if (is_search_archive)
+                {
+                    $scope.search_params.status = 21;
+                }
+
                 dataService.findTaskWithOptions($scope.search_params, function (result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;

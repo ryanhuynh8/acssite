@@ -181,9 +181,29 @@ angular
         });
     };
 
+    this.getArchivedTaskByUser = function(cb) {
+      var result, err;
+      $http.get(HOST_URL + '/api/task/list/archived')
+        .success(function(data) {
+          result = data;
+          angular.forEach(result, function(row) {
+              if (row.poster)
+                row.poster_fullname = row.poster.first_name + ' ' + row.poster.last_name;
+              else
+                return "none";
+          });
+        })
+        .catch(function(error) {
+          err = error;
+        })
+        .finally(function() {
+          cb(result, err);
+        });
+    };
+
     this.getAllTask = function(cb) {
       var result, err;
-      $http.get(HOST_URL + '/api/task/list/all')
+      $http.get(HOST_URL + '/api/task/all/list')
         .success(function(data) {
           result = data;
           angular.forEach(result, function(row) {

@@ -18,15 +18,49 @@
 	</div>
 </div>
 
-<div class="container-fluid" ng-controller="taskController">
+<div class="container-fluid" ng-controller="taskController" ng-init="setLoadMode(true)">
 	<div class="row">
 		<div class="col-md-12">
-			<div id="mainGrid" ui-grid="gridOptions" class="grid" ng-init="setLoadMode(true)">
+		<panel heading="Your archived task" panel-class="panel-default">
+			<panel-controls>
+				<panel-control-collapse></panel-control-collapse>
+			</panel-controls>
+				<div id="searchForm">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="row">
+								<!-- Task Description textbox -->
+								<label class="col-sm-1 control-label" for="textinput">Task Description</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" ng-model="search_params.task_description"/>
+								</div>
+								<!-- Assigned By combobox -->
+								<label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
+								<div class="col-sm-2">
+									<select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
+								</div>
 
-			</div>
-			<div class="panel-loading" ng-hide="dataLoaded">
-				<div class="panel-loader-circular"></div>
-			</div>
+								<!-- Search button -->
+								<button ng-click="quickSearch(true)" class="btn btn-info col-sm-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
+								<button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
+							</div>
+							<br/>
+							<div class="row" style="margin-left: 10px; margin-right: 10px">
+								<alert ng-show="showResult" type="success">{{ resultMsg }}</alert>
+							</div>
+							<br/>
+							<div class="row">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="mainGrid" ui-grid="gridOptions" class="grid">
+
+				</div>
+				<div class="panel-loading" ng-hide="dataLoaded">
+					<div class="panel-loader-circular"></div>
+				</div>
+			</panel>
 		</div>
 	</div>
 </div>

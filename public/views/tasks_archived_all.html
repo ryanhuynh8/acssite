@@ -2,10 +2,10 @@
 	<ol class="breadcrumb">
 		<li><a href="#/">Dashboard</a>
 		</li>
-		<li class="active">Task List</li>
+		<li class="active">Archived Task List</li>
 	</ol>
 
-	<h1>Task List</h1>
+	<h1i>Archived Task List</h1>
 	<div class="options">
 		<div class="btn-toolbar">
 			<div class="btn-group" dropdown>
@@ -18,7 +18,7 @@
 	</div>
 </div>
 
-<div class="container-fluid" ng-controller="taskAdminController	">
+<div class="container-fluid" ng-controller="taskAdminController" ng-init="setLoadMode(true)">
 	<div class="row">
 		<div class="col-md-12">
 			<div id="mainGrid" ui-grid="gridOptions" class="grid">

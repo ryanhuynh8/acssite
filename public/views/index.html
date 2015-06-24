@@ -38,7 +38,7 @@
                     <div class="col-sm-11">
                         <h4 style="margin-top: 0px; margin-bottom: 40px; font-family: Verdana, Menlo">
                             <span ng-bind-html="item.announcements_description"/>
-                            <br>
+                            <br/>
                             <small>
                                 {{ item.heading }}
                                 <a href="javascript:void(0);" ng-click="delete(item.id)">[Delete]</a>
@@ -50,19 +50,24 @@
         </div>
         <div class="col-md-4">
             <a href="http://www.accuweather.com/en/us/houston-tx/77002/current-weather/351197" class="aw-widget-legal"></a>
-            <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true"></div>
+            <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true">
+
+            </div>
             <script type="text/javascript" src="scripts/launch.js"></script>
         </div>
     </div>
+
+    <br/>
+
     <div class="row">
         <div class="col-md-12">
-            <div ng-controller="taskController" ng-init="loadGrid()">
+            <div ng-controller="taskController" ng-init="setLoadMode(false)">
                 <div class="row">
                     <div class="col-md-12">
                         <panel heading="Tasks assigned to you" panel-class="panel-default">
                             <panel-controls>
                                 <panel-control-collapse></panel-control-collapse>
-                            </panel-controls    >
+                            </panel-controls>
                             <div id="searchForm">
                                 <form class="form-horizontal">
                                     <div class="form-group">
@@ -124,71 +129,22 @@
             </div>
        </div>
     </div>
-    <div class="col-md-4">
 
-    </div>
+    <div class="row">
+        <div class="col-md-12" ng-drop="true">
+            <panel panel-class="panel-default" ng-drag="true" heading="Calendar">
+                <panel-controls>
+                    <panel-control-collapse></panel-control-collapse>
+                    <panel-control-title></panel-control-title>
+                    <panel-control-colors></panel-control-colors>
+                </panel-controls>
 
-
-</div>
-
-<div class="row">
-    <div class="col-md-6">
-
-
-    </div>
-    <div class="col-md-6" ng-drop="true">
-        <panel panel-class="panel-default no-padding" ng-drag="true" heading="User Accounts">
-            <panel-controls>
-                <panel-control-collapse></panel-control-collapse>
-                <panel-control-title></panel-control-title>
-                <panel-control-colors></panel-control-colors>
-            </panel-controls>
-
-            <div class="table-responsive">
-                <table class="table" style="margin-bottom: 0px;">
-                    <tbody class="selects">
-                        <tr ng-repeat="ua in accountsInRange()">
-                            <td class="col-xs-1"><img ng-src="assets/demo/avatar/{{ua.picture}}" alt="jackson" class="img-circle" style="width: 30px; height: 30px;">
-                                <td class="col-xs-8">{{ua.name}}</td>
-                                <td class="col-xs-3 text-right">
-                                    <div class="btn-group">
-                                        <button class="btn btn-sm btn-default" ng-click="uaHandle($index)"><i class="glyphicon glyphicon-ok"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-default" ng-click="uaHandle($index)"><i class="glyphicon glyphicon-remove"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="active">
-                            <td colspan="4" class="text-left" style="background: none;">
-                                <div class="clearfix">
-                                    <div class="pull-right">
-                                        <pagination class="mb0 pagination-sm" boundary-links="false" total-items="userAccounts.length-6" ng-model="currentPage" items-per-page="itemsPerPage" previous-text="&lsaquo;" next-text="&rsaquo;" class="pull-right"></pagination>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </panel>
-
-        <panel panel-class="panel-default" ng-drag="true" heading="Calendar">
-            <panel-controls>
-                <panel-control-collapse></panel-control-collapse>
-                <panel-control-title></panel-control-title>
-                <panel-control-colors></panel-control-colors>
-            </panel-controls>
-
-            <div ng-controller="CalendarController">
-                <div data-full-calendar="{ events: demoEvents }" ng-model="demoEvents"></div>
-            </div>
-        </panel>
-    </div>
-    <div class="col-md-6">
-
+                <div ng-controller="CalendarController">
+                    <div data-full-calendar="{ events: demoEvents }" ng-model="demoEvents"></div>
+                </div>
+            </panel>
+        </div>
     </div>
 </div>
+
 <!-- container-fluid -->

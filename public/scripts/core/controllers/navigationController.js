@@ -24,6 +24,14 @@ angular
           url: '#/tasks/archived'
         }]
     }, {
+      label: 'Employee Management',
+      iconClasses: 'glyphicon glyphicon-user',
+      children: [{
+        label: 'Add new employee'
+      }, {
+        label: 'View employee information'
+      }]
+    }, {
       label: 'Bonus Apps',
       iconClasses: '',
       separator: true
