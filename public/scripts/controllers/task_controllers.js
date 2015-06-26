@@ -37,6 +37,13 @@ angular.module('themeApp.controllers')
                     loadGrid();
             };
 
+            function showDatabaseErrorMessage() {
+                $bootbox.alert({
+                    size: 'small',
+                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                });
+            }
+
             var loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -71,6 +78,10 @@ angular.module('themeApp.controllers')
                 dataService.getAllTask(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
+                    if (err !== undefined)
+                    {
+                        showDatabaseErrorMessage();
+                    }
                 });
 
             };
@@ -104,6 +115,10 @@ angular.module('themeApp.controllers')
                 dataService.getAllArchivedTask(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
+                    if (err !== undefined)
+                    {
+                        showDatabaseErrorMessage();
+                    }
                 });
             };
 
@@ -147,19 +162,14 @@ angular.module('themeApp.controllers')
                 {
                     $scope.search_params.status = 21;
                 }
-
                 dataService.findTaskWithOptions($scope.search_params, function (result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
                     $scope.showResult = true;
                     $scope.resultMsg = 'Found ' + result.length + ' record(s).';
-
                     if (err !== undefined)
                     {
-                        $bootbox.alert({
-                            size: 'small',
-                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                        });
+                        showDatabaseErrorMessage();
                     }
                 });
             };
@@ -193,6 +203,13 @@ angular.module('themeApp.controllers')
                 }
             };
 
+            function showDatabaseErrorMessage() {
+                $bootbox.alert({
+                    size: 'small',
+                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+                });
+            }
+
            var loadArchivedGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -221,13 +238,10 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        $bootbox.alert({
-                            size: 'small',
-                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                        });
+                        showDatabaseErrorMessage();
                     }
                 });
-            }
+            };
 
             var loadGrid = function() {
                 $scope.gridOptions = {
@@ -263,10 +277,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        $bootbox.alert({
-                            size: 'small',
-                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                        });
+                        showDatabaseErrorMessage();
                     }
                 });
             };
@@ -326,10 +337,7 @@ angular.module('themeApp.controllers')
 
                     if (err !== undefined)
                     {
-                        $bootbox.alert({
-                            size: 'small',
-                            message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                        });
+                        showDatabaseErrorMessage();
                     }
                 });
             };

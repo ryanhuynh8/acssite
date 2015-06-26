@@ -34,7 +34,7 @@ angular
                 var notification = new $window.PNotify(args);
                 notification.notify = notification.update;
                 return notification;
-            },
+            }
         };
     }])
     .factory('$bootbox', ['$modal', '$window', function($modal, $window) {
@@ -124,19 +124,19 @@ angular
                 else
                     return "none";
             });
-        }
+        };
 
         this.get = function(key) {
             return data[key];
-        }
+        };
 
         this.set = function(key, value) {
             data[key] = value;
-        }
+        };
 
         this.getApiUrl = function(path_to_api) {
             return HOST_URL + path_to_api;
-        }
+        };
 
         this.getUserList = function(cb) {
             var result, err;

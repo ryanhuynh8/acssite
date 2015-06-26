@@ -21,7 +21,7 @@
 <div class="container-fluid" ng-controller="taskAdminController" ng-init="setLoadMode(true)">
 	<div class="row">
 		<div class="col-md-12">
-		<panel heading="Your archived task" panel-class="panel-default">
+		<panel heading="Archived tasks" panel-class="panel-default">
 			<panel-controls>
 				<panel-control-collapse></panel-control-collapse>
 			</panel-controls>
@@ -29,20 +29,28 @@
 					<form class="form-horizontal">
 						<div class="form-group">
 							<div class="row">
-								<!-- Task Description textbox -->
-								<label class="col-sm-1 control-label" for="textinput">Task Description</label>
-								<div class="col-md-3">
+								<!-- Task Description te	xtbox -->
+								<label class="col-md-1 control-label" for="textinput">Task Description</label>
+								<div class="col-md-2">
 									<input type="text" class="form-control" ng-model="search_params.task_description"/>
 								</div>
 								<!-- Assigned By combobox -->
-								<label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
-								<div class="col-sm-2">
+								<label class="col-md-1 control-label" for="selectbasic">Assigned By</label>
+								<div class="col-md-2">
 									<select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
 								</div>
-
+								<!-- Assign To combobox -->
+								<label class="col-md-1 control-label" for="selectbasic">Assigned To</label>
+								<div class="col-md-2">
+									<select ng-model="search_params.assignee" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
+								</div>
 								<!-- Search button -->
-								<button ng-click="quickSearch(true)" class="btn btn-info col-sm-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
-								<button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
+								<button ng-click="quickSearch(true)" class="btn btn-info col-md-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px">
+									<i class="glyphicon glyphicon-search"/>
+								</button>
+								<button ng-click="reset()" class="btn btn-brown col-md-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px">
+									<i class="glyphicon glyphicon-refresh"/>
+								</button>
 							</div>
 							<br/>
 							<div class="row" style="margin-left: 10px; margin-right: 10px">
