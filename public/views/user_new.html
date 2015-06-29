@@ -1,0 +1,181 @@
+<div id="page-heading">
+	<ol class="breadcrumb">
+		<li><a href="#/">Dashboard</a></li>
+		<li class="active">User</li>
+	</ol>
+
+	<h1>Add new user</h1>
+	<div class="options">
+		<div class="btn-toolbar">
+			<a href="#" class="btn btn-default hidden-xs"><i class="glyphicon glyphicon-cog"></i></a>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid" ng-controller="userController">
+	<form class="form-horizontal row-border" name="userForm" novalidate>
+		<panel panel-class="panel-midnightblue" heading="Personal information">
+			<div class="form-group has-error">
+				<label class="col-sm-3 control-label">First Name</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="first_name" ng-model="user.first_name" required>
+					<span class="help-block" ng-show="userForm.first_name.$invalid">This field is required</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Middle Name</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.middle_name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Last Name</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.last_name" required>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Sex</label>
+				<div class="col-sm-6">
+					<div class="radio">
+						<label>
+							<input icheck type="radio" name="optionsRadios" value="male" checked ng-model="user.sex">
+							Male
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input icheck type="radio" name="optionsRadios" value="female" ng-model="user.sex">
+							Female
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Address</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.address">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">State</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.state">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">City</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.city">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Zipcode</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.zip">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Phone Number #1</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.phone1">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Phone Number #2</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.phone2">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Email</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.email">
+				</div>
+			</div>
+		</panel>
+		<panel panel-class="panel-midnightblue" heading="Login information">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Username</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.user_name">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Password</label>
+				<div class="col-sm-6">
+					<input type="password" class="form-control" ng-model="user.password">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Confirm Password</label>
+				<div class="col-sm-6">
+					<input type="password" class="form-control" ng-model="user.confirm_password">
+				</div>
+			</div>
+		</panel>
+		<panel panel-class="panel-midnightblue" heading="Confidential information">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Social Security Number</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" ng-model="user.ss_number">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">DOB</label>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.dob" is-open="openedDOB" close-text="Close" />
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="openDOB($event)"><i class="glyphicon glyphicon-calendar"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Date Hired</label>
+				<div class="col-sm-6">
+					<div class="input-group">
+						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.date_hired" is-open="openedDateHired" close-text="Close" />
+						<div class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="openDateHired($event)"><i class="glyphicon glyphicon-calendar"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Employee Type</label>
+				<div class="col-sm-6">
+					<div class="radio">
+						<label>
+							<input icheck type="radio" name="optionsRadios" id="optionsRadios1" value="0" checked ng-model="user.employee_type">
+							Contractor
+						</label>
+					</div>
+					<div class="radio">
+						<label>
+							<input icheck type="radio" name="optionsRadios" id="optionsRadios2" value="1" ng-model="user.employee_type">
+							Full-Time
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-sm-6 col-sm-offset-3">
+						<div class="btn-toolbar">
+							<button class="btn-primary btn" ng-click="addUser()">Submit</button>
+							<button class="btn-default btn">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</panel>
+
+
+
+		</form>
+</div>
+
