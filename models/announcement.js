@@ -27,5 +27,8 @@ var Announcement = module.exports = sq.define('Announcement', {
   }
 }, {
   tableName: 'tbl_announcements',
-  timestamps: false,
+  timestamps: true,
+  deletedAt: false,
+  updatedAt: false,
+  createdAt: 'post_on_date'
 });

@@ -24,7 +24,7 @@ var Task = module.exports = sq.define('Task', {
     },
     due_date: {
         type: Sequelize.DATE,
-        allowNull: true,
+        allowNull: true,    
     },
     complete_date: {
         type: Sequelize.DATE,

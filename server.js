@@ -11,7 +11,7 @@ var api = require('./api');
 
 app.use(session({
   store: new RedisStore({
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 6379,
   }),
   secret: '2,M@bQ2T&U~fnMH`U"r=3kMe}|1,2A',

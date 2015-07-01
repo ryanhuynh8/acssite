@@ -1,7 +1,0 @@
-- Add new announcement feature
-- Remove unnessary buttons in task panel
-- Check for both posted_on_date and expire_date
-- Check for IE compatibility
-- Check for iPhone viewing compatibility
-- Task description box auto big big, remove scroll
-- Logo
