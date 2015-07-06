@@ -13,13 +13,12 @@
 </div>
 
 <div class="container-fluid" ng-controller="userController">
-	<form class="form-horizontal row-border" name="userForm" novalidate>
+	<form class="form-horizontal row-border" name="userForm" ng-submit="submit()" novalidate>
 		<panel panel-class="panel-midnightblue" heading="Personal information">
-			<div class="form-group has-error">
+			<div class="form-group">
 				<label class="col-sm-3 control-label">First Name</label>
 				<div class="col-sm-6">
 					<input type="text" class="form-control" name="first_name" ng-model="user.first_name" required>
-					<span class="help-block" ng-show="userForm.first_name.$invalid">This field is required</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -39,13 +38,13 @@
 				<div class="col-sm-6">
 					<div class="radio">
 						<label>
-							<input icheck type="radio" name="optionsRadios" value="male" checked ng-model="user.sex">
+							<input icheck type="radio" value="male" checked ng-model="user.sex">
 							Male
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input icheck type="radio" name="optionsRadios" value="female" ng-model="user.sex">
+							<input icheck type="radio" value="female" ng-model="user.sex">
 							Female
 						</label>
 					</div>
@@ -54,31 +53,31 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Address</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.address">
+					<input type="text" class="form-control" ng-model="user.address" required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">State</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.state">
+					<input type="text" class="form-control" ng-model="user.state" require>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">City</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.city">
+					<input type="text" class="form-control" ng-model="user.city" required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Zipcode</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.zip">
+					<input type="text" class="form-control" ng-model="user.zip" required>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Phone Number #1</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.phone1">
+					<input type="text" class="form-control" ng-model="user.phone1" required>
 				</div>
 			</div>
 			<div class="form-group">
@@ -90,7 +89,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Email</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.email">
+					<input type="email" class="form-control" ng-model="user.email" required>
 				</div>
 			</div>
 		</panel>
@@ -98,7 +97,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Username</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.user_name">
+					<input type="text" class="form-control" ng-model="user.user_name" required>
 				</div>
 			</div>
 			<div class="form-group">
@@ -150,24 +149,30 @@
 				<div class="col-sm-6">
 					<div class="radio">
 						<label>
-							<input icheck type="radio" name="optionsRadios" id="optionsRadios1" value="0" checked ng-model="user.employee_type">
+							<input icheck type="radio" id="optionsRadios1" value="0" checked ng-model="user.employee_type">
 							Contractor
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input icheck type="radio" name="optionsRadios" id="optionsRadios2" value="1" ng-model="user.employee_type">
+							<input icheck type="radio" id="optionsRadios2" value="1" ng-model="user.employee_type">
 							Full-Time
 						</label>
 					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-6">
+					<alert ng-show="showError" type="danger"><span style="white-space:pre">{{ errorMsg }}</span></alert>
 				</div>
 			</div>
 			<div class="panel-footer">
 				<div class="row">
 					<div class="col-sm-6 col-sm-offset-3">
 						<div class="btn-toolbar">
-							<button class="btn-primary btn" ng-click="addUser()">Submit</button>
-							<button class="btn-default btn">Cancel</button>
+							<button type="submit" class="btn-primary btn">Submit</button>
+							<button type="reset" class="btn-default btn">Reset</button>
 						</div>
 					</div>
 				</div>
@@ -176,6 +181,6 @@
 
 
 
-		</form>
+	</form>
 </div>
 
