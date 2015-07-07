@@ -37,13 +37,6 @@ angular.module('themeApp.controllers')
                     loadGrid();
             };
 
-            function showDatabaseErrorMessage() {
-                $bootbox.alert({
-                    size: 'small',
-                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                });
-            }
-
             var loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -80,7 +73,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
 
@@ -117,7 +110,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -169,7 +162,7 @@ angular.module('themeApp.controllers')
                     $scope.resultMsg = 'Found ' + result.length + ' record(s).';
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -203,13 +196,6 @@ angular.module('themeApp.controllers')
                 }
             };
 
-            function showDatabaseErrorMessage() {
-                $bootbox.alert({
-                    size: 'small',
-                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                });
-            }
-
            var loadArchivedGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -238,7 +224,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -277,7 +263,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -337,7 +323,7 @@ angular.module('themeApp.controllers')
 
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);;
                     }
                 });
             };

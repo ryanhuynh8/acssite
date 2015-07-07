@@ -38,13 +38,20 @@ angular.module('themeApp.controllers')
             $scope.alertType = 'success';
             $scope.alertMsg = '';
 
-            $scope.open = function($event) {
+            $scope.open1 = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-
-                if ($scope.opened) $scope.opened = false;
+                if ($scope.opened1) $scope.opened1 = false;
                 else
-                    $scope.opened = true;
+                    $scope.opened1 = true;
+            };
+
+            $scope.open2 = function($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                if ($scope.opened2) $scope.opened2 = false;
+                else
+                    $scope.opened2 = true;
             };
 
             $scope.reset = function() {

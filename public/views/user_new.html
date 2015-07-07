@@ -25,7 +25,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Middle Name</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.middle_name">
+					<input type="text" class="form-control" ng-model="user.middle_name" name="">
 				</div>
 			</div>
 			<div class="form-group">
@@ -54,13 +54,13 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Address</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.address">
+					<input type="text" class="form-control" ng-model="user.address" name="user.address">
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="col-sm-3 control-label">State</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.state">
+					<input type="text" class="form-control" ng-model="user.state" name="user.state">
 				</div>
 			</div>
 			<div class="form-group">
@@ -162,11 +162,17 @@
 					</div>
 				</div>
 			</div>
+	        <div class="form-group">
+	            <div class="col-sm-3"></div>
+	            <div class="col-sm-6">
+	                <alert ng-show="showAlert" type="danger">{{ errorMsg }}</alert>
+	            </div>
+	        </div>
 			<div class="panel-footer">
 				<div class="row">
 					<div class="col-sm-6 col-sm-offset-3">
 						<div class="btn-toolbar">
-							<button class="btn-primary btn" ng-click="addUser()">Submit</button>
+							<button class="btn-primary btn" ng-click="submit()">Submit</button>
 							<button class="btn-default btn">Cancel</button>
 						</div>
 					</div>
