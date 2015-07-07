@@ -124,9 +124,9 @@
 				<label class="col-sm-3 control-label">DOB</label>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.dob" is-open="openedDOB" close-text="Close" />
+						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.dob" is-open="opened1" close-text="Close" />
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="openDOB($event)"><i class="glyphicon glyphicon-calendar"></i>
+							<button type="button" class="btn btn-default" ng-click="open1($event)"><i class="glyphicon glyphicon-calendar"></i>
 							</button>
 						</div>
 					</div>
@@ -136,9 +136,9 @@
 				<label class="col-sm-3 control-label">Date Hired</label>
 				<div class="col-sm-6">
 					<div class="input-group">
-						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.date_hired" is-open="openedDateHired" close-text="Close" />
+						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.date_hired" is-open="opened2" close-text="Close" />
 						<div class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="openDateHired($event)"><i class="glyphicon glyphicon-calendar"></i>
+							<button type="button" class="btn btn-default" ng-click="open2($event)"><i class="glyphicon glyphicon-calendar"></i>
 							</button>
 						</div>
 					</div>
@@ -172,7 +172,8 @@
 					<div class="col-sm-6 col-sm-offset-3">
 						<div class="btn-toolbar">
 							<button type="submit" class="btn-primary btn">Submit</button>
-							<button type="reset" class="btn-default btn">Reset</button>
+							<a href="#/users"><button type="submit" class="btn-default btn" ng-show="mode==='edit'">Back to list</button></a>
+							<button type="reset" class="btn-default btn" ng-hide="mode==='edit'">Reset</button>
 						</div>
 					</div>
 				</div>

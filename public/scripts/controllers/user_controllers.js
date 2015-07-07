@@ -2,8 +2,11 @@ angular.module('themeApp.controllers')
     /* route setup */
     .config(['$routeProvider', function($routeProvider) {
         $routeProvider
-            .when('/users/new', {
+            .when('/user/new', {
                 templateUrl: 'views/user_new.html'
+            })
+            .when('/user/edit', {
+                templateUrl: 'views/user_new.html' // template re-use xP
             })
             .when('/users', {
                 templateUrl: 'views/users.html'
@@ -17,40 +20,36 @@ angular.module('themeApp.controllers')
         '$location',
         '$bootbox',
         'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.dataLoaded = false;
             $scope.showError = false;
             $scope.user = {};
             $scope.errorMsg = '';
+
             // default values
             $scope.user.sex = 0;
             $scope.user.employee_type = 0;
 
-            $scope.openDOB = function($event) {
+            $scope.open1 = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-                if ($scope.openedDOB) $scope.openedDOB = false;
-                else
-                    $scope.openedDOB = true;
+                $scope.opened1 = true;
 
             };
 
-            $scope.openDateHired = function($event) {
+            $scope.open2 = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-                if ($scope.openedDateHired) $scope.openedDateHired = false;
-                else
-                    $scope.openedDateHired = true;
+                $scope.opened2 = true;
             };
-
 
             $scope.submit = function () {
                 if (!validate()) return;
                 $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
                     .then(function(result) {
-                        alert('success');
                         $scope.showAlert = false;
-                        $location.path('/');
+                        alert('New user added!');
+                        $location.path('/users');
                     })
                     .catch(function(err) {
                         $scope.showAlert = true;
@@ -61,7 +60,7 @@ angular.module('themeApp.controllers')
             $scope.loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
-                    rowHeight: 30,
+                    rowHeight: 45   ,
                     enableHorizontalScrollbar: 0,
                     minRowsToShow: 20,
                     columnDefs: [{
@@ -91,6 +90,11 @@ angular.module('themeApp.controllers')
                         cellFilter: 'employeeTypeFilter',
                         displayName: 'Employee Type',
                         width: 150
+                    }, {
+                        name: 'button',
+                        displayName: 'Action',
+                        cellTemplate: 'views/grid_template/cell.user.button.template.html',
+                        width: 300
                     }],
                     data: []
                 };
@@ -105,8 +109,9 @@ angular.module('themeApp.controllers')
             var validate = function() {
                 var user = $scope.user;
                 var email_regex = /\S+@\S+/;
-                $scope.errorMsg = '';
 
+                $scope.showErorr = false;
+                $scope.errorMsg = '';
                 // check for required
                 if (!user.first_name) $scope.errorMsg += 'Please enter the first name.\n';
                 if (!user.last_name) $scope.errorMsg += 'Please enter the last name.\n';
@@ -128,15 +133,29 @@ angular.module('themeApp.controllers')
                 {
                     $scope.showError = true;
                 }
+
+                if ($scope.errorMsg !== '') return false;
+                else return true;
             };
 
-            $scope.submit = function () {
-                validate();
-                console.log($scope.user);
-            }
+            $scope.buttonClickHandler = function($event, row, action) {
+                if (action === 'edit')
+                {
+                    dataService.set('user_to_edit', row.entity);
+                    dataService.set('user_load_mode', 'edit');
+                    $location.path('/user/edit');
+                }
+            };
 
             function isNumeric(n) {
                 return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+
+            var mode = dataService.get('user_load_mode');
+            $scope.mode = mode;
+            if (mode === 'edit')
+            {
+                $scope.user = dataService.get('user_to_edit');
             }
         }
     ]);

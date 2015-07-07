@@ -28,7 +28,7 @@ angular
       iconClasses: 'glyphicon glyphicon-user',
       children: [{
         label: 'Add new employee',
-        url: '#/users/new'
+        url: '#/user/new'
       }, {
         label: 'Employee List',
         url:'#/users'
