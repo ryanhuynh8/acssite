@@ -302,7 +302,7 @@ router.post('/task/archive', function(req, res) {
     });
 });
 
-// UPDATE TASK DETAILS: /api/task/update
+// UPDATE TASK DETAILS
 router.post('/task/update', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
   // TODO: confirm task's owner or admin
@@ -345,7 +345,7 @@ router.post('/task/update', function(req, res) {
     });
 });
 
-// LIST ALL USER: /api/user/list
+// LIST ALL USER
 router.get('/user/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
@@ -354,7 +354,39 @@ router.get('/user/list', function(req, res) {
   }).then(function(users) {
     res.json(users);
     res.end();
+  }); 
+});
+
+// LIST ALL USER WITH FULL INFORMATION
+router.get('/user/list_fullinfo', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  User.findAll({
+  }).then(function(users) {
+    res.json(users);
+    res.end();
   });
+});
+
+// ADD NEW USER
+router.post('/user/new', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  
+  var model = req.body;
+  // TODO: check for duplicate user_name before processing
+  User.create(model)
+      .then(function(result){
+        res.status(201);
+        res.json({ message: 'success' });
+      })
+      .catch(function(err) {
+        res.status(503);
+        res.json({ message: err });
+        console.log(err);
+      })
+      .finally(function() {
+        res.end();
+      });
 });
 
 // LOGIN: /api/auth/<username>
@@ -405,7 +437,7 @@ router.post('/auth', function(req, res) {
     });
 });
 
-// LIST ALL ANNOUNCEMENT BEFORE THE EXPIRING DATE
+// LIST ALL ANNOUNCEMENT BEFORE THE EXPIRING DATE AND AFTER THE POST_ON DATE
 router.get('/announcement/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
@@ -413,9 +445,12 @@ router.get('/announcement/list', function(req, res) {
     where: {
       expired_date: {
         $gte: moment().format()
+      },
+      post_on_date: {
+        $lte: moment().format()
       }
     },
-    order: 'post_on_date DESC'
+    order: 'create_on DESC'
   }).then(function(list) {
     res.json(list);
     res.end();
@@ -439,7 +474,8 @@ router.post('/announcement/new', function(req, res) {
     var new_announcement = {};
     new_announcement.expired_date = model.expired_date;
     new_announcement.announcements_description = model.task_description;
-
+    new_announcement.post_on_date = model.post_on_date;
+    
     Announcement.create(new_announcement)
       .then(function(result){
         res.status(201);

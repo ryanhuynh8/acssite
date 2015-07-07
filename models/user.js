@@ -84,7 +84,10 @@ var User = module.exports = sq.define('User',{
     },
     builder_deduction: {
         type: Sequelize.DECIMAL(10,2)
-    }    
+    },
+    employee_type: {
+        type: Sequelize.INTEGER(2)
+    }
 },{
     tableName: 'tbl_users',
     timestamps: false
