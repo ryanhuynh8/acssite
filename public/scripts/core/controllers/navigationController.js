@@ -27,9 +27,11 @@ angular
       label: 'Employee Management',
       iconClasses: 'glyphicon glyphicon-user',
       children: [{
-        label: 'Add new employee'
+        label: 'Add new employee',
+        url: '#/user/new'
       }, {
-        label: 'View employee information'
+        label: 'Employee List',
+        url:'#/users'
       }]
     }, {
       label: 'Bonus Apps',

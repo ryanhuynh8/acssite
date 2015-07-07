@@ -37,13 +37,6 @@ angular.module('themeApp.controllers')
                     loadGrid();
             };
 
-            function showDatabaseErrorMessage() {
-                $bootbox.alert({
-                    size: 'small',
-                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                });
-            }
-
             var loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -80,7 +73,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
 
@@ -117,7 +110,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -125,17 +118,16 @@ angular.module('themeApp.controllers')
 
             $scope.buttonClickHandler = function($event, row, action) {
                 if (action === 'view') {
-                    var msg = '<h4><span style="white-space: pre-line">';
+                    var msg = '<h4><span style="white-space: pre-line; font-family: Verdana">';
                     msg += row.entity.task_description;
                     msg += '</span></h4>';
                     $bootbox.dialog({
                         size: 'large',
-                        title: 'Task Detail',
+                        title: '<b>Task Detail</b>',
                         message: msg,
                         onEscape: true,
                         buttons: {ok:{label: 'OK'}}
                     });
-
                 }
                 else if (action === 'edit') {
                     dataService.set('task_to_edit', row.entity);
@@ -169,7 +161,7 @@ angular.module('themeApp.controllers')
                     $scope.resultMsg = 'Found ' + result.length + ' record(s).';
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -203,13 +195,6 @@ angular.module('themeApp.controllers')
                 }
             };
 
-            function showDatabaseErrorMessage() {
-                $bootbox.alert({
-                    size: 'small',
-                    message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
-                });
-            }
-
            var loadArchivedGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -238,7 +223,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -266,7 +251,7 @@ angular.module('themeApp.controllers')
                     }, {
                         name: ' button',
                         displayName: 'Action',
-                        cellTemplate: 'views/grid_template/cell.read.unread.button.template.html',
+                        cellTemplate: 'views/grid_template/cell.task.button.template.html',
                         width: 150
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
@@ -277,7 +262,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -306,6 +291,19 @@ angular.module('themeApp.controllers')
                             var index = $scope.gridOptions.data.indexOf(row.entity);
                             $scope.gridOptions.data.splice(index, 1);
                         })
+                }
+                else if (action === 'view')
+                {
+                    var msg = '<h4><span style="white-space: pre-line;font-family: Verdana">';
+                    msg += row.entity.task_description;
+                    msg += '</span></h4>';
+                    $bootbox.dialog({
+                        size: 'large',
+                        title: '<b>Task Detail</b>',
+                        message: msg,
+                        onEscape: true,
+                        buttons: {ok:{label: 'OK'}}
+                    });
                 }
             };
 
@@ -337,7 +335,7 @@ angular.module('themeApp.controllers')
 
                     if (err !== undefined)
                     {
-                        showDatabaseErrorMessage();
+                        dataService.showDatabaseErrorMessage($bootbox);;
                     }
                 });
             };

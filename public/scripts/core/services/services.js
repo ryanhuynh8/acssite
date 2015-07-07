@@ -138,9 +138,36 @@ angular
             return HOST_URL + path_to_api;
         };
 
+        this.showDatabaseErrorMessage = function(bootbox) {
+            bootbox.alert({
+                size: 'small',
+                message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
+            });
+        }
+
+        this.getUserListFullInfo = function(cb) {
+            var result, err;
+            $http.get(HOST_URL + '/api/user/list_fullinfo')
+                .success(function(data) {
+                    result = data;
+                    angular.forEach(result, function(user) {
+                        if (user.middle_name)
+                            user.full_name = user.first_name + ' ' + user.middle_name + ' ' + user.last_name;
+                        else
+                            user.full_name = user.first_name + ' ' + user.last_name;
+                    });
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
+        };
+
         this.getUserList = function(cb) {
             var result, err;
-            $http.get(HOST_URL + '/api/user/list')
+            $http.get(HOST_URL + '/api/user/list/')
                 .success(function(data) {
                     result = [];
                     data.forEach(function(c, i, a) {
@@ -286,5 +313,21 @@ angular
                 return 'Yes';
             else
                 return 'No';
+        };
+    })
+    .filter('sexFilter', function() {
+        return function(value) {
+            if (value === true)
+                return 'F';
+            else
+                return 'M';
+        };
+    })
+    .filter('employeeTypeFilter', function() {
+        return function(value) {
+            if (value === 0)
+                return 'A'
+            else
+                return 'B'
         };
     });
