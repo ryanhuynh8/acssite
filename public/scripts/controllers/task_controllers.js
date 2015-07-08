@@ -383,6 +383,7 @@ angular.module('themeApp.controllers')
             };
 
             $scope.updateTask = function() {
+                // TODO: error handling and concurrency update notification
                 $http.post(dataService.getApiUrl('/api/task/update'), $scope.task);
             }
         }
