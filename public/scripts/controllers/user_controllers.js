@@ -45,16 +45,30 @@ angular.module('themeApp.controllers')
 
             $scope.submit = function () {
                 if (!validate()) return;
-                $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
-                    .then(function(result) {
-                        $scope.showAlert = false;
-                        alert('New user added!');
-                        $location.path('/users');
-                    })
-                    .catch(function(err) {
-                        $scope.showAlert = true;
-                        $scope.errorMsg = err;
-                    });
+                // are we updating existing or creating a new user?
+                if (mode === 'edit') // updating model
+                {
+                    $http.post(dataService.getApiUrl('/api/user/update'), $scope.user)
+                        .then(function(result) {
+                            $location.path('/users');
+                        })
+                        .catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.errorMsg = err;
+                        })
+                } else
+                {
+                    $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
+                        .then(function(result) {
+                            $scope.showAlert = false;
+                            alert('New user added!');
+                            $location.path('/users');
+                        })
+                        .catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.errorMsg = err;
+                        });
+                    }
             }
 
             $scope.loadGrid = function() {
@@ -125,7 +139,8 @@ angular.module('themeApp.controllers')
                 if (!user.password) $scope.errorMsg += 'Please enter a password.\n';
                 // check for data format
                 if (!isNumeric(user.zip)) $scope.errorMsg += 'Please enter a valid zipcode.\n';
-                if (!isNumeric(user.phone1) || !isNumeric(user.phone2)) $scope.errorMsg += 'Please enter valid phone number(s).\n';
+                if (!isNumeric(user.phone1)) $scope.errorMsg += 'Please enter a valid first phone number.\n';
+                if (!isNumeric(user.phone2) && (user.phone2 !== '')) $scope.errorMsg += 'Please enter a valid second phone number.\n';
                 if (!email_regex.test(user.email)) $scope.errorMsg += 'Please enter a valid email address, ie: abc@def.com.\n';
                 // check for password matching
                 if (user.password !== user.confirm_password) $scope.errorMsg += 'Passwords do not match.\n';
