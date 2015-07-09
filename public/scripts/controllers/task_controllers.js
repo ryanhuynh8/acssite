@@ -256,7 +256,6 @@ angular.module('themeApp.controllers')
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
-
                 dataService.getTaskByUser(function (result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
