@@ -10,7 +10,7 @@
 </div>
 
 <div class="container-fluid" ng-controller="taskCreateController">
-    <form class="form-horizontal">
+    <form class="form-horizontal" name="mainform" ng-submit="submit()" novalidate>
     <fieldset>
         <!-- Form Name -->
         <legend>Create a new task</legend>
@@ -19,8 +19,11 @@
         <div class="form-group">
           <label class="col-sm-1 control-label" for="assign_to">Assign to</label>
           <div class="col-sm-5">
-            <select ng-model="task.assign_by" ng-options="user.id as user.full_name for user in user_list" class="form-control">
+            <select ng-model="task.assign_by" name="assign_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
             </select>
+          </div>
+          <div class="help-block" ng-show="mainform.assign_by.$invalid">
+            This field is required.
           </div>
         </div>
 
@@ -28,7 +31,10 @@
         <div class="form-group">
           <label class="col-sm-1 control-label" for="task_description">Task description</label>
           <div class="col-sm-5">
-            <textarea rows="10" class="form-control" id="task_description" name="task_description" ng-model="task.task_description"></textarea>
+            <textarea rows="10" class="form-control" id="task_description" name="task_description" ng-model="task.task_description" required></textarea>
+          </div>
+          <div class="help-block" ng-show="mainform.task_description.$invalid">
+            This field is required.
           </div>
         </div>
 
@@ -36,12 +42,15 @@
             <label class="col-sm-1 control-label">Due date</label>
             <div class="col-sm-5">
                 <div class="input-group">
-                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="Close" />
+                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" name="due_date" is-open="opened" close-text="Close" required />
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
                         </button>
                     </div>
                 </div>
+            </div>
+            <div class="help-block" ng-show="mainform.due_date.$invalid">
+                This field is required.
             </div>
         </div>
 
@@ -55,8 +64,10 @@
        <div class="form-group">
             <div class="col-sm-1"></div>
             <div class="col-sm-3">
-                <button id="create_task_button" class="btn btn-primary" ng-click="submit()" onclick="$('#create_task_button').attr('disabled','')">Create task</button>
-                <button class="btn btn-default" ng-click="reset()">Reset fields</button>
+                <button type="submit" id="create_task_button" class="btn btn-primary" ng-disabled="mainform.$invalid">Create task</button>
+                <!-- <input type="submit" id="submit" value="Submit" /> -->
+
+                <button class="btn btn-default" type="reset">Reset fields</button>
             </div>
         </div>
     </fieldset>
