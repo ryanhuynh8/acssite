@@ -33,6 +33,7 @@ angular.module('themeApp.controllers')
         'dataService',
         function($scope, $timeout, $http, $location, dataService) {
             $scope.model = {};
+            $scope.model.post_on_date = moment().valueOf();
             $scope.model.expired_date = moment().add(3, 'days').valueOf();
             $scope.showAlert = false;
             $scope.alertType = 'success';
@@ -58,26 +59,47 @@ angular.module('themeApp.controllers')
                 $scope.model = {};
             };
 
+            var validate = function() {
+                var post_on_before_expired_date = moment($scope.model.post_on_date).isBefore($scope.model.expired_date),
+                    valid_post_on_date = moment().isBefore(moment($scope.model.post_on_date)) || moment().isSame(moment($scope.model.post_on_date), 'day'),
+                    require_description = ($scope.model.task_description !== '') && ($scope.model.task_description !== undefined);
+
+                if (post_on_before_expired_date && valid_post_on_date && require_description) {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
             $scope.submit = function() {
-                $http.post(dataService.getApiUrl('/api/announcement/new'), $scope.model)
-                    .then(function(result) {
-                        if (result.data.message !== 'success'){
-                            throw result.data;
-                        }
-                        // display successfully alert
-                        $scope.showAlert = true;
-                        $scope.alertType = 'success';
-                        $scope.alertMsg = 'New announcement added successfully. Redirecting to dashboard now...';
-                        $timeout(function() {
-                            $location.path('/');
-                        }, 2000)
-                    }).
-                    catch(function(err) {
-                        $scope.showAlert = true;
-                        $scope.alertType = 'danger';
-                        $scope.alertMsg = 'Error creating a new announcement!';
-                        $('#create_button').removeAttr('disabled');
-                    });
+                if (validate())
+                {
+                    $http.post(dataService.getApiUrl('/api/announcement/new'), $scope.model)
+                        .then(function(result) {
+                            if (result.data.message !== 'success'){
+                                throw result.data;
+                            }
+                            // display successfully alert
+                            $scope.showAlert = true;
+                            $scope.alertType = 'success';
+                            $scope.alertMsg = 'New announcement added successfully. Redirecting to dashboard now...';
+                            $timeout(function() {
+                                $location.path('/');
+                            }, 2000)
+                        }).
+                        catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.alertType = 'danger';
+                            $scope.alertMsg = 'Error creating a new announcement!';
+                            $('#create_button').removeAttr('disabled');
+                        });
+                } else {
+                    $scope.showAlert = true;
+                    $scope.alertType = 'danger';
+                    $scope.alertMsg = 'Invalid date or empty description.';
+                    $('#create_button').removeAttr('disabled');
+                }
+
             }
         }
     ]);

@@ -38,8 +38,14 @@ angular.module('themeApp.controllers', ['ui.grid'])
                         }
                     }
                 }).catch(function(err) {
-                    $scope.errorMsg = "Cannot connect to server. Please contact website administrator.";
                     $scope.isError = true;
+                    if (err.status === 401)
+                    {
+                        $scope.errorMsg = "Wrong username or password, please try again.";
+                        el.removeAttr('disabled');
+                    }
+                    else
+                        $scope.errorMsg = "Cannot connect to server. Please contact website administrator. (" + err.status + ')';
                     console.log(err);
                 })
             }

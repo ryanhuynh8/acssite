@@ -76,7 +76,6 @@ angular.module('themeApp.controllers')
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
-
             };
 
             var loadArchivedGrid = function() {
@@ -396,12 +395,10 @@ angular.module('themeApp.controllers')
         function($scope, $timeout, $http, $location, dataService) {
             $scope.task = {};
             $scope.user_list = [];
-            $scope.dt = new Date();
-            $scope.task.due_date = Date.now();
             $scope.showAlert = false;
             $scope.alertType = 'success';
             $scope.alertMsg = '';
-
+            console.log(mainform.$invalid);
             dataService.getUserList(function(result, err) {
                 $scope.user_list = result;
             });
@@ -415,26 +412,42 @@ angular.module('themeApp.controllers')
                     $scope.opened = true;
             };
 
+            var validate = function() {
+                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date)))
+                {
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
             $scope.submit = function() {
-                $http.post(dataService.getApiUrl('/api/task/new'), $scope.task)
-                    .then(function(result) {
-                        if (result.data.message !== 'success'){
-                            throw result.data;
-                        }
-                        // display successfully alert
-                        $scope.showAlert = true;
-                        $scope.alertType = 'success';
-                        $scope.alertMsg = 'New task added successfully. Redirecting to dashboard now...';
-                        $timeout(function() {
-                            $location.path('/');
-                        }, 2000)
-                    }).
-                    catch(function(err) {
-                        $scope.showAlert = true;
-                        $scope.alertType = 'danger';
-                        $scope.alertMsg = 'Error creating a new task!';
-                        $('#create_task_button').removeAttr('disabled');
-                    });
+                if (validate()) {
+                    $http.post(dataService.getApiUrl('/api/task/new'), $scope.task)
+                        .then(function(result) {
+                            if (result.data.message !== 'success'){
+                                throw result.data;
+                            }
+                            // display successfully alert
+                            $scope.showAlert = true;
+                            $scope.alertType = 'success';
+                            $scope.alertMsg = 'New task added successfully. Redirecting to dashboard now...';
+                            $timeout(function() {
+                                $location.path('/');
+                            }, 2000)
+                        }).
+                        catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.alertType = 'danger';
+                            $scope.alertMsg = 'Error creating a new task!';
+                            $('#create_task_button').removeAttr('disabled');
+                        });
+                } else {
+                    $scope.showAlert = true;
+                    $scope.alertType = 'danger';
+                    $scope.alertMsg = 'Due date must be after or equal today';
+                    $('#create_task_button').removeAttr('disabled');
+                }
             }
 
             $scope.reset = function() {
