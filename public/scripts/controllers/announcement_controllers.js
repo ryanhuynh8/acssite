@@ -91,6 +91,7 @@ angular.module('themeApp.controllers')
                             $scope.showAlert = true;
                             $scope.alertType = 'danger';
                             $scope.alertMsg = 'Error creating a new announcement!';
+                            console.log(err);
                             $('#create_button').removeAttr('disabled');
                         });
                 } else {

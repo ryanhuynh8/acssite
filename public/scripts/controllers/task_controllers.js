@@ -28,14 +28,30 @@ angular.module('themeApp.controllers')
         '$bootbox',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
+            $scope.dataLoaded = false;
             $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
-
+            var mode = null;
             $scope.setLoadMode = function(is_archived) {
                 if (is_archived)
+                {
                     loadArchivedGrid();
-                else
+                    mode = 'archived';
+                } else {
                     loadGrid();
+                    mode = 'all'
+                }
             };
+
+            // populate the user list combobox
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+            });
+
+            $timeout(function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    'placement': 'top'
+                });
+            });
 
             var loadGrid = function() {
                 $scope.gridOptions = {
@@ -114,7 +130,6 @@ angular.module('themeApp.controllers')
                 });
             };
 
-
             $scope.buttonClickHandler = function($event, row, action) {
                 if (action === 'view') {
                     var msg = '<h4><span style="white-space: pre-line; font-family: Verdana">';
@@ -127,25 +142,30 @@ angular.module('themeApp.controllers')
                         onEscape: true,
                         buttons: {ok:{label: 'OK'}}
                     });
-                }
-                else if (action === 'edit') {
+                } else if (action === 'edit') {
                     dataService.set('task_to_edit', row.entity);
                     $location.path('/tasks/edit');
+                } else if (action === 'delete') {
+                    $bootbox.confirm('Are you sure you want to delete this task?', function(result) {
+                        if (result) {
+                            deleteTask(row.entity.id);
+                        }
+                    });
                 }
             };
 
-            $scope.dataLoaded = false;
-
-            // populate the user list combobox
-            dataService.getUserList(function(result, err) {
-                $scope.user_list = result;
-            });
-
-            $timeout(function() {
-                $('[data-toggle="tooltip"]').tooltip({
-                    'placement': 'top'
+            var deleteTask = function(id) {
+                var item_to_delete = { id: id };
+                $http.post(dataService.getApiUrl('/api/task/delete'), item_to_delete)
+                .then(function(result) {
+                    if (result.data.message === 'success') {
+                        $scope.reset();
+                    }
+                })
+                .catch(function(err) {
+                    $bootbox.alert(err.data);
                 });
-            });
+            };
 
             $scope.quickSearch = function(is_search_archive) {
                 $scope.dataLoaded = false;
@@ -168,6 +188,12 @@ angular.module('themeApp.controllers')
             $scope.reset = function() {
                 $scope.search_params = {};
                 $scope.showResult = false;
+                $scope.dataLoaded = false;
+                if (mode === 'archived') {
+                    loadArchivedGrid();
+                } else {
+                    loadGrid();
+                }
             };
         }
     ])
@@ -182,15 +208,16 @@ angular.module('themeApp.controllers')
             $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
             $scope.showResult = false;
             $scope.is_archived = false;
+            var mode = null;
 
             $scope.setLoadMode = function(is_archived) {
                 if (is_archived)
                 {
                     loadArchivedGrid();
-                }
-                else
-                {
+                    mode = 'archived';
+                } else {
                     loadGrid();
+                    mode = 'all'
                 }
             };
 
@@ -341,6 +368,12 @@ angular.module('themeApp.controllers')
             $scope.reset = function() {
                 $scope.search_params = {};
                 $scope.showResult = false;
+                $scope.dataLoaded = false;
+                if (mode === 'archived') {
+                    loadArchivedGrid();
+                } else {
+                    loadGrid();
+                }
             };
 
         }
@@ -363,8 +396,10 @@ angular.module('themeApp.controllers')
         'dataService',
         function($scope, $timeout, $http, $location, dataService) {
             $scope.task = dataService.get('task_to_edit');
+            dataService.set('task_to_edit', null);
             $scope.user_list = [];
             $scope.dt = $scope.task.due_date;
+            $scope.buttonDisabled = false;
 
             dataService.getUserList(function(result, err) {
                 $scope.user_list = result;
@@ -381,8 +416,35 @@ angular.module('themeApp.controllers')
             };
 
             $scope.updateTask = function() {
-                // TODO: error handling and concurrency update notification
-                $http.post(dataService.getApiUrl('/api/task/update'), $scope.task);
+                $scope.buttonDisabled = true;
+                $http.post(dataService.getApiUrl('/api/task/update'), $scope.task)
+                .then(function(result) {
+                    if (result.data.message !== 'success'){
+                        throw result.data;
+                    }
+                    // display successfully alert
+                    $scope.showAlert = true;
+                    $scope.alertType = 'success';
+                    $scope.alertMsg = 'Task updated successfully. Redirecting to dashboard now...';
+                    $timeout(function() {
+                        $location.path('/');
+                    }, 2000);
+                })
+                .catch(function(err) {
+                    $scope.showAlert = true;
+                    $scope.alertType = 'danger';
+                    if (err.message === 'error_modified')
+                    {
+                        $scope.alertMsg = 'Error: someone had just updated the task before you, please reload this page and try to update again. Going back to dashboard now...';
+                        $timeout(function() {
+                            $location.path('/');
+                        }, 5000);
+                    } else {
+                        $scope.alertMsg = 'Error creating a new task!';
+                    }
+                    $scope.buttonDisabled = false;
+                    console.log(err);
+                });
             }
         }
     ])
@@ -398,7 +460,9 @@ angular.module('themeApp.controllers')
             $scope.showAlert = false;
             $scope.alertType = 'success';
             $scope.alertMsg = '';
-            console.log(mainform.$invalid);
+
+            $scope.minDate = new Date();
+
             dataService.getUserList(function(result, err) {
                 $scope.user_list = result;
             });
@@ -413,7 +477,7 @@ angular.module('themeApp.controllers')
             };
 
             var validate = function() {
-                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date)))
+                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day'))
                 {
                     return true;
                 } else {
@@ -441,6 +505,7 @@ angular.module('themeApp.controllers')
                             $scope.alertType = 'danger';
                             $scope.alertMsg = 'Error creating a new task!';
                             $('#create_task_button').removeAttr('disabled');
+                            console.log(err);
                         });
                 } else {
                     $scope.showAlert = true;

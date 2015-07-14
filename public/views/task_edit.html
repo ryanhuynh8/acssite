@@ -41,8 +41,15 @@
 
         <div class="form-group">
             <div class="col-sm-1"></div>
+            <div class="col-sm-5">
+                <alert ng-show="showAlert" type="{{ alertType }}">{{ alertMsg }}</alert>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-1"></div>
             <div class="col-sm-3">
-                <button class="btn btn-primary" ng-click="updateTask()">Save changes</button>
+                <button class="btn btn-primary" ng-click="updateTask()" ng-disabled="buttonDisabled">Save changes</button>
                 <a href="#/tasks"><button class="btn btn-default">Back to task list</button>  </a>
             </div>
         </div>
