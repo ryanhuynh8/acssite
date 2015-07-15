@@ -42,7 +42,7 @@
             <label class="col-sm-1 control-label">Due date</label>
             <div class="col-sm-5">
                 <div class="input-group">
-                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" name="due_date" is-open="opened" close-text="Close" required />
+                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="task.due_date" name="due_date" is-open="opened" close-text="Close" required />
                     <div class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
                         </button>
