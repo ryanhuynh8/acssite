@@ -12,8 +12,9 @@ angular.module('themeApp.controllers')
         '$timeout',
         '$http',
         '$location',
+        '$bootbox',
         'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.list = [];
             dataService.getAnnoucementList(function(result, err) {
                 $scope.list = result;
@@ -21,8 +22,25 @@ angular.module('themeApp.controllers')
             });
 
             $scope.delete = function(id) {
-                console.log(id);
+                $bootbox.confirm('Are you sure you want to delete this item?', function(result) {
+                    if (result) {
+                        deleteAnnouncement(id);
+                    }
+                });
             }
+
+            var deleteAnnouncement = function(id) {
+                var item_to_delete = { id: id };
+                $http.post(dataService.getApiUrl('/api/announcement/delete'), item_to_delete)
+                .then(function(result) {
+                    if (result.data.message === 'success') {
+                        $location.reload();
+                    }
+                })
+                .catch(function(err) {
+                    $bootbox.alert(err.data);
+                });
+            };
         }
     ])
     .controller('announcementCreateController', [

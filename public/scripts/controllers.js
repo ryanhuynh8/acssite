@@ -30,6 +30,9 @@ angular.module('themeApp.controllers', ['ui.grid'])
                     if (res.message) {
                         if (res.message === "authorized") {
                             $cookies.name = res.name;
+                            // var cookie = document.cookie;
+                            // cookie = cookie + 'connect.sid=' + res.sid + ';path=/';
+                            // document.cookie = cookie;
                             $location.path('/');
                         } else {
                             $scope.isError = true;
