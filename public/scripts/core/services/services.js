@@ -109,7 +109,7 @@ angular
     }])
     .service('dataService', ['$http', function($http) {
         var data = {};
-        var HOST_URL = 'http://acsdemo-yuhuynh.c9.io';
+        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
 
 
         var processResultExtractName = function(result) {

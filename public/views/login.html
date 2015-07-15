@@ -2,7 +2,7 @@
 	<a href="#/"><img src="assets/img/logo-big-black.png" alt="Logo" class="brand" /></a>
 	<div class="panel panel-primary">
 		<div class="panel-body">
-			<h4 class="text-center" style="margin-bottom: 25px;">Just click log in!</h4>
+			<h4 class="text-center" style="margin-bottom: 25px;">Log in</h4>
 			<form action="#" class="form-horizontal" ng-model='user'>
 				<div class="form-group">
 					<label for="email" class="control-label col-sm-4" style="text-align: left;">Username</label>
@@ -18,9 +18,6 @@
 				</div>
 				<div class="form-group">
 					<alert ng-show="isError" type="danger">{{ errorMsg }}</alert>
-				</div>
-				<div class="clearfix">
-					<div class="pull-right"><label><input type="checkbox"> Remember Me</label></div>
 				</div>
 				<a href class="btn btn-primary btn-block" ng-click="login($event)">Log In</a>
 			</form>

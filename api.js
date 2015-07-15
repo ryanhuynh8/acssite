@@ -1,10 +1,15 @@
 var router = require('express').Router();
+var cors = require('cors');
 var crypto = require('crypto');
 var moment = require('moment');
 var Models = require("./models/models");
 var Task = Models.Task;
 var User = Models.User;
 var Announcement = Models.Announcement;
+
+router.use(cors({
+  credentials: true
+}));
 
 function auth_require(req, res, roles) {
   // if (req.session.user_id == null)
@@ -17,8 +22,59 @@ function auth_require(req, res, roles) {
   return true;
 }
 
+// LOGIN: /api/auth/<username>
+router.post('/auth', function(req, res) {
+  User.findOne({
+      where: {
+        user_name: req.body.user_name
+      },
+      attributes: ['id', 'password', 'first_name', 'last_name']
+    })
+    .then(function(user) {
+      if (!user) {
+        throw new Error('INVALID_LOGIN');
+      }
+
+      var md5Hash = crypto.createHash('md5');
+      md5Hash.update(req.body.password);
+      var hashed = md5Hash.digest('hex');
+      if (hashed === user.password) {
+
+        // issue new session and invalidate the old one to prevent session-fixation
+        req.session.regenerate(function() {
+          req.session.user_id = user.id;
+          req.session.loggedin = true;
+          res.json({
+            message: 'authorized',
+            name: user.first_name + ' ' + user.last_name,
+            sid: req.session.id
+          });
+          res.end();
+        });
+      }
+      else {
+        throw new Error('INVALID_LOGIN');
+      }
+    })
+    .catch(function (error) {
+      console.log('FAILED', error);
+      if (error.message === 'INVALID_LOGIN')
+      {
+        res.status(401).send('invalid');
+      }
+      else {
+        res.status(503).send('database error');  // causing race condition
+      }
+      res.end();
+
+    })
+    .finally(function () {
+      // res.end();
+    });
+});
+
 // LIST TASKS FOR CURRENT LOGGED IN USER
-router.get('/task/list', function(req, res)   {
+router.get('/task/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
   var user_id = req.session.user_id;
@@ -123,6 +179,12 @@ router.get('/task/all/archived', function(req, res) {
 router.post('/task/new', function(req, res) {
     if (!auth_require(req, res, 'admin')) return;
 
+    if (!req.session.user_id)
+    {
+      res.status(401).end();
+      return;
+    }
+
     var task = req.body;
     // is the data typeof Task?
     if ((task.due_date === undefined) || (task.task_description === undefined) || (task.assign_by === undefined))
@@ -151,13 +213,13 @@ router.post('/task/new', function(req, res) {
 
 // GENERIC SEARCH FUNCTION
 var searchTask = function(req, res, search_params) {
-  
+
   // semi- query building
   var opt_task = {};
   var opt_assigned_by = {};
   var opt_status = {};
   var opt_id = {};
-  
+
   if (search_params.user_id === undefined)
     opt_id = { ne: 'NULL' };
   else
@@ -167,7 +229,7 @@ var searchTask = function(req, res, search_params) {
     opt_id = { ne: 'NULL' };
   else
     opt_id = { like : search_params.assignee };
-    
+
   if (search_params.task_description === undefined)
     opt_task = { ne: 'NULL' };
   else
@@ -177,12 +239,12 @@ var searchTask = function(req, res, search_params) {
     opt_assigned_by = { ne: 'NULL' };
   else
     opt_assigned_by = { like : search_params.assigned_by };
-    
+
   if (search_params.status === undefined)
     opt_status = { ne: 'NULL' };
   else
     opt_status = { like: search_params.status };
-  
+
   Task.findAll({
     include: [
       {
@@ -302,6 +364,33 @@ router.post('/task/archive', function(req, res) {
     });
 });
 
+// DELETE A TASK
+router.post('/task/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  // TODO: confirm task's owner or admin
+  var item_to_delete = req.body;
+
+  Task.destroy({
+    where: {
+      id: item_to_delete.id
+    }
+  })
+  .then(function(result) {
+    res.json({
+      message: "success"
+    });
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json({
+      message: err
+    });
+  })
+  .finally(function() {
+    res.end();
+  });
+});
+
 // UPDATE TASK DETAILS
 router.post('/task/update', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
@@ -340,7 +429,7 @@ router.post('/task/update', function(req, res) {
       else {
         res.json({
           message: 'error_modified'
-        });
+        }).end();
       }
     });
 });
@@ -354,7 +443,7 @@ router.get('/user/list', function(req, res) {
   }).then(function(users) {
     res.json(users);
     res.end();
-  }); 
+  });
 });
 
 // LIST ALL USER WITH FULL INFORMATION
@@ -371,7 +460,7 @@ router.get('/user/list_fullinfo', function(req, res) {
 // ADD NEW USER
 router.post('/user/new', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
-  
+
   var model = req.body;
   // TODO: check for duplicate user_name before processing
   User.create(model)
@@ -389,52 +478,74 @@ router.post('/user/new', function(req, res) {
       });
 });
 
-// LOGIN: /api/auth/<username>
-router.post('/auth', function(req, res) {
-  User.findOne({
-      where: {
-        user_name: req.body.user_name
-      },
-      attributes: ['id', 'password', 'first_name', 'last_name']
-    })
-    .then(function(user) {
-      if (!user) {
-        throw new Error('INVALID_LOGIN');
-      }
+router.post('/user/update', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  // TODO: confirm task's owner or admin
 
-      var md5Hash = crypto.createHash('md5');
-      md5Hash.update(req.body.password);
-      var hashed = md5Hash.digest('hex');
-      if (hashed === user.password) {
-        // issue new session and invalidate the old one to prevent session-fixation
-        req.session.regenerate(function() {
-          req.session.user_id = user.id;
-          req.session.loggedin = true;
-          res.json({
-            message: 'authorized',
-            name: user.first_name + ' ' + user.last_name
-          });
-          res.end();
-        });
-      }
-      else {
-        throw new Error('INVALID_LOGIN');
-      }
-    })
-    .catch(function (error) {
-      console.log('FAILED', error);
-      if (error.message === 'INVALID_LOGIN')
-      {
-        res.status(401).send('invalid');
-      }
-      else
-        res.status(503).send('database error');  // causing race condition
-      res.end();
-
-    })
-    .finally(function () {
-      // res.end();
+  var user_to_update = req.body;
+  User.update({
+    first_name: user_to_update.first_name,
+    middle_name: user_to_update.middle_name,
+    last_name: user_to_update.last_name,
+    user_name: user_to_update.user_name,
+    password: user_to_update.password,
+    email: user_to_update.email,
+    address: user_to_update.address,
+    city: user_to_update.city,
+    state: user_to_update.state,
+    zip: user_to_update.zip,
+    phone1: user_to_update.phone1,
+    phone2: user_to_update.phone2,
+    ss_number: user_to_update.ss_number,
+    dob: user_to_update.dob,
+    date_hired: user_to_update.date_hired,
+    sex: user_to_update.sex,
+    employee_type: user_to_update.employee_type
+  }, {
+    where: {
+      id: user_to_update.id
+    }})
+  .then(function(result) {
+    res.json({
+      message: 'success'
     });
+  })
+  .catch(function(err) {
+    res.json({
+      message: err
+    });
+  })
+  .finally(function(result) {
+      res.end();
+  });
+});
+
+// DELETE AN ANNOUNCEMENT
+router.post('/announcement/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  // TODO: confirm task's owner or admin
+  
+  var item_to_delete = req.body;
+
+  Announcement.destroy({
+    where: {
+      id: item_to_delete.id
+    }
+  })
+  .then(function(result) {
+    res.json({
+      message: "success"
+    });
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json({
+      message: err
+    });
+  })
+  .finally(function() {
+    res.end();
+  });
 });
 
 // LIST ALL ANNOUNCEMENT BEFORE THE EXPIRING DATE AND AFTER THE POST_ON DATE
@@ -475,7 +586,7 @@ router.post('/announcement/new', function(req, res) {
     new_announcement.expired_date = model.expired_date;
     new_announcement.announcements_description = model.task_description;
     new_announcement.post_on_date = model.post_on_date;
-    
+
     Announcement.create(new_announcement)
       .then(function(result){
         res.status(201);
