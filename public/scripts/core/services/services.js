@@ -143,7 +143,7 @@ angular
                 size: 'small',
                 message: '<span style="color:red">There was an error connecting to the database. Please contact your system administrator to resolve this issue.</span>'
             });
-        }
+        };
 
         this.getUserListFullInfo = function(cb) {
             var result, err;
@@ -326,8 +326,8 @@ angular
     .filter('employeeTypeFilter', function() {
         return function(value) {
             if (value === 0)
-                return 'A'
+                return 'A';
             else
-                return 'B'
+                return 'B';
         };
     });

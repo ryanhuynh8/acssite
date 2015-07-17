@@ -55,7 +55,7 @@ angular.module('themeApp.controllers')
                         .catch(function(err) {
                             $scope.showAlert = true;
                             $scope.errorMsg = err;
-                        })
+                        });
                 } else
                 {
                     $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
@@ -69,7 +69,7 @@ angular.module('themeApp.controllers')
                             $scope.errorMsg = err;
                         });
                     }
-            }
+            };
 
             $scope.loadGrid = function() {
                 $scope.gridOptions = {
@@ -117,7 +117,7 @@ angular.module('themeApp.controllers')
                     $scope.dataLoaded = true;
                     if (err !== undefined)
                         dataService.showDatabaseErrorMessage($bootbox);
-                })
+                });
             };
 
             var validate = function() {

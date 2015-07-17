@@ -13,8 +13,9 @@ angular.module('themeApp.controllers')
         '$http',
         '$location',
         '$bootbox',
+        '$window',
         'dataService',
-        function($scope, $timeout, $http, $location, $bootbox, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, $window, dataService) {
             $scope.list = [];
             dataService.getAnnoucementList(function(result, err) {
                 $scope.list = result;
@@ -27,14 +28,14 @@ angular.module('themeApp.controllers')
                         deleteAnnouncement(id);
                     }
                 });
-            }
+            };
 
             var deleteAnnouncement = function(id) {
                 var item_to_delete = { id: id };
                 $http.post(dataService.getApiUrl('/api/announcement/delete'), item_to_delete)
                 .then(function(result) {
                     if (result.data.message === 'success') {
-                        $location.reload();
+                        $window.location.reload();
                     }
                 })
                 .catch(function(err) {
@@ -103,7 +104,7 @@ angular.module('themeApp.controllers')
                             $scope.alertMsg = 'New announcement added successfully. Redirecting to dashboard now...';
                             $timeout(function() {
                                 $location.path('/');
-                            }, 2000)
+                            }, 2000);
                         }).
                         catch(function(err) {
                             $scope.showAlert = true;
@@ -119,7 +120,7 @@ angular.module('themeApp.controllers')
                     $('#create_button').removeAttr('disabled');
                 }
 
-            }
+            };
         }
     ]);
 

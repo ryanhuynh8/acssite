@@ -29,3 +29,5 @@ angular
         redirectTo: '/'
       });
   }]);
+  
+angular.module('themeApp.controllers', ['ui.grid']);

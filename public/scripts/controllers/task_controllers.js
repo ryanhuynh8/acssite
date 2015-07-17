@@ -38,7 +38,7 @@ angular.module('themeApp.controllers')
                     mode = 'archived';
                 } else {
                     loadGrid();
-                    mode = 'all'
+                    mode = 'all';
                 }
             };
 
@@ -207,6 +207,7 @@ angular.module('themeApp.controllers')
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
             $scope.showResult = false;
+            $scope.dataLoaded = false;
             $scope.is_archived = false;
             var mode = null;
 
@@ -217,7 +218,7 @@ angular.module('themeApp.controllers')
                     mode = 'archived';
                 } else {
                     loadGrid();
-                    mode = 'all'
+                    mode = 'all';
                 }
             };
 
@@ -257,6 +258,7 @@ angular.module('themeApp.controllers')
             var loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
+                    enableColumnResizing: true,
                     rowHeight: 150,
                     rowTemplate: 'views/grid_template/row.task.template.html',
                     enableHorizontalScrollbar: 0,
@@ -297,7 +299,7 @@ angular.module('themeApp.controllers')
                     return {
                         // 'background-color': 'white',
                         'font-weight': 'normal'
-                    }
+                    };
             };
 
             $scope.buttonClickHandler = function($event, row, action) {
@@ -315,7 +317,7 @@ angular.module('themeApp.controllers')
                         .then(function(result){
                             var index = $scope.gridOptions.data.indexOf(row.entity);
                             $scope.gridOptions.data.splice(index, 1);
-                        })
+                        });
                 }
                 else if (action === 'view')
                 {
@@ -331,8 +333,6 @@ angular.module('themeApp.controllers')
                     });
                 }
             };
-
-            $scope.dataLoaded = false;
 
             // populate the user list combobox
             dataService.getUserList(function(result, err) {
@@ -358,9 +358,8 @@ angular.module('themeApp.controllers')
                     $scope.showResult = true;
                     $scope.resultMsg = 'Found ' + result.length + ' record(s).';
 
-                    if (err !== undefined)
-                    {
-                        dataService.showDatabaseErrorMessage($bootbox);;
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
             };
@@ -445,7 +444,7 @@ angular.module('themeApp.controllers')
                     $scope.buttonDisabled = false;
                     console.log(err);
                 });
-            }
+            };
         }
     ])
     .controller('taskCreateController', [
@@ -498,7 +497,7 @@ angular.module('themeApp.controllers')
                             $scope.alertMsg = 'New task added successfully. Redirecting to dashboard now...';
                             $timeout(function() {
                                 $location.path('/');
-                            }, 2000)
+                            }, 2000);
                         }).
                         catch(function(err) {
                             $scope.showAlert = true;
@@ -513,7 +512,7 @@ angular.module('themeApp.controllers')
                     $scope.alertMsg = 'Due date must be after or equal today';
                     $('#create_task_button').removeAttr('disabled');
                 }
-            }
+            };
 
             $scope.reset = function() {
                 $scope.task = {};

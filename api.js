@@ -199,7 +199,7 @@ router.post('/task/new', function(req, res) {
     Task.create(task)
       .then(function(result){
         res.status(201);
-        res.json({ message: 'success' })
+        res.json({ message: 'success' });
       })
       .catch(function(err) {
         res.status(503);
@@ -208,8 +208,8 @@ router.post('/task/new', function(req, res) {
       })
       .finally(function() {
         res.end();
-      })
-})
+      });
+});
 
 // GENERIC SEARCH FUNCTION
 var searchTask = function(req, res, search_params) {

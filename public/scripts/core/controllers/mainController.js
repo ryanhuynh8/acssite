@@ -196,7 +196,7 @@ angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'
     $scope.getCookieName = function () {
       if ($cookies.name !== undefined)
         return $cookies.name.capitalize();
-    }
+    };
 
     if ($cookies.name === undefined) {
       $location.path('/login');

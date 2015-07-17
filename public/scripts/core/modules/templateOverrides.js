@@ -1,7 +1,7 @@
 angular.module('theme.core.template_overrides', [])
   .config(['$provide', function($provide) {
     'use strict';
-    $provide.decorator('tabsetDirective', function($delegate) {
+    $provide.decorator('tabsetDirective',['$delegate',function($delegate) {
       $delegate[0].templateUrl = function(element, attr) {
         if (attr.tabPosition || attr.tabTheme) {
           if (attr.tabPosition && (attr.tabPosition === '\'bottom\'' || attr.tabPosition === 'bottom')) {
@@ -55,8 +55,8 @@ angular.module('theme.core.template_overrides', [])
       };
 
       return $delegate;
-    });
-    $provide.decorator('progressbarDirective', function($delegate) {
+    }]);
+    $provide.decorator('progressbarDirective', ['$delegate', function($delegate) {
       $delegate[0].templateUrl = function(element, attr) {
         if (attr.contextual && attr.contextual === 'true') {
           return 'templates/contextual-progressbar.html';
@@ -71,7 +71,7 @@ angular.module('theme.core.template_overrides', [])
       };
 
       return $delegate;
-    });
+    }]);
   }])
   /* jshint ignore:start */
   .run(['$templateCache', function($templateCache) {
