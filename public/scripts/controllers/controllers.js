@@ -33,8 +33,7 @@ angular.module('themeApp.controllers')
                             // var cookie = document.cookie;
                             // cookie = cookie + 'connect.sid=' + res.sid + ';path=/';
                             // document.cookie = cookie;
-                            $location.path('/');
-                            window.location.reload();
+                            window.location.href = '/';
                         } else {
                             $scope.isError = true;
                             $scope.errorMsg = "Wrong username or password, please try again.";
@@ -43,12 +42,10 @@ angular.module('themeApp.controllers')
                     }
                 }).catch(function(err) {
                     $scope.isError = true;
-                    if (err.status === 401)
-                    {
+                    if (err.status === 401) {
                         $scope.errorMsg = "Wrong username or password, please try again.";
                         el.removeAttr('disabled');
-                    }
-                    else
+                    } else
                         $scope.errorMsg = "Cannot connect to server. Please contact website administrator. (" + err.status + ')';
                     console.log(err);
                 });

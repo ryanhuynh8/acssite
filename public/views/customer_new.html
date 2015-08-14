@@ -1,9 +1,10 @@
 <div id="page-heading">
 	<ol class="breadcrumb">
 		<li><a href="#/">Dashboard</a></li>
-		<li class="active">User</li>
+		<li class="active">Customers</li>
 	</ol>
 
+	<h1>Add new customer</h1>
 	<div class="options">
 		<div class="btn-toolbar">
 			<a href="#" class="btn btn-default hidden-xs"><i class="glyphicon glyphicon-cog"></i></a>
@@ -11,168 +12,177 @@
 	</div>
 </div>
 
-<div class="container-fluid" ng-controller="userController">
-	<h1 ng-show="mode !== 'edit'">Add new user</h1>
-	<h1 ng-show="mode === 'edit'">Edit user</h1>
+<div class="container-fluid" ng-controller="customerController">
 	<form class="form-horizontal row-border" name="userForm" ng-submit="submit()" novalidate>
 		<panel panel-class="panel-midnightblue" heading="Personal information">
+			<!-- Type -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Type</label>
+				<div class="col-sm-6">
+					<select class="form-control">
+						<option value="0">Residential</option>
+						<option value="1">Commercial</option>
+						<option value="2">Rental</option>
+					</select>
+				</div>
+			</div>
+
+			<!-- First name -->
 			<div class="form-group" ng-class="{'has-error': userForm.first_name.$invalid && !userForm.first_name.$pristine}">
 				<label class="col-sm-3 control-label">First Name</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="first_name" ng-model="user.first_name" required>
+					<input type="text" class="form-control" name="first_name" ng-model="customer.first_name" required>
 				</div>
 				<span class="help-block" ng-show="userForm.first_name.$invalid && !userForm.first_name.$pristine">This field is required.</span>
 			</div>
+
+			<!-- Middle name -->
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Middle Name</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.middle_name" name="">
+					<input type="text" class="form-control" ng-model="customer.middle_name" name="">
 				</div>
 			</div>
+
+			<!-- Last name -->
 			<div class="form-group" ng-class="{'has-error': userForm.last_name.$invalid && !userForm.last_name.$pristine}">
 				<label class="col-sm-3 control-label">Last Name</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="last_name" ng-model="user.last_name" required>
+					<input type="text" class="form-control" name="last_name" ng-model="customer.last_name" required>
 				</div>
 				<span class="help-block" ng-show="userForm.last_name.$invalid && !userForm.last_name.$pristine">This field is required.</span>
 			</div>
+
+			<!-- Sex -->
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Sex</label>
 				<div class="col-sm-6">
 					<div class="radio">
 						<label>
-							<input icheck type="radio" value="0" checked ng-model="user.sex">
+							<input icheck type="radio" value="0" checked ng-model="customer.sex">
 							Male
 						</label>
 					</div>
 					<div class="radio">
 						<label>
-							<input icheck type="radio" value="1" ng-model="user.sex">
+							<input icheck type="radio" value="1" ng-model="customer.sex">
 							Female
 						</label>
 					</div>
 				</div>
 			</div>
+
+			<!-- Address -->
 			<div class="form-group" ng-class="{'has-error': userForm.address.$invalid && !userForm.address.$pristine}">
 				<label class="col-sm-3 control-label">Address</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="address" ng-model="user.address" required>
+					<input type="text" class="form-control" name="address" ng-model="customer.address" required>
 				</div>
 				<span class="help-block" ng-show="userForm.address.$invalid && !userForm.address.$pristine">This field is required.</span>
 			</div>
+
+			<!-- State -->
 			<div class="form-group" ng-class="{'has-error': userForm.state.$invalid && !userForm.state.$pristine}">
 				<label class="col-sm-3 control-label">State</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.state" name="state" required>
+					<input type="text" class="form-control" ng-model="customer.state" name="state" required>
 				</div>
 				<span class="help-block" ng-show="userForm.state.$invalid && !userForm.state.$pristine">This field is required.</span>
 			</div>
+
+			<!-- City -->
 			<div class="form-group" ng-class="{'has-error': userForm.city.$invalid && !userForm.city.$pristine}">
 				<label class="col-sm-3 control-label">City</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="city" ng-model="user.city" required>
+					<input type="text" class="form-control" name="city" ng-model="customer.city" required>
 				</div>
 				<span class="help-block" ng-show="userForm.city.$invalid && !userForm.city.$pristine">This field is required.</span>
 			</div>
+
+			<!-- Zipcode -->
 			<div class="form-group" ng-class="{'has-error': userForm.zipcode.$invalid && !userForm.zipcode.$pristine}">
 				<label class="col-sm-3 control-label">Zipcode</label>
 				<div class="col-sm-6">
-					<input type="number" class="form-control" name="zipcode" ng-model="user.zip" required>
+					<input type="number" class="form-control" name="zipcode" ng-model="customer.zip" required>
 				</div>
 				<span class="help-block" ng-show="userForm.zipcode.$invalid && !userForm.zipcode.$pristine">Enter a valid zipcode.</span>
 			</div>
+
+			<!-- Phone 1 -->
 			<div class="form-group" ng-class="{'has-error': userForm.phone1.$invalid && !userForm.phone1.$pristine}">
 				<label class="col-sm-3 control-label">Phone Number #1</label>
 				<div class="col-sm-6">
-					<input type="number" class="form-control" name="phone1" ng-model="user.phone1" required>
+					<input type="number" class="form-control" name="phone1" ng-model="customer.phone1" required>
 				</div>
 				<span class="help-block" ng-show="userForm.phone1.$invalid && !userForm.phone1.$pristine">Enter a valid phone number.</span>
 			</div>
+
+			<!-- Phone 2 -->
 			<div class="form-group" ng-class="{'has-error': userForm.phone2.$invalid && !userForm.phone2.$pristine}">
 				<label class="col-sm-3 control-label">Phone Number #2</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="user.phone2">
+					<input type="text" class="form-control" ng-model="customer.phone2">
 				</div>
 				<span class="help-block" ng-show="userForm.phone2.$invalid && !userForm.phone2.$pristine">Enter a valid phone number.</span>
 			</div>
+
+			<!-- Email -->
 			<div class="form-group" ng-class="{'has-error': userForm.email.$invalid && !userForm.email.$pristine}">
 				<label class="col-sm-3 control-label">Email</label>
 				<div class="col-sm-6">
-					<input type="email" class="form-control" name="email" ng-model="user.email" required>
+					<input type="email" class="form-control" name="email" ng-model="customer.email" required>
 				</div>
 				<span class="help-block" ng-show="userForm.email.$invalid && !userForm.email.$pristine">Enter a valid email.</span>
 			</div>
-		</panel>
-		<panel panel-class="panel-midnightblue" heading="Login information">
-			<div class="form-group" ng-class="{'has-error': userForm.username.$invalid && !userForm.username.$pristine}">
-				<label class="col-sm-3 control-label">Username</label>
+
+			<!-- Lead source -->
+			<div class="form-group" ng-class="{'has-error': userForm.referral.$invalid && !userForm.referral.$pristine}">
+				<label class="col-sm-3 control-label">Lead source</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="username" ng-model="user.user_name" required>
+					<input type="text" class="form-control" name="referral" ng-model="customer.referral" required>
 				</div>
+				<span class="help-block" ng-show="userForm.referral.$invalid && !userForm.referral.$pristine">Enter a valid referral.</span>
 			</div>
-			<div class="form-group" ng-class="{'has-error': userForm.password.$invalid && !userForm.password.$pristine}">
-				<label class="col-sm-3 control-label">Password</label>
-				<div class="col-sm-6">
-					<input type="password" class="form-control" name="password" ng-model="user.password">
-				</div>
-				<span class="help-block" ng-show="userForm.password.$invalid && !userForm.password.$pristine">Password is required.</span>
-			</div>
+
+			<!-- Notes -->
 			<div class="form-group">
-				<label class="col-sm-3 control-label">Confirm Password</label>
+				<label class="col-sm-3 control-label">Notes</label>
 				<div class="col-sm-6">
-					<input type="password" class="form-control" ng-model="user.confirm_password">
+					<textarea rows="5" class="form-control" name="notes" ng-model="customer.notes" />
 				</div>
 			</div>
-		</panel>
-		<panel panel-class="panel-midnightblue" heading="Confidential information">
-			<div class="form-group" ng-class="{'has-error': userForm.ss_number.$invalid && !userForm.ss_number.$pristine}">
-				<label class="col-sm-3 control-label">Social Security Number</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="ss_number" ng-model="user.ss_number" required>
+
+			<!-- Labels -->
+			<label class="col-sm-3 control-label"></label>
+			<label class="col-sm-1 control-label">Year</label>
+			<label class="col-sm-1 control-label">Type</label>
+			<label class="col-sm-2 control-label">Unit</label>
+			<label class="col-sm-2 control-label">Model#</label>
+			<label class="col-sm-2 control-label">Serial#</label>
+
+			<div class="form-group"></div>
+			<!-- Equipment details -->
+			<div ng-repeat="n in [] | range:10">
+				<div class="col-sm-3"></div>
+				<div class="col-sm-1">
+					<input type="text" class="form-control" name="year" ng-model="">
 				</div>
-				<span class="help-block" ng-show="userForm.ss_number.$invalid && !userForm.ss_number.$pristine">Enter a social security number.</span>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">DOB</label>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.dob" is-open="opened1" close-text="Close" required />
-						<div class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="open1($event)"><i class="glyphicon glyphicon-calendar"></i>
-							</button>
-						</div>
-					</div>
+				<div class="col-sm-1">
+					<input type="text" class="form-control" name="year" ng-model="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">Date Hired</label>
-				<div class="col-sm-6">
-					<div class="input-group">
-						<input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="user.date_hired" is-open="opened2" close-text="Close" required />
-						<div class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="open2($event)"><i class="glyphicon glyphicon-calendar"></i>
-							</button>
-						</div>
-					</div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" name="year" ng-model="">
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">Employee Type</label>
-				<div class="col-sm-6">
-					<div class="radio">
-						<label>
-							<input icheck type="radio" id="optionsRadios1" value="0" checked ng-model="user.employee_type">
-							Contractor
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input icheck type="radio" id="optionsRadios2" value="1" ng-model="user.employee_type">
-							Full-Time
-						</label>
-					</div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" name="year" ng-model="">
 				</div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" name="year" ng-model="">
+				</div>
+				<div class="form-group"></div>
 			</div>
+
+			<!-- Error -->
 			<div class="form-group">
 				<div class="col-sm-3"></div>
 				<div class="col-sm-6">

@@ -1,22 +1,25 @@
 angular.module('themeApp.controllers')
-    /* route setup */
-    .config(['$routeProvider', function($routeProvider) {
-        $routeProvider
-            .when('/tasks', {
-                templateUrl: 'views/tasks.html'
-            })
-            .when('/tasks/new', {
-                templateUrl: 'views/task_new.html'
-            })
-            .when('/tasks/edit', {
-                templateUrl: 'views/task_edit.html'
-            })
-            .when('/tasks/archived', {
-                templateUrl: 'views/tasks_archived.html'
-            })
-            .when('/tasks/all/archived', {
-                templateUrl: 'views/tasks_archived_all.html'
-            });
+    .config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider
+                .when('/tasks', {
+                    templateUrl: 'views/tasks.html'
+                })
+                .when('/tasks/new', {
+                    templateUrl: 'views/task_new.html'
+                })
+                .when('/tasks/edit', {
+                    templateUrl: 'views/task_edit.html'
+                })
+                .when('/tasks/:id/view', {
+                    templateUrl: 'views/task_view.html'
+                })
+                .when('/tasks/archived', {
+                    templateUrl: 'views/tasks_archived.html'
+                })
+                .when('/tasks/all/archived', {
+                    templateUrl: 'views/tasks_archived_all.html'
+                });
 
         }
     ])
@@ -29,11 +32,10 @@ angular.module('themeApp.controllers')
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.dataLoaded = false;
-            $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
+            $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
             var mode = null;
             $scope.setLoadMode = function(is_archived) {
-                if (is_archived)
-                {
+                if (is_archived) {
                     loadArchivedGrid();
                     mode = 'archived';
                 } else {
@@ -87,8 +89,7 @@ angular.module('themeApp.controllers')
                 dataService.getAllTask(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
-                    if (err !== undefined)
-                    {
+                    if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
@@ -123,8 +124,7 @@ angular.module('themeApp.controllers')
                 dataService.getAllArchivedTask(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
-                    if (err !== undefined)
-                    {
+                    if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
@@ -140,7 +140,11 @@ angular.module('themeApp.controllers')
                         title: '<b>Task Detail</b>',
                         message: msg,
                         onEscape: true,
-                        buttons: {ok:{label: 'OK'}}
+                        buttons: {
+                            ok: {
+                                label: 'OK'
+                            }
+                        }
                     });
                 } else if (action === 'edit') {
                     dataService.set('task_to_edit', row.entity);
@@ -155,31 +159,31 @@ angular.module('themeApp.controllers')
             };
 
             var deleteTask = function(id) {
-                var item_to_delete = { id: id };
+                var item_to_delete = {
+                    id: id
+                };
                 $http.post(dataService.getApiUrl('/api/task/delete'), item_to_delete)
-                .then(function(result) {
-                    if (result.data.message === 'success') {
-                        $scope.reset();
-                    }
-                })
-                .catch(function(err) {
-                    $bootbox.alert(err.data);
-                });
+                    .then(function(result) {
+                        if (result.data.message === 'success') {
+                            $scope.reset();
+                        }
+                    })
+                    .catch(function(err) {
+                        $bootbox.alert(err.data);
+                    });
             };
 
             $scope.quickSearch = function(is_search_archive) {
                 $scope.dataLoaded = false;
-                if (is_search_archive)
-                {
+                if (is_search_archive) {
                     $scope.search_params.status = 21;
                 }
-                dataService.findTaskWithOptions($scope.search_params, function (result, err) {
+                dataService.findTaskWithOptions($scope.search_params, function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
                     $scope.showResult = true;
                     $scope.resultMsg = 'Found ' + result.length + ' record(s).';
-                    if (err !== undefined)
-                    {
+                    if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
@@ -205,15 +209,14 @@ angular.module('themeApp.controllers')
         '$bootbox',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
-            $scope.search_params = {};  // to avoid the DOT notation quirk nature of javascript
+            $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
             $scope.showResult = false;
             $scope.dataLoaded = false;
             $scope.is_archived = false;
             var mode = null;
 
             $scope.setLoadMode = function(is_archived) {
-                if (is_archived)
-                {
+                if (is_archived) {
                     loadArchivedGrid();
                     mode = 'archived';
                 } else {
@@ -222,7 +225,7 @@ angular.module('themeApp.controllers')
                 }
             };
 
-           var loadArchivedGrid = function () {
+            var loadArchivedGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
                     rowHeight: 150,
@@ -245,11 +248,10 @@ angular.module('themeApp.controllers')
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
-                dataService.getArchivedTaskByUser(function (result, err) {
+                dataService.getArchivedTaskByUser(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
-                    if (err !== undefined)
-                    {
+                    if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
@@ -280,15 +282,14 @@ angular.module('themeApp.controllers')
                         name: ' button',
                         displayName: 'Action',
                         cellTemplate: 'views/grid_template/cell.task.button.template.html',
-                        width: 150
+                        width: 300
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
-                dataService.getTaskByUser(function (result, err) {
+                dataService.getTaskByUser(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
-                    if (err !== undefined)
-                    {
+                    if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
                     }
                 });
@@ -310,17 +311,14 @@ angular.module('themeApp.controllers')
                     $http.post(dataService.getApiUrl('/api/task/readed'), row.entity);
                     row.entity.readed = true;
                     el.attr('disabled', '');
-                }
-                else if (action === 'mark_as_completed') {
+                } else if (action === 'mark_as_completed') {
                     row.entity.task_description = 'Archiving, please wait...';
                     $http.post(dataService.getApiUrl('/api/task/archive'), row.entity)
-                        .then(function(result){
+                        .then(function(result) {
                             var index = $scope.gridOptions.data.indexOf(row.entity);
                             $scope.gridOptions.data.splice(index, 1);
                         });
-                }
-                else if (action === 'view')
-                {
+                } else if (action === 'view') {
                     var msg = '<h4><span style="white-space: pre-line;font-family: Verdana">';
                     msg += row.entity.task_description;
                     msg += '</span></h4>';
@@ -329,8 +327,14 @@ angular.module('themeApp.controllers')
                         title: '<b>Task Detail</b>',
                         message: msg,
                         onEscape: true,
-                        buttons: {ok:{label: 'OK'}}
+                        buttons: {
+                            ok: {
+                                label: 'OK'
+                            }
+                        }
                     });
+                } else if (action === 'open') {
+                    alert('foo');
                 }
             };
 
@@ -347,12 +351,11 @@ angular.module('themeApp.controllers')
 
             $scope.quickSearch = function(is_search_archive) {
                 $scope.dataLoaded = false;
-                if (is_search_archive)
-                {
+                if (is_search_archive) {
                     $scope.search_params.status = 21;
                 }
 
-                dataService.findUserTaskWithOptions($scope.search_params, function (result, err) {
+                dataService.findUserTaskWithOptions($scope.search_params, function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
                     $scope.showResult = true;
@@ -382,9 +385,16 @@ angular.module('themeApp.controllers')
         '$timeout',
         '$http',
         '$location',
+        '$routeParams',
         'dataService',
-        function($scope, $timeout, $http, $location, dataService) {
-            $scope.task = dataService.get('task_to_view');
+        function($scope, $timeout, $http, $location, $routeParams, dataService) {
+            var task_id = $routeParams.id;
+            dataService.getTaskById(task_id, function(result, err) {
+                $scope.task = result;
+                if (err !== undefined) {
+                    dataService.showDatabaseErrorMessage($bootbox);
+                }
+            });
         }
     ])
     .controller('taskEditController', [
@@ -417,33 +427,32 @@ angular.module('themeApp.controllers')
             $scope.updateTask = function() {
                 $scope.buttonDisabled = true;
                 $http.post(dataService.getApiUrl('/api/task/update'), $scope.task)
-                .then(function(result) {
-                    if (result.data.message !== 'success'){
-                        throw result.data;
-                    }
-                    // display successfully alert
-                    $scope.showAlert = true;
-                    $scope.alertType = 'success';
-                    $scope.alertMsg = 'Task updated successfully. Redirecting to dashboard now...';
-                    $timeout(function() {
-                        $location.path('/');
-                    }, 2000);
-                })
-                .catch(function(err) {
-                    $scope.showAlert = true;
-                    $scope.alertType = 'danger';
-                    if (err.message === 'error_modified')
-                    {
-                        $scope.alertMsg = 'Error: someone had just updated the task before you, please reload this page and try to update again. Going back to dashboard now...';
+                    .then(function(result) {
+                        if (result.data.message !== 'success') {
+                            throw result.data;
+                        }
+                        // display successfully alert
+                        $scope.showAlert = true;
+                        $scope.alertType = 'success';
+                        $scope.alertMsg = 'Task updated successfully. Redirecting to dashboard now...';
                         $timeout(function() {
                             $location.path('/');
-                        }, 5000);
-                    } else {
-                        $scope.alertMsg = 'Error creating a new task!';
-                    }
-                    $scope.buttonDisabled = false;
-                    console.log(err);
-                });
+                        }, 2000);
+                    })
+                    .catch(function(err) {
+                        $scope.showAlert = true;
+                        $scope.alertType = 'danger';
+                        if (err.message === 'error_modified') {
+                            $scope.alertMsg = 'Error: someone had just updated the task before you, please reload this page and try to update again. Going back to dashboard now...';
+                            $timeout(function() {
+                                $location.path('/');
+                            }, 5000);
+                        } else {
+                            $scope.alertMsg = 'Error creating a new task!';
+                        }
+                        $scope.buttonDisabled = false;
+                        console.log(err);
+                    });
             };
         }
     ])
@@ -476,8 +485,7 @@ angular.module('themeApp.controllers')
             };
 
             var validate = function() {
-                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day'))
-                {
+                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day')) {
                     return true;
                 } else {
                     return false;
@@ -488,7 +496,7 @@ angular.module('themeApp.controllers')
                 if (validate()) {
                     $http.post(dataService.getApiUrl('/api/task/new'), $scope.task)
                         .then(function(result) {
-                            if (result.data.message !== 'success'){
+                            if (result.data.message !== 'success') {
                                 throw result.data;
                             }
                             // display successfully alert
@@ -499,13 +507,13 @@ angular.module('themeApp.controllers')
                                 $location.path('/');
                             }, 2000);
                         }).
-                        catch(function(err) {
-                            $scope.showAlert = true;
-                            $scope.alertType = 'danger';
-                            $scope.alertMsg = 'Error creating a new task!';
-                            $('#create_task_button').removeAttr('disabled');
-                            console.log(err);
-                        });
+                    catch(function(err) {
+                        $scope.showAlert = true;
+                        $scope.alertType = 'danger';
+                        $scope.alertMsg = 'Error creating a new task!';
+                        $('#create_task_button').removeAttr('disabled');
+                        console.log(err);
+                    });
                 } else {
                     $scope.showAlert = true;
                     $scope.alertType = 'danger';
