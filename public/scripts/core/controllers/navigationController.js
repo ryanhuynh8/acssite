@@ -34,6 +34,16 @@ angular
         url:'#/users'
       }]
     }, {
+      label: 'Customers',
+      iconClasses: 'fa fa-users',
+      children: [{
+        label: 'Add new customer',
+        url: '#/customer/new'
+      }, {
+        label: 'Customers Management',
+        url:'#/customers'
+      }]
+    }, {
       label: 'Bonus Apps',
       iconClasses: '',
       separator: true

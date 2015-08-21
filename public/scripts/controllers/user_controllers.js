@@ -1,17 +1,17 @@
 angular.module('themeApp.controllers')
-    /* route setup */
-    .config(['$routeProvider', function($routeProvider) {
-        $routeProvider
-            .when('/user/new', {
-                templateUrl: 'views/user_new.html'
-            })
-            .when('/user/edit', {
-                templateUrl: 'views/user_new.html' // template re-use xP
-            })
-            .when('/users', {
-                templateUrl: 'views/users.html'
-            });
-    }
+    .config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider
+                .when('/user/new', {
+                    templateUrl: 'views/user_new.html'
+                })
+                .when('/user/edit', {
+                    templateUrl: 'views/user_new.html' // template re-use xP
+                })
+                .when('/users', {
+                    templateUrl: 'views/users.html'
+                });
+        }
     ])
     .controller('userController', [
         '$scope',
@@ -43,7 +43,7 @@ angular.module('themeApp.controllers')
                 $scope.opened2 = true;
             };
 
-            $scope.submit = function () {
+            $scope.submit = function() {
                 if (!validate()) return;
                 // are we updating existing or creating a new user?
                 if (mode === 'edit') // updating model
@@ -56,8 +56,7 @@ angular.module('themeApp.controllers')
                             $scope.showAlert = true;
                             $scope.errorMsg = err;
                         });
-                } else
-                {
+                } else {
                     $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
                         .then(function(result) {
                             $scope.showAlert = false;
@@ -68,13 +67,13 @@ angular.module('themeApp.controllers')
                             $scope.showAlert = true;
                             $scope.errorMsg = err;
                         });
-                    }
+                }
             };
 
             $scope.loadGrid = function() {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
-                    rowHeight: 45   ,
+                    rowHeight: 45,
                     enableHorizontalScrollbar: 0,
                     minRowsToShow: 20,
                     columnDefs: [{
@@ -144,8 +143,7 @@ angular.module('themeApp.controllers')
                 if (!email_regex.test(user.email)) $scope.errorMsg += 'Please enter a valid email address, ie: abc@def.com.\n';
                 // check for password matching
                 if (user.password !== user.confirm_password) $scope.errorMsg += 'Passwords do not match.\n';
-                if ($scope.errorMsg !== '')
-                {
+                if ($scope.errorMsg !== '') {
                     $scope.showError = true;
                 }
 
@@ -154,8 +152,7 @@ angular.module('themeApp.controllers')
             };
 
             $scope.buttonClickHandler = function($event, row, action) {
-                if (action === 'edit')
-                {
+                if (action === 'edit') {
                     dataService.set('user_to_edit', row.entity);
                     dataService.set('user_load_mode', 'edit');
                     $location.path('/user/edit');
@@ -167,9 +164,9 @@ angular.module('themeApp.controllers')
             }
 
             var mode = dataService.get('user_load_mode');
+            console.log(mode);
             $scope.mode = mode;
-            if (mode === 'edit')
-            {
+            if (mode === 'edit') {
                 $scope.user = dataService.get('user_to_edit');
             }
         }
