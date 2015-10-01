@@ -5,7 +5,7 @@
         <li class="active">Dashboard</li>
     </ol>
 
-    <h1>Announcements</h1>
+    <h1>Dashboard</h1>
     <div class="options">
         <div class="btn-toolbar">
             <div class="btn-group" dropdown>
@@ -28,123 +28,134 @@
 
 
 <div class="container-fluid" ng-controller="DashboardController">
-    <div class="row">
-        <div class="col-sm-8" ng-controller="announcementController">
-            <panel panel-class="panel-warning" data-heading="New announcements">
-                <div class="row" ng-repeat="item in list">
-                    <div class="col-sm-1">
-                        <i class="fa fa-bullhorn fa-2x" style="color: red"></i>
-                    </div>
-                    <div class="col-sm-11">
-                        <h4 style="margin-top: 0px; margin-bottom: 40px; font-family: Verdana, Menlo">
-                            <span ng-bind-html="item.announcements_description"/>
-                            <br/>
-                            <small>
-                                {{ item.heading }}
-                                <a href="javascript:void(0);" ng-click="delete(item.id)">[Delete]</a>
-                            </small>
-                        </h4>
-                    </div>
+    <tabset tab-theme="midnightblue" tab-position="top">
+        <tab heading="Overview">
+            <div class="row">
+                <div class="col-sm-8" ng-controller="announcementController">
+                    <panel panel-class="panel-default" data-heading="New announcements">
+                        <div class="row" ng-repeat="item in list">
+                            <div class="col-sm-1">
+                                <i class="fa fa-bullhorn fa-2x" style="color: red"></i>
+                            </div>
+                            <div class="col-sm-11">
+                                <h4 style="margin-top: 0px; margin-bottom: 40px; font-family: Verdana, Menlo">
+                                    <span ng-bind-html="item.announcements_description"/>
+                                    <br/>
+                                    <small>
+                                        {{ item.heading }}
+                                        <a href="javascript:void(0);" ng-click="delete(item.id)">[Delete]</a>
+                                    </small>
+                                </h4>
+                            </div>
+                        </div>
+                    </panel>
                 </div>
-            </panel>
-        </div>
-        <div class="col-md-4">
-            <a href="http://www.accuweather.com/en/us/houston-tx/77002/current-weather/351197" class="aw-widget-legal"></a>
-            <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true">
-
+                <div class="col-md-4">
+                    <a href="http://www.accuweather.com/en/us/houston-tx/77002/current-weather/351197" class="aw-widget-legal"></a>
+                    <div id="awtd1433306556898" class="aw-widget-36hour"  data-locationkey="351197" data-unit="f" data-language="en-us" data-useip="false" data-uid="awtd1433306556898" data-editlocation="true">
+                    </div>
+                    <script type="text/javascript" src="scripts/launch.js"/>
+                </div>
             </div>
-            <script type="text/javascript" src="scripts/launch.js"></script>
+        </tab>
+        <tab heading="My tasks">
+            <div class="row">
+                <div class="col-md-12">
+                    <div ng-controller="taskController" ng-init="setLoadMode(false)">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <panel heading="Tasks assigned to you" panel-class="panel-default">
+                                    <panel-controls>
+                                        <panel-control-collapse></panel-control-collapse>
+                                    </panel-controls>
+                                    <div id="searchForm">
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <!-- Task Description textbox -->
+                                                    <label class="col-sm-1 control-label" for="textinput">Task Description</label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" class="form-control" ng-model="search_params.task_description"/>
+                                                    </div>
+                                                    <!-- Assigned By combobox -->
+                                                    <label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
+                                                    <div class="col-sm-2">
+                                                        <select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
+                                                    </div>
+
+                                                    <!-- Search button -->
+                                                    <button ng-click="quickSearch()" class="btn btn-info col-sm-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
+                                                    <button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
+                                                </div>
+                                                <br/>
+                                                <div class="row" style="margin-left: 10px; margin-right: 10px">
+                                                    <alert ng-show="showResult" type="success">{{ resultMsg }}</alert>
+                                                </div>
+                                                <br/>
+                                                <div class="row">
+                                                    <!-- <label class="col-sm-1 control-label">From</label>
+                                                    <div class="col-sm-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="N/A" />
+                                                            <div class="input-group-btn">
+                                                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <label class="col-sm-1 control-label">To</label>
+                                                    <div class="col-sm-2">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="N/A" />
+                                                            <div class="input-group-btn">
+                                                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div id="mainGrid" ui-grid="gridOptions" class="grid">
+
+                                    </div>
+                                    <div class="panel-loading" ng-hide="dataLoaded">
+                                        <div class="panel-loader-circular"></div>
+                                    </div>
+                                </panel>
+                            </div>
+                        </div>
+                    </div>
+               </div>
+            </div>
+        </tab>
+        <tab heading="Calendar">
+            <div class="row">
+                <div class="col-md-12" ng-drop="true">
+                    <panel panel-class="panel-default" ng-drag="true" heading="Calendar">
+                        <panel-controls>
+                        <panel-control-collapse></panel-control-collapse>
+                        <panel-control-title></panel-control-title>
+                        <panel-control-colors></panel-control-colors>
+                    </panel-controls>
+
+                    <div ng-controller="CalendarController">
+                        <div data-full-calendar="{ events: demoEvents }" ng-model="demoEvents"></div>
+                    </div>
+                </panel>
+            </div>
         </div>
-    </div>
+    </tab>
+    </tabset>
+
+
 
     <br/>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div ng-controller="taskController" ng-init="setLoadMode(false)">
-                <div class="row">
-                    <div class="col-md-12">
-                        <panel heading="Tasks assigned to you" panel-class="panel-default">
-                            <panel-controls>
-                                <panel-control-collapse></panel-control-collapse>
-                            </panel-controls>
-                            <div id="searchForm">
-                                <form class="form-horizontal">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <!-- Task Description textbox -->
-                                            <label class="col-sm-1 control-label" for="textinput">Task Description</label>
-                                            <div class="col-md-3">
-                                                <input type="text" class="form-control" ng-model="search_params.task_description"/>
-                                            </div>
-                                            <!-- Assigned By combobox -->
-                                            <label class="col-sm-1 control-label" for="selectbasic">Assigned By</label>
-                                            <div class="col-sm-2">
-                                                <select ng-model="search_params.assigned_by" ng-options="user.id as user.full_name for user in user_list" class="form-control" />
-                                            </div>
 
-                                            <!-- Search button -->
-                                            <button ng-click="quickSearch()" class="btn btn-info col-sm-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
-                                            <button ng-click="reset()" class="btn btn-brown col-sm-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
-                                        </div>
-                                        <br/>
-                                        <div class="row" style="margin-left: 10px; margin-right: 10px">
-                                            <alert ng-show="showResult" type="success">{{ resultMsg }}</alert>
-                                        </div>
-                                        <br/>
-                                        <div class="row">
-                                            <!-- <label class="col-sm-1 control-label">From</label>
-                                            <div class="col-sm-2">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="N/A" />
-                                                    <div class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <label class="col-sm-1 control-label">To</label>
-                                            <div class="col-sm-2">
-                                                <div class="input-group">
-                                                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" ng-model="task.due_date" is-open="opened" close-text="N/A" />
-                                                    <div class="input-group-btn">
-                                                        <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div> -->
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div id="mainGrid" ui-grid="gridOptions" class="grid">
 
-                            </div>
-                            <div class="panel-loading" ng-hide="dataLoaded">
-                                <div class="panel-loader-circular"></div>
-                            </div>
-                        </panel>
-                    </div>
-                </div>
-            </div>
-       </div>
-    </div>
 
-    <div class="row">
-        <div class="col-md-12" ng-drop="true">
-            <panel panel-class="panel-default" ng-drag="true" heading="Calendar">
-                <panel-controls>
-                    <panel-control-collapse></panel-control-collapse>
-                    <panel-control-title></panel-control-title>
-                    <panel-control-colors></panel-control-colors>
-                </panel-controls>
-
-                <div ng-controller="CalendarController">
-                    <div data-full-calendar="{ events: demoEvents }" ng-model="demoEvents"></div>
-                </div>
-            </panel>
-        </div>
-    </div>
 </div>
 
 <!-- container-fluid -->
