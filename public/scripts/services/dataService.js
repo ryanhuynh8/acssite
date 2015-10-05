@@ -198,4 +198,14 @@ angular.module('theme.core.services')
                     cb(result, err);
                 });
         };
+
+        this.logOut = function(cb) {
+            $http.get(HOST_URL + '/api/logout')
+                .success(function(data){
+                    cb();
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        };
     }]);

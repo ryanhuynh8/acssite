@@ -53,25 +53,6 @@
 				<span class="help-block" ng-show="userForm.last_name.$invalid && !userForm.last_name.$pristine">This field is required.</span>
 			</div>
 
-			<!-- Sex -->
-			<div class="form-group">
-				<label class="col-sm-3 control-label">Sex</label>
-				<div class="col-sm-6">
-					<div class="radio">
-						<label>
-							<input icheck type="radio" value="0" checked ng-model="customer.sex">
-							Male
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input icheck type="radio" value="1" ng-model="customer.sex">
-							Female
-						</label>
-					</div>
-				</div>
-			</div>
-
 			<!-- Address -->
 			<div class="form-group" ng-class="{'has-error': userForm.address.$invalid && !userForm.address.$pristine}">
 				<label class="col-sm-3 control-label">Address</label>
@@ -133,15 +114,6 @@
 					<input type="email" class="form-control" name="email" ng-model="customer.email" required>
 				</div>
 				<span class="help-block" ng-show="userForm.email.$invalid && !userForm.email.$pristine">Enter a valid email.</span>
-			</div>
-
-			<!-- Lead source -->
-			<div class="form-group" ng-class="{'has-error': userForm.referral.$invalid && !userForm.referral.$pristine}">
-				<label class="col-sm-3 control-label">Lead source</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="referral" ng-model="customer.referral" required>
-				</div>
-				<span class="help-block" ng-show="userForm.referral.$invalid && !userForm.referral.$pristine">Enter a valid referral.</span>
 			</div>
 
 			<!-- Notes -->

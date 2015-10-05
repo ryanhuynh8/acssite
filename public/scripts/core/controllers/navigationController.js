@@ -7,7 +7,7 @@ angular
       iconClasses: '',
       separator: true
     }, {
-      label: 'Dashboard',
+      label: 'My Dashboard',
       iconClasses: 'glyphicon glyphicon-home',
       url: '#/'
     }, {

@@ -1,5 +1,5 @@
 angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'])
-  .controller('MainController', ['$scope', '$theme', '$timeout', 'progressLoader', '$location','$cookies', function($scope, $theme, $timeout, progressLoader, $location, $cookies) {
+  .controller('MainController', ['$scope', '$theme', '$timeout', 'progressLoader', '$location','$cookies','dataService', function($scope, $theme, $timeout, progressLoader, $location, $cookies, dataService) {
     'use strict';
     // $scope.layoutIsSmallScreen = false;
     $scope.layoutFixedHeader = $theme.get('fixedHeader');
@@ -150,8 +150,13 @@ angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'
     // but for the purposes of this demo this will do :P
     $scope.isLoggedIn = true;
     $scope.logOut = function() {
-      $scope.isLoggedIn = false;
+      dataService.logOut(function() {
+        $scope.isLoggedIn = false;
+        $cookies.name = '';
+        $location.path('/login');
+      });
     };
+
     $scope.logIn = function() {
       $scope.isLoggedIn = true;
     };
@@ -198,8 +203,7 @@ angular.module('theme.core.main_controller', ['theme.core.services', 'ngCookies'
         return $cookies.name.capitalize();
     };
 
-    if ($cookies.name === undefined) {
+    if ($cookies.name === undefined || $cookies.name === '') {
       $location.path('/login');
     }
-
   }]);

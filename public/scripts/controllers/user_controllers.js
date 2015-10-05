@@ -85,23 +85,13 @@ angular.module('themeApp.controllers')
                         displayName: 'Employee Name',
                         width: '*'
                     }, {
-                        field: 'sex',
-                        displayName: 'Sex',
-                        cellFilter: 'sexFilter',
-                        width: 150
-                    }, {
                         field: 'email',
                         displayName: 'Email',
                         width: 200
                     }, {
-                        field: 'date_hired',
-                        displayName: 'Date Hired',
-                        cellFilter: 'date',
-                        width: 150
-                    }, {
                         field: 'employee_type',
                         cellFilter: 'employeeTypeFilter',
-                        displayName: 'Employee Type',
+                        displayName: 'Employee Role',
                         width: 150
                     }, {
                         name: 'button',

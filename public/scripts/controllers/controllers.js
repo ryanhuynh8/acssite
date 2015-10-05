@@ -21,7 +21,6 @@ angular.module('themeApp.controllers')
                 var el = angular.element($event.toElement);
                 el.attr('disabled', '');
 
-                // var request = 'http://acsdemo-yuhuynh.c9.io/api/auth/' + $scope.user.user_name + '/' + $scope.user.password;
                 var request = dataService.getApiUrl('/api/auth');
                 $http.post(request, {
                     user_name: $scope.user.user_name,
