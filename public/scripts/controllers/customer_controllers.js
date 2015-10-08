@@ -18,6 +18,9 @@ angular.module('themeApp.controllers')
         '$bootbox',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
-
+            $scope.customer = {};
+            $scope.states = dataService.getListOfStates();
+            $scope.builders = dataService.getBuilderList();
+            $scope.customer.builder_1 = 1;
         }
     ]);

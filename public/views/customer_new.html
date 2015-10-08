@@ -19,7 +19,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Type</label>
 				<div class="col-sm-6">
-					<select class="form-control">
+					<select class="form-control" ng-model="customer.type">
 						<option value="0">Residential</option>
 						<option value="1">Commercial</option>
 						<option value="2">Rental</option>
@@ -34,14 +34,6 @@
 					<input type="text" class="form-control" name="first_name" ng-model="customer.first_name" required>
 				</div>
 				<span class="help-block" ng-show="userForm.first_name.$invalid && !userForm.first_name.$pristine">This field is required.</span>
-			</div>
-
-			<!-- Middle name -->
-			<div class="form-group">
-				<label class="col-sm-3 control-label">Middle Name</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="customer.middle_name" name="">
-				</div>
 			</div>
 
 			<!-- Last name -->
@@ -62,11 +54,21 @@
 				<span class="help-block" ng-show="userForm.address.$invalid && !userForm.address.$pristine">This field is required.</span>
 			</div>
 
+			<!-- Address 2 -->
+			<div class="form-group" ng-class="{'has-error': userForm.address2.$invalid && !userForm.address2.$pristine}">
+				<label class="col-sm-3 control-label">Address 2</label>
+				<div class="col-sm-6">
+					<input type="text" class="form-control" name="address2" ng-model="customer.address2" required>
+				</div>
+				<span class="help-block" ng-show="userForm.address2.$invalid && !userForm.address2.$pristine">This field is required.</span>
+			</div>
+
+
 			<!-- State -->
 			<div class="form-group" ng-class="{'has-error': userForm.state.$invalid && !userForm.state.$pristine}">
 				<label class="col-sm-3 control-label">State</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" ng-model="customer.state" name="state" required>
+					<select class="form-control" ng-model="customer.state" ng-options="state.abbreviation as state.abbreviation for state in states"></select>
 				</div>
 				<span class="help-block" ng-show="userForm.state.$invalid && !userForm.state.$pristine">This field is required.</span>
 			</div>
@@ -93,7 +95,7 @@
 			<div class="form-group" ng-class="{'has-error': userForm.phone1.$invalid && !userForm.phone1.$pristine}">
 				<label class="col-sm-3 control-label">Phone Number #1</label>
 				<div class="col-sm-6">
-					<input type="number" class="form-control" name="phone1" ng-model="customer.phone1" required>
+					<input type="text" class="form-control" name="phone1" ng-model="customer.phone1" required>
 				</div>
 				<span class="help-block" ng-show="userForm.phone1.$invalid && !userForm.phone1.$pristine">Enter a valid phone number.</span>
 			</div>
@@ -116,42 +118,72 @@
 				<span class="help-block" ng-show="userForm.email.$invalid && !userForm.email.$pristine">Enter a valid email.</span>
 			</div>
 
-			<!-- Notes -->
+			<!-- Builder #1 -->
 			<div class="form-group">
+				<label class="col-sm-3 control-label">Builder #1</label>
+				<div class="col-sm-6">
+					<select class="form-control" ng-model="customer.builder_1" ng-options="builder.id as builder.name for builder in builders"></select>
+				</div>
+				<span>{{ customer }}</span>
+			</div>
+
+			<!-- Builder #2 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Builder #2</label>
+				<div class="col-sm-6">
+					<select class="form-control" ng-model="customer.builder_2" ng-options="builder.id as builder.name for builder in builders"></select>
+				</div>
+			</div>
+
+			<!-- Builder #3 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">Builder #3</label>
+				<div class="col-sm-6">
+					<select class="form-control" ng-model="customer.builder_3" ng-options="builder.id as builder.name for builder in builders"></select>
+				</div>
+			</div>
+
+			<!-- Notes -->
+<!-- 			<div class="form-group">
 				<label class="col-sm-3 control-label">Notes</label>
 				<div class="col-sm-6">
 					<textarea rows="5" class="form-control" name="notes" ng-model="customer.notes" />
 				</div>
-			</div>
+			</div> -->
 
 			<!-- Labels -->
-			<label class="col-sm-3 control-label"></label>
-			<label class="col-sm-1 control-label">Year</label>
-			<label class="col-sm-1 control-label">Type</label>
-			<label class="col-sm-2 control-label">Unit</label>
-			<label class="col-sm-2 control-label">Model#</label>
-			<label class="col-sm-2 control-label">Serial#</label>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
+				<label class="col-sm-1 control-label">Make</label>
+				<label class="col-sm-2 control-label">Model#</label>
+				<label class="col-sm-2 control-label">Serial#</label>
+			</div>
 
-			<div class="form-group"></div>
 			<!-- Equipment details -->
-			<div ng-repeat="n in [] | range:10">
+			<div ng-repeat="n in [] | range:5">
 				<div class="col-sm-3"></div>
-				<div class="col-sm-1">
-					<input type="text" class="form-control" name="year" ng-model="">
-				</div>
-				<div class="col-sm-1">
-					<input type="text" class="form-control" name="year" ng-model="">
+				<div class="col-sm-2">
+					<input type="text" class="form-control" name="year" foong-model="">
 				</div>
 				<div class="col-sm-2">
-					<input type="text" class="form-control" name="year" ng-model="">
+					<input type="text" class="form-control" name="year" foong-model="">
 				</div>
 				<div class="col-sm-2">
-					<input type="text" class="form-control" name="year" ng-model="">
-				</div>
-				<div class="col-sm-2">
-					<input type="text" class="form-control" name="year" ng-model="">
+					<input type="text" class="form-control" name="year" foong-model="">
 				</div>
 				<div class="form-group"></div>
+			</div>
+
+			<!-- How did you hear about it? -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label">How did you hear about us?</label>
+				<div class="col-sm-6">
+					<select class="form-control" ng-model="customer.referral">
+						<option value="0">TV Commercial</option>
+						<option value="1">Word of Mouth</option>
+						<option value="2">Online Search</option>
+					</select>
+				</div>
 			</div>
 
 			<!-- Error -->
