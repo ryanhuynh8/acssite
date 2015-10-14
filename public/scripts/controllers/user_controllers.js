@@ -30,6 +30,13 @@ angular.module('themeApp.controllers')
             $scope.user.sex = 0;
             $scope.user.employee_type = 0;
 
+            var mode = dataService.get('user_load_mode');
+            console.log(mode);
+            $scope.mode = mode;
+            if (mode === 'edit') {
+                $scope.user = dataService.get('user_to_edit');
+            }
+
             $scope.open1 = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
@@ -153,11 +160,5 @@ angular.module('themeApp.controllers')
                 return !isNaN(parseFloat(n)) && isFinite(n);
             }
 
-            var mode = dataService.get('user_load_mode');
-            console.log(mode);
-            $scope.mode = mode;
-            if (mode === 'edit') {
-                $scope.user = dataService.get('user_to_edit');
-            }
         }
     ]);

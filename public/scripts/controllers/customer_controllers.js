@@ -22,5 +22,31 @@ angular.module('themeApp.controllers')
             $scope.states = dataService.getListOfStates();
             $scope.builders = dataService.getBuilderList();
             $scope.customer.builder_1 = 1;
+
+            var mode = dataService.get('user_load_mode');
+            $scope.submit = function() {
+                if (mode === 'edit') // updating model
+                {
+                    $http.post(dataService.getApiUrl('/api/customer/update'), $scope.customer)
+                        .then(function(result) {
+                            $location.path('/customers');
+                        })
+                        .catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.errorMsg = err;
+                        });
+                } else {
+                    $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
+                        .then(function(result) {
+                            $scope.showAlert = false;
+                            alert('New user added!');
+                            $location.path('/users');
+                        })
+                        .catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.errorMsg = err;
+                        });
+                }
+            }
         }
     ]);
