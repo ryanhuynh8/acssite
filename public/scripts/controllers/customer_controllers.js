@@ -22,11 +22,15 @@ angular.module('themeApp.controllers')
             $scope.states = dataService.getListOfStates();
             $scope.builders = dataService.getBuilderList();
             $scope.customer.builder_1 = 1;
-
             var mode = dataService.get('user_load_mode');
+            $scope.mode = mode;
+
+            if (mode === 'edit') {
+                $scope.user = dataService.get('user_to_edit');
+            }
+
             $scope.submit = function() {
-                if (mode === 'edit') // updating model
-                {
+                if (mode === 'edit') {// updating model
                     $http.post(dataService.getApiUrl('/api/customer/update'), $scope.customer)
                         .then(function(result) {
                             $location.path('/customers');
@@ -36,11 +40,11 @@ angular.module('themeApp.controllers')
                             $scope.errorMsg = err;
                         });
                 } else {
-                    $http.post(dataService.getApiUrl('/api/user/new'), $scope.user)
+                    $http.post(dataService.getApiUrl('/api/customer/new'), $scope.user)
                         .then(function(result) {
                             $scope.showAlert = false;
-                            alert('New user added!');
-                            $location.path('/users');
+                            alert('New customer added!');
+                            $location.path('/customers');
                         })
                         .catch(function(err) {
                             $scope.showAlert = true;

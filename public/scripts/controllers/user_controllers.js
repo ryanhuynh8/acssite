@@ -31,7 +31,6 @@ angular.module('themeApp.controllers')
             $scope.user.employee_type = 0;
 
             var mode = dataService.get('user_load_mode');
-            console.log(mode);
             $scope.mode = mode;
             if (mode === 'edit') {
                 $scope.user = dataService.get('user_to_edit');
@@ -79,35 +78,35 @@ angular.module('themeApp.controllers')
 
             $scope.loadGrid = function() {
                 $scope.gridOptions = {
-                    enableColumnMenus: false,
-                    rowHeight: 45,
-                    enableHorizontalScrollbar: 0,
-                    minRowsToShow: 20,
-                    columnDefs: [{
-                        field: 'user_name',
-                        displayName: 'Username',
-                        width: 150
-                    }, {
-                        field: 'full_name',
-                        displayName: 'Employee Name',
-                        width: '*'
-                    }, {
-                        field: 'email',
-                        displayName: 'Email',
-                        width: 200
-                    }, {
-                        field: 'employee_type',
-                        cellFilter: 'employeeTypeFilter',
-                        displayName: 'Employee Role',
-                        width: 150
-                    }, {
-                        name: 'button',
-                        displayName: 'Action',
-                        cellTemplate: 'views/grid_template/cell.user.button.template.html',
-                        width: 300
-                    }],
-                    data: []
-                };
+                        enableColumnMenus: false,
+                        rowHeight: 45,
+                        enableHorizontalScrollbar: 0,
+                        minRowsToShow: 20,
+                        columnDefs: [{
+                            field: 'user_name',
+                            displayName: 'Username',
+                            width: 150
+                        }, {
+                            field: 'full_name',
+                            displayName: 'Employee Name',
+                            width: '*'
+                        }, {
+                            field: 'email',
+                            displayName: 'Email',
+                            width: 200
+                        }, {
+                            field: 'employee_type',
+                            cellFilter: 'employeeTypeFilter',
+                            displayName: 'Employee Role',
+                            width: 150
+                        }, {
+                            name: 'button',
+                            displayName: 'Action',
+                            cellTemplate: 'views/grid_template/cell.user.button.template.html',
+                            width: 300
+                        }],
+                        data: []
+                    };
                 dataService.getUserListFullInfo(function(result, err) {
                     $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
