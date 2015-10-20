@@ -86,7 +86,7 @@
 			<div class="form-group" ng-class="{'has-error': userForm.zipcode.$invalid && !userForm.zipcode.$pristine}">
 				<label class="col-sm-3 control-label">Zipcode</label>
 				<div class="col-sm-6">
-					<input type="number" class="form-control" name="zipcode" ng-model="customer.zip" required>
+					<input type="number" class="form-control" name="zipcode" ng-model="customer.zipcode" required>
 				</div>
 				<span class="help-block" ng-show="userForm.zipcode.$invalid && !userForm.zipcode.$pristine">Enter a valid zipcode.</span>
 			</div>
@@ -142,14 +142,6 @@
 					<select class="form-control" ng-model="customer.builder_3" ng-options="builder.id as builder.name for builder in builders"></select>
 				</div>
 			</div>
-
-			<!-- Notes -->
-<!-- 			<div class="form-group">
-				<label class="col-sm-3 control-label">Notes</label>
-				<div class="col-sm-6">
-					<textarea rows="5" class="form-control" name="notes" ng-model="customer.notes" />
-				</div>
-			</div> -->
 
 			<!-- Labels -->
 			<div class="form-group">

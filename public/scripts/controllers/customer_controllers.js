@@ -21,7 +21,7 @@ angular.module('themeApp.controllers')
             $scope.customer = {};
             $scope.states = dataService.getListOfStates();
             $scope.builders = dataService.getBuilderList();
-            $scope.customer.builder_1 = 1;
+
             var mode = dataService.get('user_load_mode');
             $scope.mode = mode;
 
@@ -40,7 +40,7 @@ angular.module('themeApp.controllers')
                             $scope.errorMsg = err;
                         });
                 } else {
-                    $http.post(dataService.getApiUrl('/api/customer/new'), $scope.user)
+                    $http.post(dataService.getApiUrl('/api/customer/new'), $scope.customer)
                         .then(function(result) {
                             $scope.showAlert = false;
                             alert('New customer added!');
