@@ -56,6 +56,20 @@ angular.module('theme.core.services')
                 });
         };
 
+        this.getCustomerList = function(cb) {
+            var result, err;
+            $http.get(HOST_URL + '/api/customer/list')
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
+        };
+
         this.getUserList = function(cb) {
             var result, err;
             $http.get(HOST_URL + '/api/user/list/')

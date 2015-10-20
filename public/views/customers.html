@@ -1,0 +1,29 @@
+<div id="page-heading">
+	<ol class="breadcrumb">
+		<li><a href="#/">Dashboard</a>
+		</li>
+		<li class="active">Customer List</li>
+	</ol>
+
+	<h1>Customer List</h1>
+	<div class="options">
+		<div class="btn-toolbar">
+			<a href="#" class="btn btn-default hidden-xs"><i class="glyphicon glyphicon-cog"></i></a>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid" ng-controller="customerController">
+	<div class="row">
+		<div class="col-md-12">
+			<panel heading="Customers" panel-class="panel-default" ng-init='loadGrid()'>
+				<div id="mainGrid" ui-grid="gridOptions" class="grid">
+
+				</div>
+				<div class="panel-loading" ng-hide="dataLoaded">
+					<div class="panel-loader-circular"></div>
+				</div>
+			</panel>
+		</div>
+	</div>
+</div>
