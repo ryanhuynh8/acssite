@@ -31,6 +31,12 @@ angular.module('themeApp.controllers')
 
             if (mode === 'edit') {
                 $scope.customer = dataService.get('customer_to_edit');
+                dataService.set('user_load_mode', '');
+                dataService.getUnitFromCustomerId($scope.customer.id, function(result, err) {
+                    if (err !== undefined)
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    $scope.customer.units = result;
+                });
             }
 
             $scope.submit = function() {
@@ -87,12 +93,11 @@ angular.module('themeApp.controllers')
                         }],
                         data: []
                     };
-
                 dataService.getCustomerList(function(result, err) {
-                    $scope.gridOptions.data = result;
-                    $scope.dataLoaded = true;
-                    if (err !== undefined)
-                        dataService.showDatabaseErrorMessage($bootbox);
+                        $scope.gridOptions.data = result;
+                        $scope.dataLoaded = true;
+                        if (err !== undefined)
+                            dataService.showDatabaseErrorMessage($bootbox);
                 });
             };
 
@@ -101,7 +106,29 @@ angular.module('themeApp.controllers')
                     dataService.set('customer_to_edit', row.entity);
                     dataService.set('user_load_mode', 'edit');
                     $location.path('/customer/edit');
+                } else if (action === 'delete') {
+                    $bootbox.confirm('Are you sure you want to delete this customer?', function(result) {
+                        if (result) {
+                            deleteCustomer(row.entity.id);
+                        }
+                    });
                 }
             };
+
+            var deleteCustomer = function(id) {
+                var item_to_delete = {
+                    id: id
+                };
+                $http.post(dataService.getApiUrl('/api/customer/delete'), item_to_delete)
+                    .then(function(result) {
+                        if (result.data.message === 'success') {
+                            $scope.dataLoaded = false;
+                            $scope.loadGrid();
+                        }
+                    })
+                    .catch(function(err) {
+                        $bootbox.alert('Error: ' + err.data);
+                    });
+            }
         }
     ]);

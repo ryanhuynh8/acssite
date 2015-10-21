@@ -222,6 +222,21 @@ angular.module('theme.core.services')
                 });
         };
 
+        this.getUnitFromCustomerId = function(id, cb)
+        {
+            var result, err;
+            $http.get(HOST_URL + '/api/customer/unit/' + id)
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
+        }
+
         this.getBuilderList = function() {
             // return [
             //     {

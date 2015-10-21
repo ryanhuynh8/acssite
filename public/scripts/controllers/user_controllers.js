@@ -34,6 +34,7 @@ angular.module('themeApp.controllers')
             $scope.mode = mode;
             if (mode === 'edit') {
                 $scope.user = dataService.get('user_to_edit');
+                dataService.set('user_load_mode', '');
             }
 
             $scope.open1 = function($event) {
