@@ -25,6 +25,7 @@ angular.module('themeApp.controllers')
             $scope.customer.units = [];
             $scope.states = dataService.getListOfStates();
             $scope.builders = dataService.getBuilderList();
+            $scope.search_params = {};
 
             var mode = dataService.get('user_load_mode');
             $scope.mode = mode;
@@ -130,5 +131,26 @@ angular.module('themeApp.controllers')
                         $bootbox.alert('Error: ' + err.data);
                     });
             }
+
+            $scope.quickSearch = function() {
+                $scope.dataLoaded = false;
+
+                dataService.findCustomerWithOptions($scope.search_params, function(result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    $scope.showResult = true;
+                    $scope.resultMsg = 'Found ' + result.length + ' record(s).';
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
+            };
+
+            $scope.reset = function() {
+                $scope.search_params = {};
+                $scope.showResult = false;
+                $scope.dataLoaded = false;
+                $scope.loadGrid();
+            };
         }
     ]);

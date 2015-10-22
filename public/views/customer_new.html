@@ -68,7 +68,7 @@
 			<div class="form-group" ng-class="{'has-error': userForm.state.$invalid && !userForm.state.$pristine}">
 				<label class="col-sm-3 control-label">State</label>
 				<div class="col-sm-6">
-					<select class="form-control" ng-model="customer.state" ng-options="state.abbreviation as state.abbreviation for state in states"></select>
+					<select class="form-control" ng-model="customer.state" ng-options="state.abbreviation as state.abbreviation for state in states" required></select>
 				</div>
 				<span class="help-block" ng-show="userForm.state.$invalid && !userForm.state.$pristine">This field is required.</span>
 			</div>
@@ -86,7 +86,7 @@
 			<div class="form-group" ng-class="{'has-error': userForm.zipcode.$invalid && !userForm.zipcode.$pristine}">
 				<label class="col-sm-3 control-label">Zipcode</label>
 				<div class="col-sm-6">
-					<input type="number" class="form-control" name="zipcode" ng-model="customer.zipcode" required>
+					<input type="text" class="form-control" name="zipcode" ng-model="customer.zipcode" required>
 				</div>
 				<span class="help-block" ng-show="userForm.zipcode.$invalid && !userForm.zipcode.$pristine">Enter a valid zipcode.</span>
 			</div>

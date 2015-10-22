@@ -212,6 +212,20 @@ angular.module('theme.core.services')
                 });
         };
 
+        this.findCustomerWithOptions = function(params, cb) {
+            var result, err;
+            $http.post(HOST_URL + '/api/customer/search', params)
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
+        };
+
         this.logOut = function(cb) {
             $http.get(HOST_URL + '/api/logout')
                 .success(function(data){

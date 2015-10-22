@@ -17,6 +17,36 @@
 	<div class="row">
 		<div class="col-md-12">
 			<panel heading="Customers" panel-class="panel-default" ng-init='loadGrid()'>
+				<div id="searchForm">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="row">
+								<!-- Customer name textbox -->
+								<label class="col-md-1 control-label" for="textinput">Customer Name</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" ng-model="search_params.name"/>
+								</div>
+
+								<!-- Address textbox -->
+								<label class="col-md-1 control-label" for="textinput">Address</label>
+								<div class="col-md-3">
+									<input type="text" class="form-control" ng-model="search_params.address"/>
+								</div>
+
+								<!-- Search button -->
+								<button ng-click="quickSearch()" class="btn btn-info col-md-1" data-toggle="tooltip" title="Quick Search" style="margin-left: 30px"><i class="glyphicon glyphicon-search"/></button>
+								<button ng-click="reset()" class="btn btn-brown col-md-1" data-toggle="tooltip" title="Reset" style="margin-left: 30px"><i class="glyphicon glyphicon-refresh"/></button>
+							</div>
+							<br/>
+							<div class="row" style="margin-left: 10px; margin-right: 10px">
+								<alert ng-show="showResult" type="success">{{ resultMsg }}</alert>
+							</div>
+							<br/>
+							<div class="row">
+							</div>
+						</div>
+					</form>
+				</div>
 				<div id="mainGrid" ui-grid="gridOptions" class="grid">
 
 				</div>
