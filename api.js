@@ -6,6 +6,8 @@ var Models = require("./models/models");
 var Task = Models.Task;
 var User = Models.User;
 var Announcement = Models.Announcement;
+var Customer = Models.Customer;
+var Unit = Models.Unit;
 
 router.use(cors({
   credentials: true
@@ -34,7 +36,8 @@ router.post('/auth', function(req, res) {
       if (!user) {
         throw new Error('INVALID_LOGIN');
       }
-
+      
+      
       var md5Hash = crypto.createHash('md5');
       md5Hash.update(req.body.password);
       var hashed = md5Hash.digest('hex');
@@ -73,11 +76,19 @@ router.post('/auth', function(req, res) {
     });
 });
 
+router.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.status(201);
+  res.json({ message: 'success' });
+  res.end();
+});
+
 // LIST TASKS FOR CURRENT LOGGED IN USER
 router.get('/task/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
   var user_id = req.session.user_id;
+  //var user_id=24;
   Task.findAll({
     include: [{
       model: User,
@@ -107,6 +118,7 @@ router.get('/task/list/archived', function(req, res)   {
   if (!auth_require(req, res, 'admin')) return;
 
   var user_id = req.session.user_id;
+  // var user_id = 24;
   Task.findAll({
     include: [{
       model: User,
@@ -289,6 +301,7 @@ router.post('/task/search', function(req, res) {
   if (!auth_require(req, res, 'all')) return;
 
   var user_id = req.session.user_id;
+  // var user_id=24;
   var search_params = req.body;
 
   search_params.user_id = user_id;
@@ -570,36 +583,217 @@ router.get('/announcement/list', function(req, res) {
 
 // CREATE A NEW ANNOUNCEMENT
 router.post('/announcement/new', function(req, res) {
-    if (!auth_require(req, res, 'admin')) return;
+  if (!auth_require(req, res, 'admin')) return;
 
-    var model = req.body;
-    // is the data typeof Announcement?
-    if ((model.expired_date === undefined) || (model.task_description === undefined))
-    {
-      res.status(400);
-      res.json({ message: 'invalid' });
-      res.end();
-      return;
-    }
+  var model = req.body;
+  // is the data typeof Announcement?
+  if ((model.expired_date === undefined) || (model.task_description === undefined)) {
+    res.status(400);
+    res.json({
+      message: 'invalid'
+    });
+    res.end();
+    return;
+  }
 
-    var new_announcement = {};
-    new_announcement.expired_date = model.expired_date;
-    new_announcement.announcements_description = model.task_description;
-    new_announcement.post_on_date = model.post_on_date;
+  var new_announcement = {};
+  new_announcement.expired_date = model.expired_date;
+  new_announcement.announcements_description = model.task_description;
+  new_announcement.post_on_date = model.post_on_date;
 
-    Announcement.create(new_announcement)
-      .then(function(result){
-        res.status(201);
-        res.json({ message: 'success' });
-      })
-      .catch(function(err) {
-        res.status(503);
-        res.json({ message: err });
-        console.log(err);
-      })
-      .finally(function() {
-        res.end();
+  Announcement.create(new_announcement)
+    .then(function(result) {
+      res.status(201);
+      res.json({
+        message: 'success'
       });
+    })
+    .catch(function(err) {
+      res.status(503);
+      res.json({
+        message: err
+      });
+      console.log(err);
+    })
+    .finally(function() {
+      res.end();
+    });
+});
+
+router.post('/customer/new', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  if (!req.session.user_id) {
+    res.status(401).end();
+    return;
+  }
+
+  var newCustomer = req.body;
+  Customer.create(newCustomer)
+    .then(function(result) {
+      for (var i = 0, len = newCustomer.units.length; i < len; i++) {
+        if (newCustomer.units[i] !== null) {
+          var newUnit = {};
+          newUnit.customer_id = result.id;
+          newUnit.make = newCustomer.units[i].make;
+          newUnit.model = newCustomer.units[i].model;
+          newUnit.serial = newCustomer.units[i].serial;
+          Unit.create(newUnit);
+        }
+      }
+      res.status(201);
+      res.json({
+        message: 'success'
+      });
+    })
+    .catch(function(err) {
+      res.status(503);
+      res.json({
+        message: err
+      });
+    })
+    .finally(function() {
+      res.end();
+    });
+});
+
+router.post('/customer/update', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var updateCustomer = req.body;
+  Customer.update({
+    type: updateCustomer.type,
+    first_name: updateCustomer.first_name,
+    last_name: updateCustomer.last_name,
+    address: updateCustomer.address,
+    address2: updateCustomer.address2,
+    city: updateCustomer.city,
+    state: updateCustomer.state,
+    zipcode: updateCustomer.zipcode,
+    phone1: updateCustomer.phone1,
+    phone2: updateCustomer.phone2,
+    email:updateCustomer.email,
+    referral: updateCustomer.referral,
+    builder_1: updateCustomer.builder_1,
+    builder_2: updateCustomer.builder_2,
+    builder_3: updateCustomer.builder_3
+  }, {
+    where: {
+      id: updateCustomer.id
+    }})
+  .then(function(result) {
+    /* remove all units and re-add them again */
+      Unit.destroy({
+        where: {
+          customer_id: updateCustomer.id
+        }
+      }).then(function(){
+          for (var i = 0, len = updateCustomer.units.length; i < len; i++) {
+            if (updateCustomer.units[i] !== null) {
+              var newUnit = {};
+              newUnit.customer_id = updateCustomer.id;
+              newUnit.make = updateCustomer.units[i].make;
+              newUnit.model = updateCustomer.units[i].model;
+              newUnit.serial = updateCustomer.units[i].serial;
+              Unit.create(newUnit);
+            }
+          }
+          res.status(201);
+      });
+  })
+  .catch(function(err) {
+    res.json({
+      message: err
+    });
+  })
+  .finally(function(result) {
+      res.end();
+  });
+});
+
+// LIST ALL USER
+router.get('/customer/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Customer.findAll({})
+    .then(function(customers) {
+      res.json(customers);
+      res.end();
+    });
+});
+
+router.post('/customer/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var item_to_delete = req.body;
+
+  Customer.destroy({
+      where: {
+        id: item_to_delete.id
+      }
+    })
+    .then(function(result) {
+      Unit.destroy({
+          where: {
+            customer_id: item_to_delete.id
+          }
+        })
+        .then(function() {
+          res.json({
+            message: "success"
+          });
+        });
+    });
+});
+
+router.get('/customer/unit/:id', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var id = req.params.id;
+  Unit.findAll({
+      where: {
+        customer_id: id
+      }
+    })
+    .then(function(result) {
+      res.json(result);
+      res.end();
+    });
+});
+
+router.post('/customer/search', function(req, res) {
+  if (!auth_require(req, res, 'all')) return;
+
+  var search_params = req.body;
+
+  // semi- query building
+  var opt_address = {};
+  var opt_name = {};
+
+  if (search_params.address === undefined || search_params.address === '')
+    opt_address = { ne: 'NULL' };
+  else
+    opt_address = { like: '%' + search_params.address + '%' };
+    
+  if (search_params.name === undefined || search_params.name === '')  
+    opt_name = { ne: 'NULL' };
+  else
+    opt_name = { like: '%' + search_params.name + '%' };
+    
+  Customer.findAll({
+    where: {
+      address: opt_address,
+      $or: [
+        { first_name: opt_name },
+        { last_name: opt_name }
+      ]
+    },
+  })
+  .then(function(tasks) {
+    res.status(200);
+    res.json(tasks);
+    res.end();
+  });
 });
 
 exports = module.exports = router;

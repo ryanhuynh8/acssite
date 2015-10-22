@@ -21,7 +21,8 @@ app.use(session({
   resave: false,
   ttl: 3600
 }));
-// app.use(cors());
+
+app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use('/api', api);
