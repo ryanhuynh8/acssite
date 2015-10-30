@@ -1,7 +1,8 @@
 angular.module('theme.core.services')
     .service('dataService', ['$http', function($http) {
         var data = {};
-        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+//        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+        var HOST_URL = 'http://localhost:8080';
 
         var processResultExtractName = function(result) {
             angular.forEach(result, function(row) {

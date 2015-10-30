@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var moment = require('moment');
 var Models = require("./models/models");
 var Task = Models.Task;
+var Ticket = Models.Ticket;
 var User = Models.User;
 var Announcement = Models.Announcement;
 var Customer = Models.Customer;
@@ -795,5 +796,43 @@ router.post('/customer/search', function(req, res) {
     res.end();
   });
 });
+
+// CREATE A NEW TICKET
+router.post('/ticket/new', function(req, res) {
+    if (!auth_require(req, res, 'admin')) return;
+
+    if (!req.session.user_id)
+    {
+      res.status(401).end();
+      return;
+    }
+
+    var ticket = req.body;
+    // is the data typeof Task?
+    if ((ticket.due_date === undefined) || (ticket.task_description === undefined) || (ticket.assign_by === undefined))
+//    {
+//      res.status(400);
+//      res.json({ message: 'invalid' });
+//      res.end();
+//      return;
+//    }
+
+    ticket.create_by = req.session.user_id;
+    
+    Ticket.create(ticket)
+      .then(function(result){
+        res.status(201);
+        res.json({ message: 'success' });
+      })
+      .catch(function(err) {
+        res.status(503);
+        res.json({ message: err });
+        console.log(err);
+      })
+      .finally(function() {
+        res.end();
+      });
+});
+
 
 exports = module.exports = router;

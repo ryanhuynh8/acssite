@@ -43,11 +43,6 @@ var Ticket = module.exports = sq.define('Ticket', {
         field: 'user_id',
         allowNull: false
     },
-    builer_id: {
-        type: Sequelize.BIGINT(11),
-        field: 'builder_id',
-        allowNull: false
-    },
     problem: {
         type: Sequelize.STRING,
         allowNull: false

@@ -1,6 +1,7 @@
 var sq = require("../db");
 var User = require("./user");
 var Task = require("./task");
+var Ticket = require("./ticket");
 var Announcement = require("./announcement");
 var Employee = require("./employee");
 var Builder = require("./builder");
@@ -31,6 +32,7 @@ Unit.removeAttribute('id');
 /* exports */
 exports.User = User;
 exports.Task = Task;
+exports.Ticket = Ticket;
 exports.Announcement = Announcement;
 exports.Customer = Customer;
 exports.Unit = Unit;
