@@ -2,6 +2,9 @@ angular.module('themeApp.controllers')
     .config(['$routeProvider',
         function($routeProvider) {
             $routeProvider
+                .when('/tickets', {
+                    templateUrl: 'views/tickets.html'
+                })
                 .when('/tickets/new', {
                     templateUrl: 'views/ticket_new.html',
                     controller: 'ticketCreateController',
@@ -27,11 +30,144 @@ angular.module('themeApp.controllers')
                             };
                         }
                     }
-                    
-                })
-                .when('/customers', {
-                    templateUrl: 'views/customers.html'
                 });
+        }
+    ])
+    .controller('ticketsController', [
+        '$scope',
+        '$timeout',
+        '$http',
+        '$location',
+        '$bootbox',
+        'dataService',
+        function($scope, $timeout, $http, $location, $bootbox, dataService) {
+            $scope.dataLoaded = false;
+            $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
+            
+            // populate the user list combobox
+            dataService.getUserList(function(result, err) {
+                $scope.user_list = result;
+            });
+            
+            var loadGrid = function () {
+                $scope.gridOptions = {
+                    enableColumnMenus: false,
+                    rowHeight: 150,
+                    rowTemplate: 'views/grid_template/row.ticket.template.html',
+                    enableHorizontalScrollbar: 0,
+                    columnDefs: [{
+                        field: 'customer.name',
+                        displayName: 'Customer',
+                        width: 100
+                    }, {
+                        field: 'customer.phone',
+                        displayName: 'Phone',
+                        width: 100
+                    }, {
+                        field: 'create_by',
+                        displayName: 'Created Date',
+                        cellFilter: 'date : \'medium\'',
+                        width: 100
+                    }, {
+                        field: 'promised_date',
+                        displayName: 'Promised Date',
+                        cellFilter: 'date: \'medium\'',
+                        width: 100
+                    }, {
+                        field: 'status',
+                        displayName: 'Status',
+                        width: 100
+                    }, {
+                        field: 'problem',
+                        displayName: 'Problem',
+                        width: 100
+                    }, {
+                        field: 'urgency',
+                        displayName: 'Urgency',
+                        width: 100
+                    }, {
+                        name: 'button',
+                        displayName: 'Action',
+                        cellTemplate: 'views/grid_template/cell.button.template.html',
+                        width: 200
+                    }],
+                    data: [] // HACK: so that the browser won't give a warning complain
+                };
+                dataService.getAllTicket(function(result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
+            };
+            loadGrid();
+
+            $scope.buttonClickHandler = function($event, row, action) {
+                if (action === 'view') {
+                    var msg = '<h4><span style="white-space: pre-line; font-family: Verdana">';
+                    msg += row.entity.job_note;
+                    msg += '</span></h4>';
+                    $bootbox.dialog({
+                        size: 'large',
+                        title: '<b>Ticket Detail</b>',
+                        message: msg,
+                        onEscape: true,
+                        buttons: {
+                            ok: {
+                                label: 'OK'
+                            }
+                        }
+                    });
+                } else if (action === 'edit') {
+                    dataService.set('ticket_to_edit', row.entity);
+                    $location.path('/ticket/edit');
+                } else if (action === 'delete') {
+                    $bootbox.confirm('Are you sure you want to delete this ticket?', function(result) {
+                        if (result) {
+                            deleteTask(row.entity.id);
+                        }
+                    });
+                }
+            };
+
+            var deleteTask = function(id) {
+                var item_to_delete = {
+                    id: id
+                };
+                $http.post(dataService.getApiUrl('/api/ticket/delete'), item_to_delete)
+                    .then(function(result) {
+                        if (result.data.message === 'success') {
+                            $scope.reset();
+                        }
+                    })
+                    .catch(function(err) {
+                        $bootbox.alert(err.data);
+                    });
+            };
+
+            $scope.quickSearch = function(is_search_archive) {
+                $scope.dataLoaded = false;
+                if (is_search_archive) {
+                    $scope.search_params.status = 21;
+                }
+                dataService.findTicketWithOptions($scope.search_params, function(result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    $scope.showResult = true;
+                    $scope.resultMsg = 'Found ' + result.length + ' record(s).';
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
+            };
+
+            $scope.reset = function() {
+                $scope.search_params = {};
+                $scope.showResult = false;
+                $scope.dataLoaded = false;
+                loadGrid();
+            };
         }
     ])
    .controller('ticketCreateController', [

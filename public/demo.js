@@ -331,6 +331,13 @@ angular
       iconClasses: 'glyphicon glyphicon-home',
       url: '#/'
     }, {
+      label: 'Tickets',
+      iconClasses: 'glyphicon glyphicon-list-alt',
+      children: [{
+          label: 'View all tickets',
+          url: '#/tickets'
+        }]
+    }, {
       label: 'Tasks',
       iconClasses: 'glyphicon glyphicon-ok',
       children: [{

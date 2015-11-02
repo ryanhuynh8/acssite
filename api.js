@@ -797,6 +797,44 @@ router.post('/customer/search', function(req, res) {
   });
 });
 
+// LIST ALL TICKETS
+router.get('/tickets', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Ticket.findAll({})
+    .then(function(tickets) {
+      res.json(tickets);
+      res.end();
+    });
+});
+
+// DELETE A TASK
+router.post('/ticket/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  var item_to_delete = req.body;
+
+  Ticket.destroy({
+    where: {
+      id: item_to_delete.id
+    }
+  })
+  .then(function(result) {
+    res.json({
+      message: "success"
+    });
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json({
+      message: err
+    });
+  })
+  .finally(function() {
+    res.end();
+  });
+});
+
+
 // CREATE A NEW TICKET
 router.post('/ticket/new', function(req, res) {
     if (!auth_require(req, res, 'admin')) return;
