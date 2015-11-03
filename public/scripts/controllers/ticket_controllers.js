@@ -33,6 +33,46 @@ angular.module('themeApp.controllers')
                 });
         }
     ])
+    .factory('ticketStatus', function() {
+        return ['Completed', 'Incomplete', 'Pending', 'Accepted', 'Confirmed', 'Installation Schedule', 'Re-schedule', 'After Service', 'Follow Up', 'Last Call', 'Recalled', 'Cancelled', 'Hold', 'Next Day Service', 'TB Called', 'Cash out', 'In-Process', 'Order Parts' ];
+    })
+    .factory('ticketUrgency', function() {
+        return ['Urgent', 'Normal', 'Postpone'];
+    })
+    .factory('ticketProblem', function() {
+        return {
+            _problemList: ['No Cooling', 'No Heating', 'Duct Works', 'Water Leak', 'PM', 'Frozen up', 'Burning Smoke', 'Condenser not working', 'Tst Malfunction', 'Estimate', 'Running Constantly', 'System runs nosily', 'Pick up', 'Follow up', 'Replace'],
+            
+            getList: function () {
+                var list = {};
+                angular.forEach(this._problemList, function(element) {
+                  list[element] = null;
+                });
+                return list;
+            },
+            prepareList: function(problems) {
+                var list = this.getList();
+                var problemString = problems.split(',');
+                angular.forEach(problemString, function(item) {
+                    list[item] = 1;
+                });
+                return list;                
+            },
+            exportList: function(problems) {
+                var text = null;
+                angular.forEach(problems, function(value, key) {
+                    if (value === 1) {
+                        text = text + key + ',';
+                    }
+                });
+                if (text.length) {
+                    text = text.substring(0, text.length - 1);
+                }
+                return text;
+            }                    
+        };
+    })       
+    
     .controller('ticketsController', [
         '$scope',
         '$timeout',
@@ -94,7 +134,7 @@ angular.module('themeApp.controllers')
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
                 dataService.getAllTicket(function(result, err) {
-                    $scope.gridOptions.data = result;
+                    $scope.gridOptions.data = _prepareData(result);
                     $scope.dataLoaded = true;
                     if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);

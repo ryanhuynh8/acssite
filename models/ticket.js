@@ -15,7 +15,7 @@ var Ticket = module.exports = sq.define('Ticket', {
         field: 'create_id'
     },
     status: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true
     },
     ticket_type: {
@@ -87,7 +87,7 @@ var Ticket = module.exports = sq.define('Ticket', {
       field: 'promised_time_to'
     },
     urgency: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: true,
     }
 },{

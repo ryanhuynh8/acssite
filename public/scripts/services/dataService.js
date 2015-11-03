@@ -59,7 +59,7 @@ angular.module('theme.core.services')
         
         this.getAllTicket = function(cb) {
           var result, err;
-          $http.get(HOST_URL + 'api/tickets')
+          $http.get(HOST_URL + '/api/tickets')
           .success(function(data) {
               result = data;
           })

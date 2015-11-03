@@ -1,3 +1,4 @@
+var _ = require('requirejs');
 var router = require('express').Router();
 var cors = require('cors');
 var crypto = require('crypto');
@@ -801,7 +802,7 @@ router.post('/customer/search', function(req, res) {
 router.get('/tickets', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
-  Ticket.findAll({})
+  Ticket.findAll({include: [Customer]})
     .then(function(tickets) {
       res.json(tickets);
       res.end();
