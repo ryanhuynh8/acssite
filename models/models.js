@@ -34,3 +34,4 @@ exports.Task = Task;
 exports.Announcement = Announcement;
 exports.Customer = Customer;
 exports.Unit = Unit;
+exports.Builder = Builder;

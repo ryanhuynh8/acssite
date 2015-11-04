@@ -8,6 +8,7 @@ var User = Models.User;
 var Announcement = Models.Announcement;
 var Customer = Models.Customer;
 var Unit = Models.Unit;
+var Builder = Models.Builder;
 
 router.use(cors({
   credentials: true
@@ -711,7 +712,6 @@ router.post('/customer/update', function(req, res) {
   });
 });
 
-// LIST ALL USER
 router.get('/customer/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
@@ -794,6 +794,43 @@ router.post('/customer/search', function(req, res) {
     res.json(tasks);
     res.end();
   });
+});
+
+router.get('/customer/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Customer.findAll({})
+    .then(function(customers) {
+      res.json(customers);
+      res.end();
+    });
+});
+
+router.get('/builder/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Builder.findAll({})
+    .then(function(builders) {
+      res.json(builders);
+      res.end();
+    });
+});
+
+router.post('/builder/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var item_to_delete = req.body;
+
+  Builder.destroy({
+      where: {
+        builder_id: item_to_delete.id
+      }
+    })
+    .then(function(result) {
+      res.json({
+        message: "success"
+      });      
+    });
 });
 
 exports = module.exports = router;

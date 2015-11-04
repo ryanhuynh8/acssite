@@ -4,6 +4,8 @@ var Sequelize = require("sequelize");
 var Builder = module.exports = sq.define('Builder', { 
     builder_id: {
       type: Sequelize.BIGINT,
+      primaryKey: true,
+      autoIncrement: true,      
       allowNull: false,
     },
     full_name: {
