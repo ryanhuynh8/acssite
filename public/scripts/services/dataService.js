@@ -1,7 +1,8 @@
 angular.module('theme.core.services')
     .service('dataService', ['$http', function($http) {
         var data = {};
-        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+//        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+        var HOST_URL = 'http://localhost:8080';
 
         var processResultExtractName = function(result) {
             angular.forEach(result, function(row) {
@@ -55,6 +56,21 @@ angular.module('theme.core.services')
                     cb(result, err);
                 });
         };
+        
+        this.getAllTicket = function(cb) {
+          var result, err;
+          $http.get(HOST_URL + '/api/tickets')
+          .success(function(data) {
+              result = data;
+          })
+          .catch(function(error) {
+              err = error;
+          })
+          .finally(function() {
+              cb(result, err);
+          });
+        };
+        
 
         this.getCustomerList = function(cb) {
             var result, err;

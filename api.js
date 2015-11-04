@@ -1,9 +1,11 @@
+var _ = require('requirejs');
 var router = require('express').Router();
 var cors = require('cors');
 var crypto = require('crypto');
 var moment = require('moment');
 var Models = require("./models/models");
 var Task = Models.Task;
+var Ticket = Models.Ticket;
 var User = Models.User;
 var Announcement = Models.Announcement;
 var Customer = Models.Customer;
@@ -796,6 +798,17 @@ router.post('/customer/search', function(req, res) {
   });
 });
 
+// LIST ALL TICKETS
+router.get('/tickets', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Ticket.findAll({include: [Customer]})
+    .then(function(tickets) {
+      res.json(tickets);
+      res.end();
+    });
+});
+
 router.get('/builder/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
@@ -822,5 +835,69 @@ router.post('/builder/delete', function(req, res) {
       });      
     });
 });
+
+// DELETE A TASK
+router.post('/ticket/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  var item_to_delete = req.body;
+
+  Ticket.destroy({
+    where: {
+      id: item_to_delete.id
+    }
+  })
+  .then(function(result) {
+    res.json({
+      message: "success"
+    });
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json({
+      message: err
+    });
+  })
+  .finally(function() {
+    res.end();
+  });
+});
+
+// CREATE A NEW TICKET
+router.post('/ticket/new', function(req, res) {
+    if (!auth_require(req, res, 'admin')) return;
+
+    if (!req.session.user_id)
+    {
+      res.status(401).end();
+      return;
+    }
+
+    var ticket = req.body;
+    // is the data typeof Task?
+    if ((ticket.due_date === undefined) || (ticket.task_description === undefined) || (ticket.assign_by === undefined))
+//    {
+//      res.status(400);
+//      res.json({ message: 'invalid' });
+//      res.end();
+//      return;
+//    }
+
+    ticket.create_by = req.session.user_id;
+    
+    Ticket.create(ticket)
+      .then(function(result){
+        res.status(201);
+        res.json({ message: 'success' });
+      })
+      .catch(function(err) {
+        res.status(503);
+        res.json({ message: err });
+        console.log(err);
+      })
+      .finally(function() {
+        res.end();
+      });
+});
+
 
 exports = module.exports = router;

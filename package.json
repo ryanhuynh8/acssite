@@ -26,6 +26,7 @@
     "sequelize": "^2.1.3",
     "superagent": "^1.2.0",
     "superagent-bluebird-promise": "^2.0.2",
-    "supertest": "^1.0.1"
+    "supertest": "^1.0.1",
+    "requirejs": "~2.1.20"
   }
 }
