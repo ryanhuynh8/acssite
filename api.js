@@ -796,16 +796,6 @@ router.post('/customer/search', function(req, res) {
   });
 });
 
-router.get('/customer/list', function(req, res) {
-  if (!auth_require(req, res, 'admin')) return;
-
-  Customer.findAll({})
-    .then(function(customers) {
-      res.json(customers);
-      res.end();
-    });
-});
-
 router.get('/builder/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
