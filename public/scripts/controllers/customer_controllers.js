@@ -21,27 +21,30 @@ angular.module('themeApp.controllers')
         '$bootbox',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
-            $scope.customer = {};
-            $scope.customer.units = [];
-            $scope.states = dataService.getListOfStates();
-            $scope.builders = dataService.getBuilderList();
-            $scope.search_params = {};
+            var init = function() {
+                $scope.customer = {};
+                $scope.customer.units = [];
+                $scope.states = dataService.getListOfStates();
+                $scope.builders = dataService.getBuilderList();
+                $scope.search_params = {};
+                var mode = dataService.get('user_load_mode');
 
-            var mode = dataService.get('user_load_mode');
-            $scope.mode = mode;
+                $scope.mode = mode;
 
-            if (mode === 'edit') {
-                $scope.customer = dataService.get('customer_to_edit');
-                dataService.set('user_load_mode', '');
-                dataService.getUnitFromCustomerId($scope.customer.id, function(result, err) {
-                    if (err !== undefined)
-                        dataService.showDatabaseErrorMessage($bootbox);
-                    $scope.customer.units = result;
-                });
+                if (mode === 'edit') {
+                    $scope.customer = dataService.get('customer_to_edit');
+                    dataService.set('user_load_mode', '');
+                    dataService.getUnitFromCustomerId($scope.customer.id, function(result, err) {
+                        if (err !== undefined) dataService.showDatabaseErrorMessage($bootbox);
+                        $scope.customer.units = result;
+                    });
+                }
             }
 
+
+
             $scope.submit = function() {
-                if (mode === 'edit') {// updating model
+                if (mode === 'edit') { // updating model
                     $http.post(dataService.getApiUrl('/api/customer/update'), $scope.customer)
                         .then(function(result) {
                             $location.path('/customers');
@@ -66,39 +69,39 @@ angular.module('themeApp.controllers')
 
             $scope.loadGrid = function() {
                 $scope.gridOptions = {
-                        enableColumnMenus: false,
-                        rowHeight: 45,
-                        enableHorizontalScrollbar: 0,
-                        minRowsToShow: 20,
-                        columnDefs: [{
-                            field: 'first_name',
-                            displayName: 'First Name',
-                            width: 150
-                        }, {
-                            field: 'last_name',
-                            displayName: 'Last Name',
-                            width: 150
-                        }, {
-                            field: 'address',
-                            displayName: 'Address',
-                            width: '*'
-                        }, {
-                            field: 'email',
-                            displayName: 'Email',
-                            width: 200
-                        }, {
-                            name: 'button',
-                            displayName: 'Action',
-                            cellTemplate: 'views/grid_template/cell.customer.button.template.html',
-                            width: 300
-                        }],
-                        data: []
-                    };
+                    enableColumnMenus: false,
+                    rowHeight: 45,
+                    enableHorizontalScrollbar: 0,
+                    minRowsToShow: 20,
+                    columnDefs: [{
+                        field: 'first_name',
+                        displayName: 'First Name',
+                        width: 150
+                    }, {
+                        field: 'last_name',
+                        displayName: 'Last Name',
+                        width: 150
+                    }, {
+                        field: 'address',
+                        displayName: 'Address',
+                        width: '*'
+                    }, {
+                        field: 'email',
+                        displayName: 'Email',
+                        width: 200
+                    }, {
+                        name: 'button',
+                        displayName: 'Action',
+                        cellTemplate: 'views/grid_template/cell.customer.button.template.html',
+                        width: 300
+                    }],
+                    data: []
+                };
                 dataService.getCustomerList(function(result, err) {
-                        $scope.gridOptions.data = result;
-                        $scope.dataLoaded = true;
-                        if (err !== undefined)
-                            dataService.showDatabaseErrorMessage($bootbox);
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    if (err !== undefined)
+                        dataService.showDatabaseErrorMessage($bootbox);
                 });
             };
 

@@ -1,8 +1,8 @@
 angular.module('theme.core.services')
     .service('dataService', ['$http', function($http) {
         var data = {};
-//        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
-        var HOST_URL = 'http://localhost:8080';
+        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+        // var HOST_URL = 'http://localhost:8080';
 
         var processResultExtractName = function(result) {
             angular.forEach(result, function(row) {
@@ -252,27 +252,18 @@ angular.module('theme.core.services')
                 });
         }
 
-        this.getBuilderList = function() {
-            // return [
-            //     {
-            //         id: '8',
-            //         name: 'foo'
-            //     }
-            // ];
-            return [
-                {
-                    "id": 0,
-                    "name": 'Bu'
-                },
-                {
-                    "id": 2,
-                    "name": 'Nyan'
-                },
-                {
-                    "id": 7,
-                    "name": 'Lac dit'
-                }
-            ];
+        this.getBuilderList = function(cb) {
+            var result, err;
+            $http.get(HOST_URL + '/api/builder/list/')
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
         };
 
         this.getListOfStates = function() {
