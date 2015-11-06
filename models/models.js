@@ -27,6 +27,31 @@ Customer.hasMany(Unit, {
     foreignKey: 'customer_id'
 });
 
+Customer.hasMany(Ticket, {
+    foreignKey: 'customer_id'
+});
+
+Ticket.belongsTo(Customer, {
+    foreignKey: 'customer_id'
+});
+
+Ticket.belongsTo(Employee, {
+    foreignKey: 'seller'
+});
+
+Ticket.belongsTo(Employee, {
+    foreignKey: 'assign_tech'
+});
+
+Employee.hasMany(Ticket, {
+    foreignKey: 'seller'
+});
+
+Employee.hasMany(Ticket, {
+    foreignKey: 'assign_tech'
+});
+
+
 Unit.removeAttribute('id');
 
 /* exports */
@@ -36,3 +61,4 @@ exports.Ticket = Ticket;
 exports.Announcement = Announcement;
 exports.Customer = Customer;
 exports.Unit = Unit;
+exports.Builder = Builder;

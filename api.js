@@ -1,3 +1,4 @@
+var _ = require('requirejs');
 var router = require('express').Router();
 var cors = require('cors');
 var crypto = require('crypto');
@@ -9,6 +10,7 @@ var User = Models.User;
 var Announcement = Models.Announcement;
 var Customer = Models.Customer;
 var Unit = Models.Unit;
+var Builder = Models.Builder;
 
 router.use(cors({
   credentials: true
@@ -712,7 +714,6 @@ router.post('/customer/update', function(req, res) {
   });
 });
 
-// LIST ALL USER
 router.get('/customer/list', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
@@ -793,6 +794,70 @@ router.post('/customer/search', function(req, res) {
   .then(function(tasks) {
     res.status(200);
     res.json(tasks);
+    res.end();
+  });
+});
+
+// LIST ALL TICKETS
+router.get('/tickets', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Ticket.findAll({include: [Customer]})
+    .then(function(tickets) {
+      res.json(tickets);
+      res.end();
+    });
+});
+
+router.get('/builder/list', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  Builder.findAll({})
+    .then(function(builders) {
+      res.json(builders);
+      res.end();
+    });
+});
+
+router.post('/builder/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var item_to_delete = req.body;
+
+  Builder.destroy({
+      where: {
+        builder_id: item_to_delete.id
+      }
+    })
+    .then(function(result) {
+      res.json({
+        message: "success"
+      });      
+    });
+});
+
+// DELETE A TASK
+router.post('/ticket/delete', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  var item_to_delete = req.body;
+
+  Ticket.destroy({
+    where: {
+      id: item_to_delete.id
+    }
+  })
+  .then(function(result) {
+    res.json({
+      message: "success"
+    });
+  })
+  .catch(function(err) {
+    console.log(err);
+    res.json({
+      message: err
+    });
+  })
+  .finally(function() {
     res.end();
   });
 });

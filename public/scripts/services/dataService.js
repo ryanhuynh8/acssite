@@ -56,6 +56,21 @@ angular.module('theme.core.services')
                     cb(result, err);
                 });
         };
+        
+        this.getAllTicket = function(cb) {
+          var result, err;
+          $http.get(HOST_URL + '/api/tickets')
+          .success(function(data) {
+              result = data;
+          })
+          .catch(function(error) {
+              err = error;
+          })
+          .finally(function() {
+              cb(result, err);
+          });
+        };
+        
 
         this.getCustomerList = function(cb) {
             var result, err;
