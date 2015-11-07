@@ -10,229 +10,230 @@
 </div>
 
 <div class="container-fluid">
-    <form class="form-horizontal" name="customerForm" ng-submit="submitCustomerInfo()" novalidate>
-        <fieldset>            
-            <legend>Search for Customer</legend>
-            <div class="form-group">
-                <label class="col-sm-1 control-label" for="customerName">Name</label>
-                <div class="col-sm-5">
-                    <input type="text" ng-model="customer.name" class="form-control" name="customerName" required>
+    <panel panel-class="panel-midnightblue" heading="Create a new service ticket">
+        <form class="form-horizontal" name="customerForm" ng-submit="submitCustomerInfo()" novalidate>
+            <fieldset>            
+                <legend>Customer information</legend>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="customerName">Name</label>
+                    <div class="col-sm-5">
+                        <input type="text" ng-model="customer.name" class="form-control" name="customerName" required>
+                    </div>
+                    <div class="help-block" ng-show="customerForm.customerName.$invalid">
+                        This field is required.
+                    </div>
                 </div>
-                <div class="help-block" ng-show="customerForm.customerName.$invalid">
+                <div class="form-group" ng-if="isCreateCustomer">
+                    <label class="col-sm-1 control-label" for="builder">Builder</label>
+                    <div class="col-sm-5">
+                        <input type="text" ng-model="customer.builder" class="form-control" name="builder">
+                    </div>
+                    <div class="help-block" ng-show="customerForm.builder.$invalid">
+                        This field is required.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">Address</label>
+                    <div class="col-sm-5">
+                        <input type="text" ng-model="customer.address" class="form-control" name="address" ng-required="isCreateCustomer">
+                    </div>
+                    <div class="help-block" ng-show="customerForm.address.$invalid && isCreateCustomer">
+                        This field is required.
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">City</label>
+                    <div class="col-sm-1">
+                        <input type="text" ng-model="customer.city" class="form-control" name="city" ng-required="isCreateCustomer">
+                    </div>
+                    <label class="col-sm-1 control-label" for="state">State</label>
+                    <div class="col-sm-1">
+                        <input type="text" ng-model="customer.state" class="form-control" name="state" ng-required="isCreateCustomer">
+                    </div>
+                    <label class="col-sm-1 control-label" for="zip">Zip</label>
+                    <div class="col-sm-1">
+                        <input type="text" ng-model="customer.zip" class="form-control" name="zip" ng-required="isCreateCustomer">
+                    </div>
+                    <div class="help-block" ng-show="(customerForm.city.$invalid || customerForm.state.$invalid || customerForm.zip.$invalid) && isCreateCustomer">
+                        <span ng-show="customerForm.city.$invalid">City field is required. </span>
+                        <span ng-show="customerForm.state.$invalid">State field is required. </span>
+                        <span ng-show="customerForm.zip.$invalid">Zip field is required. </span>
+                    </div>
+                </div>
+                <div class="form-group" ng-if="isCreateCustomer">
+                    <label class="col-sm-1 control-label" for="phone">Phone</label>
+                    <div class="col-sm-5">
+                        <input type="text" ng-model="customer.phone" class="form-control" name="phone">
+                    </div>
+                </div>            
+                <div class="alert alert-info" ng-show="customerNonExist">
+                    <p>We couldn't find this customer. Would you like to create this customer?</p>
+                    <br/>
+                    <button class="btn btn-default" ng-click="customerNonExist = false; isCreateCustomer = true;">Create new Customer</button>
+                </div>
+                <div class="form-group" >
+                    <div class="col-sm-3 col-sm-offset-1">
+                        <button ng-if="!isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Search</button>
+                        <button ng-if="isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Create</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        
+        <form class="form-horizontal" name="mainForm" ng-submit="submit()" novalidate>
+        <fieldset>
+            <!-- Form Name -->
+            <legend>Create a new service ticket</legend>
+            
+            <div class="form-group">
+              <label class="col-sm-1 control-label" for="assign_to">Status</label>
+              <div class="col-sm-2">
+                <select ng-model="ticket.status" name="status" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                </select>
+              </div>
+              <label class="col-sm-1 control-label" for="assign_to">Ticket type</label>
+              <div class="col-sm-2">
+                <select ng-model="ticket.type" name="type" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Dispatch ID</label>
+                <div class="col-sm-5">
+                    <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" required>
+                </div>
+                <div class="help-block" ng-show="mainForm.dispatchId.$invalid">
                     This field is required.
                 </div>
             </div>
-            <div class="form-group" ng-if="isCreateCustomer">
-                <label class="col-sm-1 control-label" for="builder">Builder</label>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Problem</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="customer.builder" class="form-control" name="builder">
+                    <div class="col-sm-4" ng-repeat="prob in problems">
+                        <div class="checkbox">
+                            <label>
+                                <input ng-click="prob.id = !problem.id" type="checkbox"> prob.text
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                <div class="help-block" ng-show="customerForm.builder.$invalid">
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
+                <div class="col-sm-5">
+                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.officeNote"></textarea>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
+                <div class="col-sm-5">
+                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.jobNote"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Assign Techician</label>
+                <div class="col-sm-2">
+                    <select ng-model="ticket.technician" name="technician" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                    </select>
+                </div>
+                
+                <label class="col-sm-1 control-label">Seller</label>
+                <div class="col-sm-2">
+                    <select ng-model="ticket.seller" name="seller" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                    </select>
+                </div>
+               <div class="help-block" ng-show="mainForm.technician.$invalid || mainForm.seller.$invalid">
+                    <span ng-show="mainForm.technician.$invalid">Please assign to an technician. </span>
+                    <span ng-show="mainForm.seller.$invalid">Please select a seller </span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Job date</label>
+                <div class="col-sm-5">
+                    <div class="input-group">
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.jobDate" name="jobDate" is-open="isOpenJobDate" close-text="Close" required />
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="help-block" ng-show="mainform.jobDate.$invalid">
                     This field is required.
                 </div>
             </div>
+
             <div class="form-group">
-                <label class="col-sm-1 control-label">Address</label>
+                <label class="col-sm-1 control-label">Promised date</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="customer.address" class="form-control" name="address" ng-required="isCreateCustomer">
+                    <div class="input-group">
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promisedDate" name="promisedDate" is-open="isOpenPromisedDate" close-text="Close" required />
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openPromiseddate($event)"><i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="help-block" ng-show="customerForm.address.$invalid && isCreateCustomer">
+                <div class="help-block" ng-show="mainform.promisedDate.$invalid">
                     This field is required.
                 </div>
             </div>
+
             <div class="form-group">
-                <label class="col-sm-1 control-label">City</label>
-                <div class="col-sm-1">
-                    <input type="text" ng-model="customer.city" class="form-control" name="city" ng-required="isCreateCustomer">
+                <label class="col-sm-1 control-label ">Promised Time</label>
+                <label class="col-sm-1 control-label">From</label>
+                <div class="col-sm-2">
+                    <timepicker ng-model="ticket.promisedFrom" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
                 </div>
-                <label class="col-sm-1 control-label" for="state">State</label>
-                <div class="col-sm-1">
-                    <input type="text" ng-model="customer.state" class="form-control" name="state" ng-required="isCreateCustomer">
-                </div>
-                <label class="col-sm-1 control-label" for="zip">Zip</label>
-                <div class="col-sm-1">
-                    <input type="text" ng-model="customer.zip" class="form-control" name="zip" ng-required="isCreateCustomer">
-                </div>
-                <div class="help-block" ng-show="(customerForm.city.$invalid || customerForm.state.$invalid || customerForm.zip.$invalid) && isCreateCustomer">
-                    <span ng-show="customerForm.city.$invalid">City field is required. </span>
-                    <span ng-show="customerForm.state.$invalid">State field is required. </span>
-                    <span ng-show="customerForm.zip.$invalid">Zip field is required. </span>
+                
+                <label class="col-sm-1 control-label">To</label>
+                <div class="col-sm-2">
+                    <timepicker ng-model="ticket.promisedTo" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
+
                 </div>
             </div>
-            <div class="form-group" ng-if="isCreateCustomer">
-                <label class="col-sm-1 control-label" for="phone">Phone</label>
+            
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Urgency</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="customer.phone" class="form-control" name="phone">
-                </div>
-            </div>            
-            <div class="alert alert-info" ng-show="customerNonExist">
-                <p>We couldn't find this customer. Would you like to create this customer?</p>
-                <br/>
-                <button class="btn btn-default" ng-click="customerNonExist = false; isCreateCustomer = true;">Create new Customer</button>
+                    <div class="radio">
+                        <label><input type="radio" value="0" ng-model="ticket.urgency" > Urgent</label>
+                    </div>            
+        
+                    <div class="radio">
+                        <label><input type="radio" value="1" ng-model="ticket.urgency" > Normal</label>
+                    </div>            
+        
+                    <div class="radio">
+                        <label><input type="radio" value="2" ng-model="ticket.urgency" > Postpone</label>
+                    </div>            
+                    
+                </div>            
             </div>
-            <div class="form-group" >
-                <div class="col-sm-3 col-sm-offset-1">
-                    <button ng-if="!isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Search</button>
-                    <button ng-if="isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Create</button>
+
+            <div class="form-group">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-5">
+                    <alert ng-show="showAlert" type="{{ alertType }}">{{ alertMsg }}</alert>
+                </div>
+            </div>
+
+           <div class="form-group">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-3">
+                    <button type="submit" class="btn btn-primary" ng-disabled="mainform.$invalid">Create ticket</button>
+                    <!-- <input type="submit" id="submit" value="Submit" /> -->
+
+                    <button class="btn btn-default" type="reset">Reset fields</button>
                 </div>
             </div>
         </fieldset>
-    </form>
-    
-    <form class="form-horizontal" name="mainForm" ng-submit="submit()" novalidate>
-    <fieldset>
-        <!-- Form Name -->
-        <legend>Create a new service ticket</legend>
-        
-        <div class="form-group">
-          <label class="col-sm-1 control-label" for="assign_to">Status</label>
-          <div class="col-sm-2">
-            <select ng-model="ticket.status" name="status" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
-            </select>
-          </div>
-          <label class="col-sm-1 control-label" for="assign_to">Ticket type</label>
-          <div class="col-sm-2">
-            <select ng-model="ticket.type" name="type" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
-            </select>
-          </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Dispatch ID</label>
-            <div class="col-sm-5">
-                <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" required>
-            </div>
-            <div class="help-block" ng-show="mainForm.dispatchId.$invalid">
-                This field is required.
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Problem</label>
-            <div class="col-sm-5">
-                <div class="col-sm-4" ng-repeat="prob in problems">
-                    <div class="checkbox">
-                        <label>
-                            <input ng-click="prob.id = !problem.id" type="checkbox"> prob.text
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
-            <div class="col-sm-5">
-                <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.officeNote"></textarea>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
-            <div class="col-sm-5">
-                <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.jobNote"></textarea>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Assign Techician</label>
-            <div class="col-sm-2">
-                <select ng-model="ticket.technician" name="technician" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
-                </select>
-            </div>
-            
-            <label class="col-sm-1 control-label">Seller</label>
-            <div class="col-sm-2">
-                <select ng-model="ticket.seller" name="seller" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
-                </select>
-            </div>
-           <div class="help-block" ng-show="mainForm.technician.$invalid || mainForm.seller.$invalid">
-                <span ng-show="mainForm.technician.$invalid">Please assign to an technician. </span>
-                <span ng-show="mainForm.seller.$invalid">Please select a seller </span>
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Job date</label>
-            <div class="col-sm-5">
-                <div class="input-group">
-                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.jobDate" name="jobDate" is-open="isOpenJobDate" close-text="Close" required />
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="help-block" ng-show="mainform.jobDate.$invalid">
-                This field is required.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Promised date</label>
-            <div class="col-sm-5">
-                <div class="input-group">
-                    <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promisedDate" name="promisedDate" is-open="isOpenPromisedDate" close-text="Close" required />
-                    <div class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="openPromiseddate($event)"><i class="glyphicon glyphicon-calendar"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="help-block" ng-show="mainform.promisedDate.$invalid">
-                This field is required.
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-1 control-label ">Promised Time</label>
-            <label class="col-sm-1 control-label">From</label>
-            <div class="col-sm-2">
-                <timepicker ng-model="ticket.promisedFrom" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
-            </div>
-            
-            <label class="col-sm-1 control-label">To</label>
-            <div class="col-sm-2">
-                <timepicker ng-model="ticket.promisedTo" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
-
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <label class="col-sm-1 control-label">Urgency</label>
-            <div class="col-sm-5">
-                <div class="radio">
-                    <label><input type="radio" value="0" ng-model="ticket.urgency" > Urgent</label>
-                </div>            
-    
-                <div class="radio">
-                    <label><input type="radio" value="1" ng-model="ticket.urgency" > Normal</label>
-                </div>            
-    
-                <div class="radio">
-                    <label><input type="radio" value="2" ng-model="ticket.urgency" > Postpone</label>
-                </div>            
-                
-            </div>            
-        </div>
-
-        <div class="form-group">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-5">
-                <alert ng-show="showAlert" type="{{ alertType }}">{{ alertMsg }}</alert>
-            </div>
-        </div>
-
-       <div class="form-group">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-3">
-                <button type="submit" class="btn btn-primary" ng-disabled="mainform.$invalid">Create ticket</button>
-                <!-- <input type="submit" id="submit" value="Submit" /> -->
-
-                <button class="btn btn-default" type="reset">Reset fields</button>
-            </div>
-        </div>
-    </fieldset>
-    </form>
-
+        </form>
+    </panel>
 </div>

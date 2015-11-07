@@ -215,50 +215,25 @@ angular.module('themeApp.controllers')
         'dataService',
         'ticket',
         '$http',
-        function($scope, dataService, ticket, $http) {
-            $scope.customer = {};
-            $scope.ticket = ticket;
-            $scope.customerNonExist = false;
-            $scope.showAlert = false;
-            $scope.alertType = 'success';
-            $scope.alertMsg = '';
-            $scope.isCreateCustomer = false;
-            
-            
-            
-            var _createCustomer = function () {
-                $http.post(dataService.getApiUrl('/api/customer/new'), $scope.customer)
-                .then(function(result) {
-                    console.log(result);
-                    $scope.showAlert = false;
-                    alert('New customer added!');
+        function($scope, dataService, ticket, $http) {            
+            var init = function() {                        
+                $scope.ticket = ticket;
+                $scope.customerNonExist = false;
+                $scope.showAlert = false;
+                $scope.alertType = 'success';
+                $scope.alertMsg = '';
+                $scope.isCreateCustomer = false;
+                dataService.getUserList(function(result, err) {
+                    $scope.employee_list = result;
                 });
-            };
-            
-            var _searchCustomer = function () {
-                dataService.findCustomerWithOptions($scope.customer, function(result, err) {
-                    if(!err){
-                        $scope.customerNonExist = false;
-                        $scope.customer = result;
-                    } else {
-                        $scope.customerNonExist = true;
-                    }
-                });
-            };
-            
+            }
+                        
             $scope.submitCustomerInfo = function () {
                 if ($scope.isCreateCustomer) 
                     _createCustomer()
                 else
                     _searchCustomer()
             };
-            
-
-//            $scope.minDate = new Date();
-//
-//            dataService.getUserList(function(result, err) {
-//                $scope.user_list = result;
-//            });
 
             $scope.openJobdate = function($event) {
                 $event.preventDefault();
