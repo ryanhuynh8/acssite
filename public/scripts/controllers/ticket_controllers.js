@@ -34,22 +34,54 @@ angular.module('themeApp.controllers')
         }
     ])
     .factory('ticketStatus', function() {
-        return ['Completed', 'Incomplete', 'Pending', 'Accepted', 'Confirmed', 'Installation Schedule', 'Re-schedule', 'After Service', 'Follow Up', 'Last Call', 'Recalled', 'Cancelled', 'Hold', 'Next Day Service', 'TB Called', 'Cash out', 'In-Process', 'Order Parts' ];
+        return [
+            { text: 'Completed' , id: 1 },
+            { text: 'Incomplete' , id: 2 },
+            { text: 'Pending' , id: 3 },
+            { text: 'Accepted' , id: 4 },
+            { text: 'Confirmed' , id: 5 },
+            { text: 'Installation Schedule' , id: 6 },
+            { text: 'Re-schedule' , id: 7 },
+            { text: 'After Service' , id: 8 },
+            { text: 'Follow Up' , id: 9 },
+            { text: 'Last Call' , id: 10 },
+            { text: 'Recalled' , id: 11 },
+            { text: 'Cancelled' , id: 12 },
+            { text: 'Hold' , id: 13 },
+            { text: 'Next Day Service' , id: 14 },
+            { text: 'TB Called' , id: 15 },
+            { text: 'Cash out' , id: 16 },
+            { text: 'In-Process' , id: 17 },
+            { text: 'Order Parts' , id: 18 },
+        ];        
     })
     .factory('ticketUrgency', function() {
         return ['Urgent', 'Normal', 'Postpone'];
     })
     .factory('ticketProblem', function() {
-        return {
-            _problemList: ['No Cooling', 'No Heating', 'Duct Works', 'Water Leak', 'PM', 'Frozen up', 'Burning Smoke', 'Condenser not working', 'Tst Malfunction', 'Estimate', 'Running Constantly', 'System runs nosily', 'Pick up', 'Follow up', 'Replace'],
-            
+        return {            
+             _problemList: [    
+                { 'text': 'No Cooling', 'status': false },
+                { 'text': 'No Heating', 'status': false },
+                { 'text': 'Duct Works', 'status': false },
+                { 'text': 'Water Leak', 'status': false },
+                { 'text': 'PM', 'status': false },
+                { 'text': 'Frozen up', 'status': false },                                
+                { 'text': 'Burning Smoke', 'status': false },
+                { 'text': 'Condenser not working', 'status': false },
+                { 'text': 'Tst Malfunction', 'status': false },
+                { 'text': 'Estimate', 'status': false },
+                { 'text': 'Running Constantly', 'status': false },
+                { 'text': 'System runs nosily', 'status': false },
+                { 'text': 'Pick up', 'status': false },
+                { 'text': 'Follow up', 'status': false },
+                { 'text': 'Replace', 'status': false },
+            ],
+
             getList: function () {
-                var list = {};
-                angular.forEach(this._problemList, function(element) {
-                  list[element] = null;
-                });
-                return list;
+                return this._problemList;
             },
+
             prepareList: function(problems) {
                 var list = this.getList();
                 var problemString = problems.split(',');
@@ -72,7 +104,6 @@ angular.module('themeApp.controllers')
             }                    
         };
     })       
-    
     .controller('ticketsController', [
         '$scope',
         '$timeout',
@@ -215,8 +246,11 @@ angular.module('themeApp.controllers')
         'dataService',
         'ticket',
         '$http',
-        function($scope, dataService, ticket, $http) {            
+        'ticketProblem',
+        'ticketStatus',
+        function($scope, dataService, ticket, $http, ticketProblem, ticketStatus) {            
             var init = function() {                        
+                $scope.customer = {};
                 $scope.ticket = ticket;
                 $scope.customerNonExist = false;
                 $scope.showAlert = false;
@@ -226,13 +260,16 @@ angular.module('themeApp.controllers')
                 dataService.getUserList(function(result, err) {
                     $scope.employee_list = result;
                 });
-            }
+                dataService.getBuilderList(function(result,err) {
+                    $scope.builders = result;
+                });
+                $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // so hack-ish it makes a baby cry TvT
+
+                $scope.statuses = ticketStatus;
+            };
                         
             $scope.submitCustomerInfo = function () {
-                if ($scope.isCreateCustomer) 
-                    _createCustomer()
-                else
-                    _searchCustomer()
+                searchCustomer();
             };
 
             $scope.openJobdate = function($event) {
@@ -251,6 +288,38 @@ angular.module('themeApp.controllers')
                     $scope.isOpenPromisedDate = true;
             };
             
+            var buildBuilderListFromResult = function(builders) {
+                var newBuilderList = {};
+                var customer = $scope.customer;                
+                angular.forEach(builders, function(builder, index) {
+                    if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3){
+                        newBuilderList.push(builder);
+                    }
+                });
+                return newBuilderList;
+            }
+
+            var searchCustomer = function() {
+                dataService.findCustomerWithOptions($scope.customer, function(result, err) {
+                    if(result.length > 0){                        
+                        $scope.customerNonExist = false;
+                        $scope.isCreateCustomer = false;
+                        angular.forEach(result, function(customer, index){
+                            customer.full_name = customer.first_name + ' ' + customer.last_name;
+                            customer.full_description =  customer.full_name + ' at ' + customer.address;
+                        });
+                        $scope.customers = result;                        
+                        var list = buildBuilderListFromResult($scope.builders);
+                        $scope.builders = list;
+                    } else {
+                        $scope.customerNonExist = true;
+                        $scope.isCreateCustomer = true;
+                    }
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
+            };
 
             var validate = function() {
                 if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day')) {
@@ -288,5 +357,7 @@ angular.module('themeApp.controllers')
             $scope.reset = function() {
                 $scope.task = {};
             };
+
+            init();
         }
     ]);

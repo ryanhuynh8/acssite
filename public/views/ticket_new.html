@@ -17,29 +17,21 @@
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="customerName">Name</label>
                     <div class="col-sm-5">
-                        <input type="text" ng-model="customer.name" class="form-control" name="customerName" required>
-                    </div>
-                    <div class="help-block" ng-show="customerForm.customerName.$invalid">
-                        This field is required.
-                    </div>
-                </div>
-                <div class="form-group" ng-if="isCreateCustomer">
-                    <label class="col-sm-1 control-label" for="builder">Builder</label>
-                    <div class="col-sm-5">
-                        <input type="text" ng-model="customer.builder" class="form-control" name="builder">
-                    </div>
-                    <div class="help-block" ng-show="customerForm.builder.$invalid">
-                        This field is required.
-                    </div>
-                </div>
+                        <input type="text" ng-model="customer.id" class="form-control" name="customerName" required>
+                    </div>                    
+                </div>                
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Address</label>
                     <div class="col-sm-5">
                         <input type="text" ng-model="customer.address" class="form-control" name="address" ng-required="isCreateCustomer">
                     </div>
-                    <div class="help-block" ng-show="customerForm.address.$invalid && isCreateCustomer">
-                        This field is required.
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="builder">Builder</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in builders" required></select>
                     </div>
+                    <span>{{ customer.builder }}</span>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">City</label>
@@ -50,9 +42,9 @@
                     <div class="col-sm-1">
                         <input type="text" ng-model="customer.state" class="form-control" name="state" ng-required="isCreateCustomer">
                     </div>
-                    <label class="col-sm-1 control-label" for="zip">Zip</label>
+                    <label class="col-sm-1 control-label" for="zipcode">Zip</label>
                     <div class="col-sm-1">
-                        <input type="text" ng-model="customer.zip" class="form-control" name="zip" ng-required="isCreateCustomer">
+                        <input type="text" ng-model="customer.zipcpde" class="form-control" name="zipcode" ng-required="isCreateCustomer">
                     </div>
                     <div class="help-block" ng-show="(customerForm.city.$invalid || customerForm.state.$invalid || customerForm.zip.$invalid) && isCreateCustomer">
                         <span ng-show="customerForm.city.$invalid">City field is required. </span>
@@ -60,23 +52,26 @@
                         <span ng-show="customerForm.zip.$invalid">Zip field is required. </span>
                     </div>
                 </div>
-                <div class="form-group" ng-if="isCreateCustomer">
+                <div class="form-group">
                     <label class="col-sm-1 control-label" for="phone">Phone</label>
                     <div class="col-sm-5">
                         <input type="text" ng-model="customer.phone" class="form-control" name="phone">
                     </div>
                 </div>            
                 <div class="alert alert-info" ng-show="customerNonExist">
-                    <p>We couldn't find this customer. Would you like to create this customer?</p>
-                    <br/>
-                    <button class="btn btn-default" ng-click="customerNonExist = false; isCreateCustomer = true;">Create new Customer</button>
-                </div>
+                    <p>We couldn't find this customer. Please try again or create a new customer</p>             
+                </div>         
                 <div class="form-group" >
                     <div class="col-sm-3 col-sm-offset-1">
-                        <button ng-if="!isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Search</button>
-                        <button ng-if="isCreateCustomer" type="submit" id="search_customer_button" class="btn btn-primary" ng-disabled="customerForm.$invalid">Create</button>
+                        <button type="submit" id="search_customer_button" class="btn btn-primary">Search</button>                        
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="phone">Search Result</label>
+                    <div class="col-sm-5">
+                        <select class="form-control" ng-model="customer" ng-options="customer as customer.full_description for customer in customers" required></select>
+                    </div>
+                </div>                   
             </fieldset>
         </form>
         
@@ -88,9 +83,10 @@
             <div class="form-group">
               <label class="col-sm-1 control-label" for="assign_to">Status</label>
               <div class="col-sm-2">
-                <select ng-model="ticket.status" name="status" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                <select ng-model="ticket.status" name="status" ng-options="status.id as status.text for status in statuses" class="form-control" required>
                 </select>
               </div>
+              <span>{{ ticket.status }}</span>
               <label class="col-sm-1 control-label" for="assign_to">Ticket type</label>
               <div class="col-sm-2">
                 <select ng-model="ticket.type" name="type" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
@@ -102,10 +98,7 @@
                 <label class="col-sm-1 control-label">Dispatch ID</label>
                 <div class="col-sm-5">
                     <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" required>
-                </div>
-                <div class="help-block" ng-show="mainForm.dispatchId.$invalid">
-                    This field is required.
-                </div>
+                </div>                
             </div>
             
             <div class="form-group">
@@ -114,10 +107,10 @@
                     <div class="col-sm-4" ng-repeat="prob in problems">
                         <div class="checkbox">
                             <label>
-                                <input ng-click="prob.id = !problem.id" type="checkbox"> prob.text
+                                <input type="checkbox" ng-model="prob.status"> {{ prob.text }}
                             </label>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
             </div>
             

@@ -21,13 +21,20 @@ angular.module('themeApp.controllers')
         '$bootbox',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
+            var mode = {};
             var init = function() {
                 $scope.customer = {};
                 $scope.customer.units = [];
                 $scope.states = dataService.getListOfStates();
-                $scope.builders = dataService.getBuilderList();
+                
+                dataService.getBuilderList(function(result, err) {
+                    $scope.builders = result;
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
                 $scope.search_params = {};
-                var mode = dataService.get('user_load_mode');
+                mode = dataService.get('user_load_mode');
 
                 $scope.mode = mode;
 
@@ -40,8 +47,6 @@ angular.module('themeApp.controllers')
                     });
                 }
             }
-
-
 
             $scope.submit = function() {
                 if (mode === 'edit') { // updating model
@@ -81,8 +86,8 @@ angular.module('themeApp.controllers')
                         field: 'last_name',
                         displayName: 'Last Name',
                         width: 150
-                    }, {
-                        field: 'address',
+                         }, {
+                   field: 'address',
                         displayName: 'Address',
                         width: '*'
                     }, {
@@ -155,5 +160,7 @@ angular.module('themeApp.controllers')
                 $scope.dataLoaded = false;
                 $scope.loadGrid();
             };
+
+            init();
         }
     ]);
