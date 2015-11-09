@@ -251,12 +251,17 @@ angular.module('themeApp.controllers')
         function($scope, dataService, ticket, $http, ticketProblem, ticketStatus) {            
             var init = function() {                        
                 $scope.customer = {};
+                $scope.customers = [];
+                $scope.selectedCustomer = {};
                 $scope.ticket = ticket;
                 $scope.customerNonExist = false;
                 $scope.showAlert = false;
                 $scope.alertType = 'success';
                 $scope.alertMsg = '';
                 $scope.isCreateCustomer = false;
+                $scope.disableEdit = false;
+                
+
                 dataService.getUserList(function(result, err) {
                     $scope.employee_list = result;
                 });
@@ -289,7 +294,7 @@ angular.module('themeApp.controllers')
             };
             
             var buildBuilderListFromResult = function(builders) {
-                var newBuilderList = {};
+                var newBuilderList = [];
                 var customer = $scope.customer;                
                 angular.forEach(builders, function(builder, index) {
                     if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3){
@@ -304,16 +309,18 @@ angular.module('themeApp.controllers')
                     if(result.length > 0){                        
                         $scope.customerNonExist = false;
                         $scope.isCreateCustomer = false;
+                        $scope.disabledEdit = true;
                         angular.forEach(result, function(customer, index){
                             customer.full_name = customer.first_name + ' ' + customer.last_name;
                             customer.full_description =  customer.full_name + ' at ' + customer.address;
+                            customer.name = customer.full_name;
                         });
-                        $scope.customers = result;                        
-                        var list = buildBuilderListFromResult($scope.builders);
+                        $scope.customers = result;                                                
                         $scope.builders = list;
                     } else {
                         $scope.customerNonExist = true;
                         $scope.isCreateCustomer = true;
+                        $scope.disabledEdit = false;
                     }
                     if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
@@ -321,12 +328,14 @@ angular.module('themeApp.controllers')
                 });
             };
 
-            var validate = function() {
-                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day')) {
-                    return true;
-                } else {
-                    return false;
-                }
+            $scope.customerChange = function () {
+                angular.forEach($scope.customers, function(customer, index){
+                    if ($scope.selectedCustomer.id === customer.id)
+                    {
+                        $scope.customer = customer;                        
+                        $scope.customer.builders = buildBuilderListFromResult($scope.builders);                        
+                    }
+                });  
             };
 
             $scope.submit = function() {
@@ -354,8 +363,9 @@ angular.module('themeApp.controllers')
                 
             };
 
-            $scope.reset = function() {
-                $scope.task = {};
+            $scope.resetSearch = function() {
+                $scope.disabledEdit = false;    
+                $scope.customer = {};                
             };
 
             init();

@@ -17,34 +17,34 @@
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="customerName">Name</label>
                     <div class="col-sm-5">
-                        <input type="text" ng-model="customer.id" class="form-control" name="customerName" required>
+                        <input type="text" ng-model="customer.name" class="form-control" name="customerName" required ng-disabled="disabledEdit" placeholder="enter name to search">
                     </div>                    
                 </div>                
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Address</label>
                     <div class="col-sm-5">
-                        <input type="text" ng-model="customer.address" class="form-control" name="address" ng-required="isCreateCustomer">
+                        <input type="text" ng-model="customer.address" class="form-control" name="address" ng-required="isCreateCustomer" ng-disabled="disabledEdit" placeholder="enter address to search">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="builder">Builder</label>
                     <div class="col-sm-5">
-                        <select class="form-control" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in builders" required></select>
+                        <select class="form-control" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in customer.builders" required></select>
                     </div>
                     <span>{{ customer.builder }}</span>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">City</label>
                     <div class="col-sm-1">
-                        <input type="text" ng-model="customer.city" class="form-control" name="city" ng-required="isCreateCustomer">
+                        <input type="text" ng-model="customer.city" class="form-control" name="city" ng-required="isCreateCustomer" ng-disabled="disabledEdit">
                     </div>
                     <label class="col-sm-1 control-label" for="state">State</label>
                     <div class="col-sm-1">
-                        <input type="text" ng-model="customer.state" class="form-control" name="state" ng-required="isCreateCustomer">
+                        <input type="text" ng-model="customer.state" class="form-control" name="state" ng-required="isCreateCustomer" ng-disabled="disabledEdit">
                     </div>
                     <label class="col-sm-1 control-label" for="zipcode">Zip</label>
                     <div class="col-sm-1">
-                        <input type="text" ng-model="customer.zipcpde" class="form-control" name="zipcode" ng-required="isCreateCustomer">
+                        <input type="text" ng-model="customer.zipcode" class="form-control" name="zipcode" ng-required="isCreateCustomer" ng-disabled="disabledEdit">
                     </div>
                     <div class="help-block" ng-show="(customerForm.city.$invalid || customerForm.state.$invalid || customerForm.zip.$invalid) && isCreateCustomer">
                         <span ng-show="customerForm.city.$invalid">City field is required. </span>
@@ -53,24 +53,31 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-1 control-label" for="phone">Phone</label>
+                    <label class="col-sm-1 control-label" for="phone1" ng-disabled="disabledEdit">Phone 1</label>
                     <div class="col-sm-5">
-                        <input type="text" ng-model="customer.phone" class="form-control" name="phone">
+                        <input type="text" ng-model="customer.phone1" class="form-control" name="phone1" ng-disabled="disabledEdit">
                     </div>
-                </div>            
+                </div>          
+                <div class="form-group">
+                    <label class="col-sm-1 control-label" for="phone2" ng-disabled="disabledEdit">Phone 2</label>
+                    <div class="col-sm-5">
+                        <input type="text" ng-model="customer.phone2" class="form-control" name="phone2" ng-disabled="disabledEdit">
+                    </div>
+                </div>                   
                 <div class="alert alert-info" ng-show="customerNonExist">
                     <p>We couldn't find this customer. Please try again or create a new customer</p>             
                 </div>         
                 <div class="form-group" >
                     <div class="col-sm-3 col-sm-offset-1">
-                        <button type="submit" id="search_customer_button" class="btn btn-primary">Search</button>                        
+                        <button type="submit" id="search_customer_button" class="btn btn-primary">Search</button>
+                        <button type="button" id="resetSearch" class="btn" ng-click="resetSearch()">Reset</button>                        
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="phone">Search Result</label>
                     <div class="col-sm-5">
-                        <select class="form-control" ng-model="customer" ng-options="customer as customer.full_description for customer in customers" required></select>
-                    </div>
+                        <select class="form-control" ng-model="selectedCustomer.id" ng-options="customer.id as customer.full_description for customer in customers" ng-change="customerChange()" required></select>
+                    </div>                    
                 </div>                   
             </fieldset>
         </form>
@@ -85,11 +92,12 @@
               <div class="col-sm-2">
                 <select ng-model="ticket.status" name="status" ng-options="status.id as status.text for status in statuses" class="form-control" required>
                 </select>
-              </div>
-              <span>{{ ticket.status }}</span>
+              </div>              
               <label class="col-sm-1 control-label" for="assign_to">Ticket type</label>
               <div class="col-sm-2">
-                <select ng-model="ticket.type" name="type" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                <select ng-model="ticket.ticket_type" name="type" class="form-control" required>
+                    <option value="0">Original</option>
+                    <option value="1">Recalled</option>
                 </select>
               </div>
             </div>
@@ -117,27 +125,27 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.officeNote"></textarea>
+                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note"></textarea>
                 </div>
             </div>
             
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.jobNote"></textarea>
+                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.job_note"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">Assign Techician</label>
                 <div class="col-sm-2">
-                    <select ng-model="ticket.technician" name="technician" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                    <select ng-model="ticket.assign_tech" name="technician" ng-options="employee.id as employee.full_name for employee in employee_list" class="form-control" required>
                     </select>
                 </div>
                 
                 <label class="col-sm-1 control-label">Seller</label>
                 <div class="col-sm-2">
-                    <select ng-model="ticket.seller" name="seller" ng-options="user.id as user.full_name for user in user_list" class="form-control" required>
+                    <select ng-model="ticket.seller" name="seller" ng-options="employee.id as employee.full_name for employee in employee_list" class="form-control" required>
                     </select>
                 </div>
                <div class="help-block" ng-show="mainForm.technician.$invalid || mainForm.seller.$invalid">
@@ -150,7 +158,7 @@
                 <label class="col-sm-1 control-label">Job date</label>
                 <div class="col-sm-5">
                     <div class="input-group">
-                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.jobDate" name="jobDate" is-open="isOpenJobDate" close-text="Close" required />
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.job_date" name="jobDate" is-open="isOpenJobDate" close-text="Close" required />
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
                             </button>
@@ -166,7 +174,7 @@
                 <label class="col-sm-1 control-label">Promised date</label>
                 <div class="col-sm-5">
                     <div class="input-group">
-                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promisedDate" name="promisedDate" is-open="isOpenPromisedDate" close-text="Close" required />
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promised_date" name="promisedDate" is-open="isOpenPromisedDate" close-text="Close" required />
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openPromiseddate($event)"><i class="glyphicon glyphicon-calendar"></i>
                             </button>
@@ -182,12 +190,12 @@
                 <label class="col-sm-1 control-label ">Promised Time</label>
                 <label class="col-sm-1 control-label">From</label>
                 <div class="col-sm-2">
-                    <timepicker ng-model="ticket.promisedFrom" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
+                    <timepicker ng-model="ticket.promised_time_from" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
                 </div>
                 
                 <label class="col-sm-1 control-label">To</label>
                 <div class="col-sm-2">
-                    <timepicker ng-model="ticket.promisedTo" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
+                    <timepicker ng-model="ticket.promised_time_to" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
 
                 </div>
             </div>
