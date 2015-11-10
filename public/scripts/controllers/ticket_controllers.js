@@ -25,7 +25,7 @@ angular.module('themeApp.controllers')
                                 seller: null,
                                 promised_date: null,
                                 promised_time_from: null,
-                                promise_time_to: null,
+                                promised_time_to: null,
                                 urgency: null                                
                             };
                         }
@@ -34,22 +34,54 @@ angular.module('themeApp.controllers')
         }
     ])
     .factory('ticketStatus', function() {
-        return ['Completed', 'Incomplete', 'Pending', 'Accepted', 'Confirmed', 'Installation Schedule', 'Re-schedule', 'After Service', 'Follow Up', 'Last Call', 'Recalled', 'Cancelled', 'Hold', 'Next Day Service', 'TB Called', 'Cash out', 'In-Process', 'Order Parts' ];
+        return [
+            { text: 'Completed' , id: 1 },
+            { text: 'Incomplete' , id: 2 },
+            { text: 'Pending' , id: 3 },
+            { text: 'Accepted' , id: 4 },
+            { text: 'Confirmed' , id: 5 },
+            { text: 'Installation Schedule' , id: 6 },
+            { text: 'Re-schedule' , id: 7 },
+            { text: 'After Service' , id: 8 },
+            { text: 'Follow Up' , id: 9 },
+            { text: 'Last Call' , id: 10 },
+            { text: 'Recalled' , id: 11 },
+            { text: 'Cancelled' , id: 12 },
+            { text: 'Hold' , id: 13 },
+            { text: 'Next Day Service' , id: 14 },
+            { text: 'TB Called' , id: 15 },
+            { text: 'Cash out' , id: 16 },
+            { text: 'In-Process' , id: 17 },
+            { text: 'Order Parts' , id: 18 },
+        ];        
     })
     .factory('ticketUrgency', function() {
         return ['Urgent', 'Normal', 'Postpone'];
     })
     .factory('ticketProblem', function() {
-        return {
-            _problemList: ['No Cooling', 'No Heating', 'Duct Works', 'Water Leak', 'PM', 'Frozen up', 'Burning Smoke', 'Condenser not working', 'Tst Malfunction', 'Estimate', 'Running Constantly', 'System runs nosily', 'Pick up', 'Follow up', 'Replace'],
-            
+        return {            
+             _problemList: [    
+                { 'text': 'No Cooling', 'status': false },
+                { 'text': 'No Heating', 'status': false },
+                { 'text': 'Duct Works', 'status': false },
+                { 'text': 'Water Leak', 'status': false },
+                { 'text': 'PM', 'status': false },
+                { 'text': 'Frozen up', 'status': false },                                
+                { 'text': 'Burning Smoke', 'status': false },
+                { 'text': 'Condenser not working', 'status': false },
+                { 'text': 'Tst Malfunction', 'status': false },
+                { 'text': 'Estimate', 'status': false },
+                { 'text': 'Running Constantly', 'status': false },
+                { 'text': 'System runs nosily', 'status': false },
+                { 'text': 'Pick up', 'status': false },
+                { 'text': 'Follow up', 'status': false },
+                { 'text': 'Replace', 'status': false },
+            ],
+
             getList: function () {
-                var list = {};
-                angular.forEach(this._problemList, function(element) {
-                  list[element] = null;
-                });
-                return list;
+                return this._problemList;
             },
+
             prepareList: function(problems) {
                 var list = this.getList();
                 var problemString = problems.split(',');
@@ -72,7 +104,6 @@ angular.module('themeApp.controllers')
             }                    
         };
     })       
-    
     .controller('ticketsController', [
         '$scope',
         '$timeout',
@@ -92,34 +123,30 @@ angular.module('themeApp.controllers')
             var loadGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
-                    rowHeight: 150,
+                    rowHeight: 100,
                     rowTemplate: 'views/grid_template/row.ticket.template.html',
                     enableHorizontalScrollbar: 0,
                     columnDefs: [{
-                        field: 'customer.name',
+                        field: 'Customer.name',
                         displayName: 'Customer',
-                        width: 100
+                        width: 200
                     }, {
-                        field: 'customer.phone',
+                        field: 'Customer.phone1',
                         displayName: 'Phone',
-                        width: 100
+                        width: 150
                     }, {
-                        field: 'create_by',
+                        field: 'create_on',
                         displayName: 'Created Date',
-                        cellFilter: 'date : \'medium\'',
-                        width: 100
+                        cellFilter: 'date',
+                        width: 150
                     }, {
                         field: 'promised_date',
                         displayName: 'Promised Date',
-                        cellFilter: 'date: \'medium\'',
-                        width: 100
+                        cellFilter: 'date',
+                        width: 150
                     }, {
                         field: 'status',
                         displayName: 'Status',
-                        width: 100
-                    }, {
-                        field: 'problem',
-                        displayName: 'Problem',
                         width: 100
                     }, {
                         field: 'urgency',
@@ -134,7 +161,7 @@ angular.module('themeApp.controllers')
                     data: [] // HACK: so that the browser won't give a warning complain
                 };
                 dataService.getAllTicket(function(result, err) {
-                    $scope.gridOptions.data = _prepareData(result);
+                    $scope.gridOptions.data = result;
                     $scope.dataLoaded = true;
                     if (err !== undefined) {
                         dataService.showDatabaseErrorMessage($bootbox);
@@ -142,34 +169,6 @@ angular.module('themeApp.controllers')
                 });
             };
             loadGrid();
-
-            $scope.buttonClickHandler = function($event, row, action) {
-                if (action === 'view') {
-                    var msg = '<h4><span style="white-space: pre-line; font-family: Verdana">';
-                    msg += row.entity.job_note;
-                    msg += '</span></h4>';
-                    $bootbox.dialog({
-                        size: 'large',
-                        title: '<b>Ticket Detail</b>',
-                        message: msg,
-                        onEscape: true,
-                        buttons: {
-                            ok: {
-                                label: 'OK'
-                            }
-                        }
-                    });
-                } else if (action === 'edit') {
-                    dataService.set('ticket_to_edit', row.entity);
-                    $location.path('/ticket/edit');
-                } else if (action === 'delete') {
-                    $bootbox.confirm('Are you sure you want to delete this ticket?', function(result) {
-                        if (result) {
-                            deleteTask(row.entity.id);
-                        }
-                    });
-                }
-            };
 
             var deleteTask = function(id) {
                 var item_to_delete = {
@@ -186,22 +185,6 @@ angular.module('themeApp.controllers')
                     });
             };
 
-            $scope.quickSearch = function(is_search_archive) {
-                $scope.dataLoaded = false;
-                if (is_search_archive) {
-                    $scope.search_params.status = 21;
-                }
-                dataService.findTicketWithOptions($scope.search_params, function(result, err) {
-                    $scope.gridOptions.data = result;
-                    $scope.dataLoaded = true;
-                    $scope.showResult = true;
-                    $scope.resultMsg = 'Found ' + result.length + ' record(s).';
-                    if (err !== undefined) {
-                        dataService.showDatabaseErrorMessage($bootbox);
-                    }
-                });
-            };
-
             $scope.reset = function() {
                 $scope.search_params = {};
                 $scope.showResult = false;
@@ -215,79 +198,133 @@ angular.module('themeApp.controllers')
         'dataService',
         'ticket',
         '$http',
-        function($scope, dataService, ticket, $http) {
-            $scope.customer = {};
-            $scope.ticket = ticket;
-            $scope.customerNonExist = false;
-            $scope.showAlert = false;
-            $scope.alertType = 'success';
-            $scope.alertMsg = '';
-            $scope.isCreateCustomer = false;
-            
-            
-            
-            var _createCustomer = function () {
-                $http.post(dataService.getApiUrl('/api/customer/new'), $scope.customer)
-                .then(function(result) {
-                    console.log(result);
-                    $scope.showAlert = false;
-                    alert('New customer added!');
-                });
-            };
-            
-            var _searchCustomer = function () {
-                dataService.findCustomerWithOptions($scope.customer, function(result, err) {
-                    if(!err){
-                        $scope.customerNonExist = false;
-                        $scope.customer = result;
-                    } else {
-                        $scope.customerNonExist = true;
-                    }
-                });
-            };
-            
-            $scope.submitCustomerInfo = function () {
-                if ($scope.isCreateCustomer) 
-                    _createCustomer()
-                else
-                    _searchCustomer()
-            };
-            
+        '$timeout',
+        '$location',
+        '$filter',
+        'ticketProblem',
+        'ticketStatus',
+        function($scope, dataService, ticket, $http, $timeout, $location, $filter, ticketProblem, ticketStatus) {            
+            var init = function() {                        
+                $scope.customer = {};
+                $scope.customers = [];
+                $scope.selectedCustomer = {};
+                $scope.ticket = ticket;
+                $scope.customerNonExist = false;
+                $scope.showAlert = false;
+                $scope.alertType = 'success';
+                $scope.alertMsg = '';
+                $scope.isCreateCustomer = false;
+                $scope.disableEdit = false;
+                $scope.datePickerStatus = {};
 
-//            $scope.minDate = new Date();
-//
-//            dataService.getUserList(function(result, err) {
-//                $scope.user_list = result;
-//            });
+                dataService.getUserList(function(result, err) {
+                    $scope.employee_list = result;
+                });
+                dataService.getBuilderList(function(result,err) {
+                    $scope.builders = result;
+                    $scope.customer.builders = $scope.builders;
+                });
+                dataService.getLastTicketId(function(result,err){
+                    var n = result.last_id + 1;
+                    $scope.ticket.invoice_id = 'R' + n;
+                });
+                $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
+                $scope.statuses = ticketStatus;
+            };
+                        
+            $scope.submitCustomerInfo = function () {
+                searchCustomer();
+            };
 
             $scope.openJobdate = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-                if ($scope.isOpenJobDate) $scope.isOpenJobDate = false;
+                if ($scope.datePickerStatus.isOpenJobDate) $scope.datePickerStatus.isOpenJobDate = false;
                 else
-                    $scope.isOpenJobDate = true;
+                    $scope.datePickerStatus.isOpenJobDate = true;
             };
             
             $scope.openPromiseddate = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
-                if ($scope.isOpenPromisedDate) $scope.isOpenPromisedDate = false;
+                if ($scope.datePickerStatus.isOpenPromisedDate) $scope.datePickerStatus.isOpenPromisedDate = false;
                 else
-                    $scope.isOpenPromisedDate = true;
+                    $scope.datePickerStatus.isOpenPromisedDate= true;
             };
             
 
-            var validate = function() {
-                if (moment().isBefore(moment($scope.task.due_date)) || moment().isSame(moment($scope.task.due_date), 'day')) {
-                    return true;
-                } else {
-                    return false;
+            var buildBuilderListFromResult = function(builders) {
+                var newBuilderList = [];
+                var customer = $scope.customer;                
+                angular.forEach(builders, function(builder, index) {
+                    if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3) {
+                        newBuilderList.push(builder);
+                    }
+                });
+                return newBuilderList;
+            }
+
+            var searchCustomer = function() {
+                dataService.findCustomerWithOptions($scope.customer, function(result, err) {
+                    if(result.length > 0){                        
+                        $scope.customerNonExist = false;
+                        $scope.isCreateCustomer = false;
+                        $scope.disabledEdit = true;
+                        angular.forEach(result, function(customer, index){
+                            customer.full_name = customer.first_name + ' ' + customer.last_name;
+                            customer.full_description =  customer.full_name + ' at ' + customer.address;
+                            customer.name = customer.full_name;
+                        });
+                        $scope.customers = result;                                                
+                        $scope.builders = list;
+                    } else {
+                        $scope.customerNonExist = true;
+                    }
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
+            };
+
+            $scope.customerChange = function() {
+                angular.forEach($scope.customers, function(customer, index){
+                    if ($scope.selectedCustomer.id === customer.id)
+                    {
+                        $scope.customer = customer;                        
+                        $scope.customer.builders = buildBuilderListFromResult($scope.builders);                        
+                    }
+                });  
+            };
+
+            $scope.builderChange = function() {
+                $scope.ticket.builder_id = $scope.customer.builder;
+                /* find the builder from list */
+                var builder = {};
+                angular.forEach($scope.builders, function(builder, index){
+                    if (builder.builder_id === $scope.customer.builder)
+                    {
+                        $scope.ticket.office_id = builder.office_number;
+                        $scope.ticket.dispatch_id = builder.id_counter + 1;
+                    }
+                })
+            };
+
+            $scope.officeNoteKeyPressed = function ($event) {                
+                $event.stopPropagation();
+                if ($event.keyCode === 13) {
+                    $scope.ticket.office_note += 'foo ';
                 }
             };
 
             $scope.submit = function() {
                 $scope.ticket.customer_id = $scope.customer.id;
-                
+                $scope.ticket.problem = angular.toJson($scope.problems);
+                $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
+                $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');   
+                /* create new customer if we are not using search */
+                if ($scope.isCreateCustomer) {
+                    $scope.ticket.customer = $scope.customer;
+                }
                 $http.post(dataService.getApiUrl('/api/ticket/new'), $scope.ticket)
                 .then(function(result) {
                     if (result.data.message !== 'success') {
@@ -310,8 +347,15 @@ angular.module('themeApp.controllers')
                 
             };
 
-            $scope.reset = function() {
-                $scope.task = {};
+            $scope.resetSearch = function() {
+                $scope.disabledEdit = false;    
+                $scope.customer = {};
+                $scope.customer.builders = $scope.builders;
+                $scope.customers = [];
+                $scope.isCreateCustomer = true;
+                $scope.selectedCustomer = {};
             };
+
+            init();
         }
     ]);

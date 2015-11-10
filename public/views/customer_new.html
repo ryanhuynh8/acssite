@@ -122,7 +122,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Builder #1</label>
 				<div class="col-sm-6">
-					<select class="form-control" ng-model="customer.builder_1" ng-options="builder.id as builder.name for builder in builders"></select>
+					<select class="form-control" ng-model="customer.builder_1" ng-options="builder.builder_id as builder.full_name for builder in builders"></select>
 				</div>
 			</div>
 
@@ -130,7 +130,7 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Builder #2</label>
 				<div class="col-sm-6">
-					<select class="form-control" ng-model="customer.builder_2" ng-options="builder.id as builder.name for builder in builders"></select>
+					<select class="form-control" ng-model="customer.builder_2"ng-options="builder.builder_id as builder.full_name for builder in builders"></select>
 				</div>
 			</div>
 
@@ -138,10 +138,10 @@
 			<div class="form-group">
 				<label class="col-sm-3 control-label">Builder #3</label>
 				<div class="col-sm-6">
-					<select class="form-control" ng-model="customer.builder_3" ng-options="builder.id as builder.name for builder in builders"></select>
+					<select class="form-control" ng-model="customer.builder_3" ng-options="builder.builder_id as builder.full_name for builder in builders"></select>
 				</div>
 			</div>
-
+						
 			<!-- Labels -->
 			<div class="form-group">
 				<label class="col-sm-3 control-label"></label>

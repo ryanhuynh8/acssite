@@ -25,7 +25,7 @@ angular.module('themeApp.controllers')
             $scope.showError = false;
             $scope.user = {};
             $scope.errorMsg = '';
-
+            $scope.states = dataService.getListOfStates();
             // default values
             $scope.user.sex = 0;
             $scope.user.employee_type = 0;
@@ -136,7 +136,7 @@ angular.module('themeApp.controllers')
                 // check for data format
                 if (!isNumeric(user.zip)) $scope.errorMsg += 'Please enter a valid zipcode.\n';
                 if (!isNumeric(user.phone1)) $scope.errorMsg += 'Please enter a valid first phone number.\n';
-                if (!isNumeric(user.phone2) && (user.phone2 !== '')) $scope.errorMsg += 'Please enter a valid second phone number.\n';
+                
                 if (!email_regex.test(user.email)) $scope.errorMsg += 'Please enter a valid email address, ie: abc@def.com.\n';
                 // check for password matching
                 if (user.password !== user.confirm_password) $scope.errorMsg += 'Passwords do not match.\n';

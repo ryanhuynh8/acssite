@@ -1,8 +1,8 @@
 angular.module('theme.core.services')
     .service('dataService', ['$http', function($http) {
         var data = {};
-//        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
-        var HOST_URL = 'http://localhost:8080';
+        var HOST_URL = 'https://acsdemo-yuhuynh.c9.io';
+        // var HOST_URL = 'http://localhost:8080';
 
         var processResultExtractName = function(result) {
             angular.forEach(result, function(row) {
@@ -57,11 +57,26 @@ angular.module('theme.core.services')
                 });
         };
         
+        this.getLastTicketId = function(cb) {
+            var result, err;
+            $http.get(HOST_URL + '/api/ticket/last_id')
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
+        };
+
         this.getAllTicket = function(cb) {
           var result, err;
           $http.get(HOST_URL + '/api/tickets')
           .success(function(data) {
               result = data;
+              processTicketInfo(result);
           })
           .catch(function(error) {
               err = error;
@@ -71,6 +86,11 @@ angular.module('theme.core.services')
           });
         };
         
+        var processTicketInfo = function(tickets){
+            angular.forEach(tickets, function(ticket, index){
+                ticket.Customer.name = ticket.Customer.first_name + ' ' + ticket.Customer.last_name;
+            });
+        };
 
         this.getCustomerList = function(cb) {
             var result, err;
@@ -267,27 +287,18 @@ angular.module('theme.core.services')
                 });
         }
 
-        this.getBuilderList = function() {
-            // return [
-            //     {
-            //         id: '8',
-            //         name: 'foo'
-            //     }
-            // ];
-            return [
-                {
-                    "id": 0,
-                    "name": 'Bu'
-                },
-                {
-                    "id": 2,
-                    "name": 'Nyan'
-                },
-                {
-                    "id": 7,
-                    "name": 'Lac dit'
-                }
-            ];
+        this.getBuilderList = function(cb) {
+            var result, err;
+            $http.get(HOST_URL + '/api/builder/list/')
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                })
+                .finally(function() {
+                    cb(result, err);
+                });
         };
 
         this.getListOfStates = function() {
