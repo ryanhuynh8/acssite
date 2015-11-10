@@ -25,7 +25,7 @@ angular.module('themeApp.controllers')
                                 seller: null,
                                 promised_date: null,
                                 promised_time_from: null,
-                                promise_time_to: null,
+                                promised_time_to: null,
                                 urgency: null                                
                             };
                         }
@@ -246,9 +246,10 @@ angular.module('themeApp.controllers')
         'dataService',
         'ticket',
         '$http',
+        '$filter',
         'ticketProblem',
         'ticketStatus',
-        function($scope, dataService, ticket, $http, ticketProblem, ticketStatus) {            
+        function($scope, dataService, ticket, $http, $filter, ticketProblem, ticketStatus) {            
             var init = function() {                        
                 $scope.customer = {};
                 $scope.customers = [];
@@ -268,8 +269,7 @@ angular.module('themeApp.controllers')
                 dataService.getBuilderList(function(result,err) {
                     $scope.builders = result;
                 });
-                $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // so hack-ish it makes a baby cry TvT
-
+                $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
                 $scope.statuses = ticketStatus;
             };
                         
@@ -297,7 +297,7 @@ angular.module('themeApp.controllers')
                 var newBuilderList = [];
                 var customer = $scope.customer;                
                 angular.forEach(builders, function(builder, index) {
-                    if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3){
+                    if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3) {
                         newBuilderList.push(builder);
                     }
                 });
@@ -338,9 +338,20 @@ angular.module('themeApp.controllers')
                 });  
             };
 
+            $scope.officeNoteKeyPressed = function ($event) {                
+                $event.stopPropagation();
+                if ($event.keyCode === 13) {
+                    $scope.ticket.office_note += 'foo ';
+                }
+            };
+
             $scope.submit = function() {
                 $scope.ticket.customer_id = $scope.customer.id;
-                
+                $scope.ticket.problem = angular.toJson($scope.problems);
+                $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
+                $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');
+                $scope.ticket.promised_time_from = $filter('date')($scope.ticket.promised_time_from, 'shortTime');
+                $scope.ticket.promised_time_to = $filter('date')($scope.ticket.promised_time_to, 'shortTime');
                 $http.post(dataService.getApiUrl('/api/ticket/new'), $scope.ticket)
                 .then(function(result) {
                     if (result.data.message !== 'success') {
@@ -365,7 +376,10 @@ angular.module('themeApp.controllers')
 
             $scope.resetSearch = function() {
                 $scope.disabledEdit = false;    
-                $scope.customer = {};                
+                $scope.customer = {};
+                $scope.customer.builders = $scope.builders;
+                $scope.customers = [];
+                $scope.isCreateCustomer = true;
             };
 
             init();

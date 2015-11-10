@@ -12,14 +12,14 @@
 <div class="container-fluid">
     <panel panel-class="panel-midnightblue" heading="Create a new service ticket">
         <form class="form-horizontal" name="customerForm" ng-submit="submitCustomerInfo()" novalidate>
-            <fieldset>            
+            <fieldset>
                 <legend>Customer information</legend>
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="customerName">Name</label>
                     <div class="col-sm-5">
                         <input type="text" ng-model="customer.name" class="form-control" name="customerName" required ng-disabled="disabledEdit" placeholder="enter name to search">
-                    </div>                    
-                </div>                
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">Address</label>
                     <div class="col-sm-5">
@@ -57,42 +57,42 @@
                     <div class="col-sm-5">
                         <input type="text" ng-model="customer.phone1" class="form-control" name="phone1" ng-disabled="disabledEdit">
                     </div>
-                </div>          
+                </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="phone2" ng-disabled="disabledEdit">Phone 2</label>
                     <div class="col-sm-5">
                         <input type="text" ng-model="customer.phone2" class="form-control" name="phone2" ng-disabled="disabledEdit">
                     </div>
-                </div>                   
+                </div>
                 <div class="alert alert-info" ng-show="customerNonExist">
-                    <p>We couldn't find this customer. Please try again or create a new customer</p>             
-                </div>         
+                    <p>We couldn't find this customer. Please try again or create a new customer</p>
+                </div>
                 <div class="form-group" >
                     <div class="col-sm-3 col-sm-offset-1">
                         <button type="submit" id="search_customer_button" class="btn btn-primary">Search</button>
-                        <button type="button" id="resetSearch" class="btn" ng-click="resetSearch()">Reset</button>                        
+                        <button type="button" id="resetSearch" class="btn" ng-click="resetSearch()">Reset</button>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label" for="phone">Search Result</label>
                     <div class="col-sm-5">
                         <select class="form-control" ng-model="selectedCustomer.id" ng-options="customer.id as customer.full_description for customer in customers" ng-change="customerChange()" required></select>
-                    </div>                    
-                </div>                   
+                    </div>
+                </div>
             </fieldset>
         </form>
-        
+
         <form class="form-horizontal" name="mainForm" ng-submit="submit()" novalidate>
         <fieldset>
             <!-- Form Name -->
             <legend>Create a new service ticket</legend>
-            
+
             <div class="form-group">
               <label class="col-sm-1 control-label" for="assign_to">Status</label>
               <div class="col-sm-2">
                 <select ng-model="ticket.status" name="status" ng-options="status.id as status.text for status in statuses" class="form-control" required>
                 </select>
-              </div>              
+              </div>
               <label class="col-sm-1 control-label" for="assign_to">Ticket type</label>
               <div class="col-sm-2">
                 <select ng-model="ticket.ticket_type" name="type" class="form-control" required>
@@ -101,14 +101,28 @@
                 </select>
               </div>
             </div>
-            
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Invoice #</label>
+                <div class="col-sm-5">
+                    <input type="text" ng-model="ticket.invoice_id" class="form-control" name="invoice_id" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Office #</label>
+                <div class="col-sm-5">
+                    <input type="text" ng-model="ticket.office_id" class="form-control" name="office_id" required>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="col-sm-1 control-label">Dispatch ID</label>
                 <div class="col-sm-5">
                     <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" required>
-                </div>                
+                </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-sm-1 control-label">Problem</label>
                 <div class="col-sm-5">
@@ -118,17 +132,17 @@
                                 <input type="checkbox" ng-model="prob.status"> {{ prob.text }}
                             </label>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note"></textarea>
+                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note" ng-keypress="officeNoteKeyPressed($event)"></textarea>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
                 <div class="col-sm-5">
@@ -142,7 +156,7 @@
                     <select ng-model="ticket.assign_tech" name="technician" ng-options="employee.id as employee.full_name for employee in employee_list" class="form-control" required>
                     </select>
                 </div>
-                
+
                 <label class="col-sm-1 control-label">Seller</label>
                 <div class="col-sm-2">
                     <select ng-model="ticket.seller" name="seller" ng-options="employee.id as employee.full_name for employee in employee_list" class="form-control" required>
@@ -153,7 +167,7 @@
                     <span ng-show="mainForm.seller.$invalid">Please select a seller </span>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-sm-1 control-label">Job date</label>
                 <div class="col-sm-5">
@@ -192,30 +206,30 @@
                 <div class="col-sm-2">
                     <timepicker ng-model="ticket.promised_time_from" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
                 </div>
-                
+
                 <label class="col-sm-1 control-label">To</label>
                 <div class="col-sm-2">
                     <timepicker ng-model="ticket.promised_time_to" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
 
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label class="col-sm-1 control-label">Urgency</label>
                 <div class="col-sm-5">
                     <div class="radio">
                         <label><input type="radio" value="0" ng-model="ticket.urgency" > Urgent</label>
-                    </div>            
-        
+                    </div>
+
                     <div class="radio">
                         <label><input type="radio" value="1" ng-model="ticket.urgency" > Normal</label>
-                    </div>            
-        
+                    </div>
+
                     <div class="radio">
                         <label><input type="radio" value="2" ng-model="ticket.urgency" > Postpone</label>
-                    </div>            
-                    
-                </div>            
+                    </div>
+
+                </div>
             </div>
 
             <div class="form-group">
