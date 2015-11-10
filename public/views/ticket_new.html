@@ -27,11 +27,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-1 control-label" for="builder">Builder</label>
+                    <label class="col-sm-1 control-lbael" for="builder">Builder</label>
                     <div class="col-sm-5">
-                        <select class="form-control" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in customer.builders" required></select>
+                        <select class="form-control" ng-change="builderChange()" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in customer.builders" required></select>
                     </div>
-                    <span>{{ customer.builder }}</span>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1 control-label">City</label>
@@ -172,7 +171,7 @@
                 <label class="col-sm-1 control-label">Job date</label>
                 <div class="col-sm-5">
                     <div class="input-group">
-                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.job_date" name="jobDate" is-open="isOpenJobDate" close-text="Close" required />
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.job_date" name="jobDate" is-open="datePickerStatus.isOpenJobDate" close-text="Close" required />
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
                             </button>
@@ -188,7 +187,7 @@
                 <label class="col-sm-1 control-label">Promised date</label>
                 <div class="col-sm-5">
                     <div class="input-group">
-                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promised_date" name="promisedDate" is-open="isOpenPromisedDate" close-text="Close" required />
+                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.promised_date" name="promisedDate" is-open="datePickerStatus.isOpenPromisedDate" close-text="Close" required />
                         <div class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openPromiseddate($event)"><i class="glyphicon glyphicon-calendar"></i>
                             </button>
@@ -204,13 +203,12 @@
                 <label class="col-sm-1 control-label ">Promised Time</label>
                 <label class="col-sm-1 control-label">From</label>
                 <div class="col-sm-2">
-                    <timepicker ng-model="ticket.promised_time_from" name="promisedFrom" show-meridian="false" show-spinners="false" required></timepicker>
+                    <input type="text" ng-model="ticket.promised_time_from" class="form-control" name="promisedFrom" required>                                        
                 </div>
 
                 <label class="col-sm-1 control-label">To</label>
                 <div class="col-sm-2">
-                    <timepicker ng-model="ticket.promised_time_to" name="promisedTo" show-meridian="false" show-spinners="false" required></timepicker>
-
+                    <input type="text" ng-model="ticket.promised_time_to" class="form-control" name="promisedFrom" required>                   
                 </div>
             </div>
 
