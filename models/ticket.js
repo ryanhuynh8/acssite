@@ -7,12 +7,11 @@ var Ticket = module.exports = sq.define('Ticket', {
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
-        field: 'ticket_id'
     },
     create_by: {
         type: Sequelize.DATE,
         allowNull: true,
-        field: 'create_id'
+        field: 'create_by'
     },
     status: {
         type: Sequelize.STRING,
@@ -24,7 +23,7 @@ var Ticket = module.exports = sq.define('Ticket', {
         field: 'ticket_type'
     },
     invoice_id: {
-        type: Sequelize.BIGINT(11),
+        type: Sequelize.STRING(50),
         allowNull: false,
         field: 'invoice_id'
     },
@@ -40,7 +39,10 @@ var Ticket = module.exports = sq.define('Ticket', {
     },
     customer_id: {
         type: Sequelize.BIGINT(11),
-        field: 'user_id',
+        allowNull: false
+    },
+    builder_id: {
+        type: Sequelize.BIGINT(11),
         allowNull: false
     },
     problem: {
@@ -77,12 +79,12 @@ var Ticket = module.exports = sq.define('Ticket', {
       field: 'promised_date'
     },
     promised_time_from: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.TIME,
       allowNull: true,
       field: 'promised_time_from'
     },
     promised_time_to: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.TIME,
       allowNull: true,
       field: 'promised_time_to'
     },

@@ -1,4 +1,4 @@
-var _ = require('requirejs');
+// var _ = require('requirejs');
 var router = require('express').Router();
 var cors = require('cors');
 var crypto = require('crypto');
@@ -11,7 +11,7 @@ var Announcement = Models.Announcement;
 var Customer = Models.Customer;
 var Unit = Models.Unit;
 var Builder = Models.Builder;
-
+var sq = Models.sq;
 router.use(cors({
   credentials: true
 }));
@@ -479,6 +479,7 @@ router.post('/user/new', function(req, res) {
 
   var model = req.body;
   // TODO: check for duplicate user_name before processing
+  model.password = crypto.createHash("md5").update(model.password).digest('hex');
   User.create(model)
       .then(function(result){
         res.status(201);
@@ -802,7 +803,10 @@ router.post('/customer/search', function(req, res) {
 router.get('/tickets', function(req, res) {
   if (!auth_require(req, res, 'admin')) return;
 
-  Ticket.findAll({include: [Customer]})
+  Ticket.findAll({
+    include: [Customer],
+    limit: 20
+  })
     .then(function(tickets) {
       res.json(tickets);
       res.end();
@@ -815,6 +819,21 @@ router.get('/builder/list', function(req, res) {
   Builder.findAll({})
     .then(function(builders) {
       res.json(builders);
+      res.end();
+    });
+});
+
+router.get('/builder/:id', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+
+  var id = req.params.id;
+  Builder.findAll({
+      where: {
+        builder_id: id
+      }
+    })
+    .then(function(result) {
+      res.json(result);
       res.end();
     });
 });
@@ -833,6 +852,15 @@ router.post('/builder/delete', function(req, res) {
       res.json({
         message: "success"
       });      
+    });
+});
+
+router.get('/ticket/last_id', function(req, res) {
+  sq.query('SELECT MAX(id) AS last_id FROM tbl_ticket')
+    .then(function(n)
+    {
+      res.json(n[0][0]);
+      res.end();
     });
 });
 
@@ -859,7 +887,7 @@ router.post('/ticket/delete', function(req, res) {
   })
   .finally(function() {
     res.end();
-  });
+  })
 });
 
 // CREATE A NEW TICKET
@@ -873,30 +901,33 @@ router.post('/ticket/new', function(req, res) {
     }
 
     var ticket = req.body;
-    // is the data typeof Task?
-    if ((ticket.due_date === undefined) || (ticket.task_description === undefined) || (ticket.assign_by === undefined))
-//    {
-//      res.status(400);
-//      res.json({ message: 'invalid' });
-//      res.end();
-//      return;
-//    }
-
     ticket.create_by = req.session.user_id;
     
-    Ticket.create(ticket)
-      .then(function(result){
-        res.status(201);
-        res.json({ message: 'success' });
+    if (ticket.customer !== undefined) { // create a new customer at the same time
+      ticket.customer.first_name = ticket.customer.name;
+      Customer.create(ticket.customer)
+      .then(function(result) {
+        console.log(result);      
       })
       .catch(function(err) {
-        res.status(503);
-        res.json({ message: err });
-        console.log(err);
-      })
-      .finally(function() {
-        res.end();
+          res.status(503);
+          res.json({ message: err });
       });
+    } else {
+      Ticket.create(ticket)
+        .then(function(result){
+          res.status(201);
+          res.json({ message: 'success' });
+        })
+        .catch(function(err) {
+          res.status(503);
+          res.json({ message: err });
+          console.log(err);
+        })
+        .finally(function() {
+          res.end();
+        });
+    }
 });
 
 

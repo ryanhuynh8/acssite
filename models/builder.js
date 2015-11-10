@@ -55,6 +55,10 @@ var Builder = module.exports = sq.define('Builder', {
     deduct_from_contractor: {
       type: Sequelize.INTEGER(4),
       allowNull: true,
+    },
+    id_counter: {
+      type: Sequelize.INTEGER(11),
+      allowNull: true
     }
   }, {
     tableName: 'tbl_builders',
