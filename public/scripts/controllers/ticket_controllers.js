@@ -3,7 +3,7 @@ angular.module('themeApp.controllers')
         function($routeProvider) {
             $routeProvider
                 .when('/tickets', {
-                    templateUrl: 'views/tickets.html'
+                    templateUrl: 'views/tickets.html',
                 })
                 .when('/tickets/new', {
                     templateUrl: 'views/ticket_new.html',
@@ -30,7 +30,33 @@ angular.module('themeApp.controllers')
                             };
                         }
                     }
-                });
+                })
+                .when('/tickets/edit', {
+                    templateUrl: 'views/ticket_new.html',
+                    controller: 'ticketCreateController',
+                    resolve: {
+                        'ticket': function() {
+                            return {
+                                status: null,
+                                ticket_type: null,
+                                invoice_id: null,
+                                office_id: null,
+                                dispatch_id: null,
+                                customer_id: null,
+                                problem: null,
+                                office_note: null,
+                                job_note: null,
+                                job_date: null,
+                                assign_tech: null,
+                                seller: null,
+                                promised_date: null,
+                                promised_time_from: null,
+                                promised_time_to: null,
+                                urgency: null
+                            };
+                        }
+                    }
+                })
         }
     ])
     .factory('ticketStatus', function() {
@@ -121,6 +147,17 @@ angular.module('themeApp.controllers')
             return result;
         }
     }])
+    .filter('problemFilter', ['ticketProblem', function(ticketProblem){
+        return function(value){
+            var problemList = JSON.parse(value);
+            var problems = '';
+            angular.forEach(problemList, function(problem, index){
+                if (problem.status === true)
+                    problems += '- '+ problem.text + '\n';
+            });
+            return problems;
+        }    
+    }])
     .controller('ticketsController', [
         '$scope',
         '$timeout',
@@ -140,27 +177,33 @@ angular.module('themeApp.controllers')
             var loadGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
-                    rowHeight: 100,
-                    rowTemplate: 'views/grid_template/row.ticket.template.html',
+                    rowHeight: 80,
+                    //rowTemplate: 'views/grid_template/row.ticket.template.html',
                     enableHorizontalScrollbar: 0,
                     columnDefs: [{
                         field: 'Customer.name',
                         displayName: 'Customer',
-                        width: 200
+                        width: 150
                     }, {
                         field: 'Customer.phone1',
                         displayName: 'Phone',
-                        width: 150
+                        width: 100
                     }, {
                         field: 'create_on',
                         displayName: 'Created Date',
                         cellFilter: 'date',
-                        width: 150
+                        width: 100
                     }, {
                         field: 'promised_date',
                         displayName: 'Promised Date',
                         cellFilter: 'date',
-                        width: 150
+                        width: 100
+                    }, {
+                        field: 'problem',
+                        display: 'Problems',
+                        cellFilter: 'problemFilter',
+                        cellTemplate: 'views/grid_template/cell.problem.text.template.html',
+                        width: 200
                     }, {
                         field: 'status',
                         displayName: 'Status',
@@ -210,6 +253,15 @@ angular.module('themeApp.controllers')
                 $scope.dataLoaded = false;
                 loadGrid();
             };
+
+            $scope.buttonClickHandler = function($event, row, action) {
+                if (action === 'edit') {
+                    dataService.set('ticket_to_edit', row.entity);
+                    dataService.set('ticket_load_mode', 'edit');
+                    $location.path('/tickets/edit');
+                }
+            };
+
         }
     ])
    .controller('ticketCreateController', [
@@ -224,16 +276,30 @@ angular.module('themeApp.controllers')
         'ticketStatus',
         function($scope, dataService, ticket, $http, $timeout, $location, $filter, ticketProblem, ticketStatus) {
             var init = function() {
-                $scope.customer = {};
-                $scope.customers = [];
-                $scope.selectedCustomer = {};
-                $scope.ticket = ticket;
-                $scope.customerNonExist = false;
+                /* edit mode */
+                if (dataService.get('ticket_load_mode') === 'edit')
+                {
+                    dataService.set('ticket_load_mode', null);
+                    $scope.ticket = dataService.get('ticket_to_edit');
+                    $scope.customer = $scope.ticket.customer;
+                    $scope.disableEdit = true;
+                    $scope.isCreateCustomer = false;
+                } 
+                /* create new ticket mode */
+                else 
+                {
+                    $scope.customer = {};
+                    $scope.customers = [];
+                    //$scope.selectedCustomer = {};
+                    $scope.ticket = ticket;
+                    $scope.isCreateCustomer = false;
+                    $scope.disabledEdit = false;
+                  
+                }      
+                $scope.customerNonExist = false;              
                 $scope.showAlert = false;
                 $scope.alertType = 'success';
                 $scope.alertMsg = '';
-                $scope.isCreateCustomer = false;
-                $scope.disableEdit = false;
                 $scope.datePickerStatus = {};
 
                 dataService.getUserList(function(result, err) {

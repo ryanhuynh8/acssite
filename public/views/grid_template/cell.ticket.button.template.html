@@ -1,6 +1,4 @@
-<div style='margin: 5px; margin-top: 5px'>
-	<button type="button" class="btn btn-primary" ng-click="grid.appScope.buttonClickHandler($event, row, 'view')"><i class="fa fa-search-plus"></i></button>
-	<a ng-href="#/tasks/{{row.entity.id}}/view"><button type="button" class="btn btn-midnightblue"><i class="fa fa-external-link"></i></button></a>
-    <button type="button" class="btn btn-info" ng-click="grid.appScope.buttonClickHandler($event, row, 'mark_as_read')"><i class="fa fa-eye"></i></button>
-    <button type="button" class="btn btn-success" ng-click="grid.appScope.buttonClickHandler($event, row, 'mark_as_completed')"><i class="fa fa-check"></i></button>
+<div style='margin: 5px'>
+    <button type="button" class="btn btn-primary" ng-click="grid.appScope.buttonClickHandler($event, row, 'edit')">View/Edit</button>
+    <button type="button" class="btn btn-danger" ng-click="grid.appScope.buttonClickHandler($event, row, 'delete')">Delete</button>
 </div>
