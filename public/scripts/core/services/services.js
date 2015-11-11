@@ -152,4 +152,6 @@ angular
                 input.push(i);
             return input;
         };
-    });
+    })
+    ;
+

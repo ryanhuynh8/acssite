@@ -26,7 +26,7 @@ angular.module('themeApp.controllers')
                                 promised_date: null,
                                 promised_time_from: null,
                                 promised_time_to: null,
-                                urgency: null                                
+                                urgency: null
                             };
                         }
                     }
@@ -53,20 +53,20 @@ angular.module('themeApp.controllers')
             { text: 'Cash out' , id: 16 },
             { text: 'In-Process' , id: 17 },
             { text: 'Order Parts' , id: 18 },
-        ];        
+        ];
     })
     .factory('ticketUrgency', function() {
         return ['Urgent', 'Normal', 'Postpone'];
     })
     .factory('ticketProblem', function() {
-        return {            
-             _problemList: [    
+        return {
+             _problemList: [
                 { 'text': 'No Cooling', 'status': false },
                 { 'text': 'No Heating', 'status': false },
                 { 'text': 'Duct Works', 'status': false },
                 { 'text': 'Water Leak', 'status': false },
                 { 'text': 'PM', 'status': false },
-                { 'text': 'Frozen up', 'status': false },                                
+                { 'text': 'Frozen up', 'status': false },
                 { 'text': 'Burning Smoke', 'status': false },
                 { 'text': 'Condenser not working', 'status': false },
                 { 'text': 'Tst Malfunction', 'status': false },
@@ -88,7 +88,7 @@ angular.module('themeApp.controllers')
                 angular.forEach(problemString, function(item) {
                     list[item] = 1;
                 });
-                return list;                
+                return list;
             },
             exportList: function(problems) {
                 var text = null;
@@ -101,9 +101,26 @@ angular.module('themeApp.controllers')
                     text = text.substring(0, text.length - 1);
                 }
                 return text;
-            }                    
+            }
         };
-    })       
+    })
+    .filter('urgencyFilter', ['ticketUrgency', function(ticketUrgency){
+        return function(value) {
+            return ticketUrgency[value];
+        }
+    }])
+    .filter('statusFilter', ['ticketStatus', function(ticketStatus) {
+        return function(value) {
+            var result;
+            angular.forEach(ticketStatus, function(status, index){
+                if (status.id.toString() === value)
+                {
+                    result = status.text;
+                }
+            });
+            return result;
+        }
+    }])
     .controller('ticketsController', [
         '$scope',
         '$timeout',
@@ -114,12 +131,12 @@ angular.module('themeApp.controllers')
         function($scope, $timeout, $http, $location, $bootbox, dataService) {
             $scope.dataLoaded = false;
             $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
-            
+
             // populate the user list combobox
             dataService.getUserList(function(result, err) {
                 $scope.user_list = result;
             });
-            
+
             var loadGrid = function () {
                 $scope.gridOptions = {
                     enableColumnMenus: false,
@@ -147,15 +164,17 @@ angular.module('themeApp.controllers')
                     }, {
                         field: 'status',
                         displayName: 'Status',
+                        cellFilter: 'statusFilter',
                         width: 100
                     }, {
                         field: 'urgency',
                         displayName: 'Urgency',
+                        cellFilter: 'urgencyFilter',
                         width: 100
                     }, {
                         name: 'button',
                         displayName: 'Action',
-                        cellTemplate: 'views/grid_template/cell.button.template.html',
+                        cellTemplate: 'views/grid_template/cell.ticket.button.template.html',
                         width: 200
                     }],
                     data: [] // HACK: so that the browser won't give a warning complain
@@ -203,8 +222,8 @@ angular.module('themeApp.controllers')
         '$filter',
         'ticketProblem',
         'ticketStatus',
-        function($scope, dataService, ticket, $http, $timeout, $location, $filter, ticketProblem, ticketStatus) {            
-            var init = function() {                        
+        function($scope, dataService, ticket, $http, $timeout, $location, $filter, ticketProblem, ticketStatus) {
+            var init = function() {
                 $scope.customer = {};
                 $scope.customers = [];
                 $scope.selectedCustomer = {};
@@ -231,7 +250,7 @@ angular.module('themeApp.controllers')
                 $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
                 $scope.statuses = ticketStatus;
             };
-                        
+
             $scope.submitCustomerInfo = function () {
                 searchCustomer();
             };
@@ -243,7 +262,7 @@ angular.module('themeApp.controllers')
                 else
                     $scope.datePickerStatus.isOpenJobDate = true;
             };
-            
+
             $scope.openPromiseddate = function($event) {
                 $event.preventDefault();
                 $event.stopPropagation();
@@ -251,11 +270,11 @@ angular.module('themeApp.controllers')
                 else
                     $scope.datePickerStatus.isOpenPromisedDate= true;
             };
-            
+
 
             var buildBuilderListFromResult = function(builders) {
                 var newBuilderList = [];
-                var customer = $scope.customer;                
+                var customer = $scope.customer;
                 angular.forEach(builders, function(builder, index) {
                     if (builder.builder_id === customer.builder_1 || builder.builder_id === customer.builder_2 || builder.builder_id === customer.builder_3) {
                         newBuilderList.push(builder);
@@ -266,7 +285,7 @@ angular.module('themeApp.controllers')
 
             var searchCustomer = function() {
                 dataService.findCustomerWithOptions($scope.customer, function(result, err) {
-                    if(result.length > 0){                        
+                    if(result.length > 0){
                         $scope.customerNonExist = false;
                         $scope.isCreateCustomer = false;
                         $scope.disabledEdit = true;
@@ -275,7 +294,7 @@ angular.module('themeApp.controllers')
                             customer.full_description =  customer.full_name + ' at ' + customer.address;
                             customer.name = customer.full_name;
                         });
-                        $scope.customers = result;                                                
+                        $scope.customers = result;
                         $scope.builders = list;
                     } else {
                         $scope.customerNonExist = true;
@@ -290,10 +309,10 @@ angular.module('themeApp.controllers')
                 angular.forEach($scope.customers, function(customer, index){
                     if ($scope.selectedCustomer.id === customer.id)
                     {
-                        $scope.customer = customer;                        
-                        $scope.customer.builders = buildBuilderListFromResult($scope.builders);                        
+                        $scope.customer = customer;
+                        $scope.customer.builders = buildBuilderListFromResult($scope.builders);
                     }
-                });  
+                });
             };
 
             $scope.builderChange = function() {
@@ -309,7 +328,7 @@ angular.module('themeApp.controllers')
                 })
             };
 
-            $scope.officeNoteKeyPressed = function ($event) {                
+            $scope.officeNoteKeyPressed = function ($event) {
                 $event.stopPropagation();
                 if ($event.keyCode === 13) {
                     $scope.ticket.office_note += 'foo ';
@@ -320,7 +339,7 @@ angular.module('themeApp.controllers')
                 $scope.ticket.customer_id = $scope.customer.id;
                 $scope.ticket.problem = angular.toJson($scope.problems);
                 $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
-                $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');   
+                $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');
                 /* create new customer if we are not using search */
                 if ($scope.isCreateCustomer) {
                     $scope.ticket.customer = $scope.customer;
@@ -344,11 +363,11 @@ angular.module('themeApp.controllers')
                     $scope.alertMsg = 'Error creating a new ticket!';
                     console.log(err);
                 });
-                
+
             };
 
             $scope.resetSearch = function() {
-                $scope.disabledEdit = false;    
+                $scope.disabledEdit = false;
                 $scope.customer = {};
                 $scope.customer.builders = $scope.builders;
                 $scope.customers = [];
