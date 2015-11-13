@@ -156,7 +156,7 @@ angular.module('themeApp.controllers')
                     problems += '- '+ problem.text + '\n';
             });
             return problems;
-        }    
+        }
     }])
     .controller('ticketsController', [
         '$scope',
@@ -262,6 +262,9 @@ angular.module('themeApp.controllers')
                 }
             };
 
+            $scope.quickSearch = function() {
+
+            }
         }
     ])
    .controller('ticketCreateController', [
@@ -280,13 +283,18 @@ angular.module('themeApp.controllers')
                 if (dataService.get('ticket_load_mode') === 'edit')
                 {
                     dataService.set('ticket_load_mode', null);
+                    $scope.mode = 'edit';
                     $scope.ticket = dataService.get('ticket_to_edit');
-                    $scope.customer = $scope.ticket.customer;
+                    $scope.ticket.status = parseInt($scope.ticket.status);
+                    $scope.ticket.problem = JSON.parse($scope.ticket.problem);
+                    $scope.customer = $scope.ticket.Customer;
+                    $scope.customer.builder = $scope.ticket.builder_id;
                     $scope.disableEdit = true;
                     $scope.isCreateCustomer = false;
-                } 
+                    $scope.disabledEdit = true;
+                }
                 /* create new ticket mode */
-                else 
+                else
                 {
                     $scope.customer = {};
                     $scope.customers = [];
@@ -294,9 +302,13 @@ angular.module('themeApp.controllers')
                     $scope.ticket = ticket;
                     $scope.isCreateCustomer = false;
                     $scope.disabledEdit = false;
-                  
-                }      
-                $scope.customerNonExist = false;              
+                    $scope.ticket.problem = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
+                    dataService.getLastTicketId(function(result,err){
+                        var n = result.last_id + 1;
+                        $scope.ticket.invoice_id = 'R' + n;
+                    });
+                }
+                $scope.customerNonExist = false;
                 $scope.showAlert = false;
                 $scope.alertType = 'success';
                 $scope.alertMsg = '';
@@ -309,11 +321,8 @@ angular.module('themeApp.controllers')
                     $scope.builders = result;
                     $scope.customer.builders = $scope.builders;
                 });
-                dataService.getLastTicketId(function(result,err){
-                    var n = result.last_id + 1;
-                    $scope.ticket.invoice_id = 'R' + n;
-                });
-                $scope.problems = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
+
+
                 $scope.statuses = ticketStatus;
             };
 
@@ -403,7 +412,7 @@ angular.module('themeApp.controllers')
 
             $scope.submit = function() {
                 $scope.ticket.customer_id = $scope.customer.id;
-                $scope.ticket.problem = angular.toJson($scope.problems);
+                $scope.ticket.problem = angular.toJson($scope.ticket.problem);
                 $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
                 $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');
                 /* create new customer if we are not using search */

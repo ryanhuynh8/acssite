@@ -56,7 +56,7 @@ angular.module('theme.core.services')
                     cb(result, err);
                 });
         };
-        
+
         this.getLastTicketId = function(cb) {
             var result, err;
             $http.get(HOST_URL + '/api/ticket/last_id')
@@ -85,7 +85,7 @@ angular.module('theme.core.services')
               cb(result, err);
           });
         };
-        
+
         var processTicketInfo = function(tickets){
             angular.forEach(tickets, function(ticket, index){
                 ticket.Customer.name = ticket.Customer.first_name + ' ' + ticket.Customer.last_name;
@@ -258,6 +258,20 @@ angular.module('theme.core.services')
                     err = error;
                 })
                 .finally(function() {
+                    cb(result, err);
+                });
+        };
+
+        this.findTicket = function(params, cab){
+            var result, err;
+            $http.post(HOST_URL + '/api/ticket/search'. params)
+                .success(function(data) {
+                    result = data;
+                })
+                .catch(function(error) {
+                    err = error;
+                }).
+                finally(function() {
                     cb(result, err);
                 });
         };
