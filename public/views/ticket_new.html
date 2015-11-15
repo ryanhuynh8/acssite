@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-1 control-lbael" for="builder">Builder</label>
+                    <label class="col-sm-1 control-label" for="builder">Builder</label>
                     <div class="col-sm-5">
                         <select class="form-control" ng-change="builderChange()" ng-model="customer.builder" ng-options="builder.builder_id as builder.full_name for builder in customer.builders" required></select>
                     </div>
@@ -125,7 +125,7 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">Problem</label>
                 <div class="col-sm-5">
-                    <div class="col-sm-4" ng-repeat="prob in problems">
+                    <div class="col-sm-4" ng-repeat="prob in ticket.problem">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" ng-model="prob.status"> {{ prob.text }}
@@ -203,12 +203,12 @@
                 <label class="col-sm-1 control-label ">Promised Time</label>
                 <label class="col-sm-1 control-label">From</label>
                 <div class="col-sm-2">
-                    <input type="text" ng-model="ticket.promised_time_from" class="form-control" name="promisedFrom" required>                                        
+                    <input type="text" ng-model="ticket.promised_time_from" class="form-control" name="promisedFrom" required>
                 </div>
 
                 <label class="col-sm-1 control-label">To</label>
                 <div class="col-sm-2">
-                    <input type="text" ng-model="ticket.promised_time_to" class="form-control" name="promisedFrom" required>                   
+                    <input type="text" ng-model="ticket.promised_time_to" class="form-control" name="promisedFrom" required>
                 </div>
             </div>
 
