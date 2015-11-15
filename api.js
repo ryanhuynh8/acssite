@@ -930,5 +930,81 @@ router.post('/ticket/new', function(req, res) {
     }
 });
 
+router.post('/ticket/search', function(req, res) {
+  if (!auth_require(req, res, 'all')) return;
+
+  var search_params = req.body;
+
+  // semi- query building
+  var opt_name = {};
+  var opt_phone = {};
+  var opt_address = {};
+  var opt_fromDate = {};
+  var opt_toDate = {};
+  var opt_assigned_by = {};
+  var opt_dispatch_id = {};
+  var opt_invoice_id = {};
+  var opt_urgency = {};  
+  
+  if (search_params.address === undefined || search_params.address === '')
+    opt_address = { ne: 'NULL' };
+  else
+    opt_address = { like: '%' + search_params.address + '%' };
+    
+  if (search_params.name === undefined || search_params.name === '')  
+    opt_name = { ne: 'NULL' };
+  else
+    opt_name = { like: '%' + search_params.name + '%' };
+    
+  if (search_params.phone === undefined || search_params.phone === '')  
+    opt_phone = { ne: 'NULL' };
+  else
+    opt_phone = { like: '%' + search_params.phone + '%' };
+  
+  if (search_params.jobDateFrom === undefined || search_params.jobDateFrom === '')  
+    opt_fromDate = { ne: 'NULL' };
+  else
+    opt_fromDate = { like: search_params.jobDateFrom };  
+  
+  if (search_params.jobDateTo === undefined || search_params.jobDateTo === '')  
+    opt_fromDate = { ne: 'NULL' };
+  else
+    opt_fromDate = { like: search_params.jobDateTo };  
+  
+  if (search_params.assign_by === undefined || search_params.assign_by === '')  
+    opt_assigned_by = { ne: 'NULL' };
+  else
+    opt_assigned_by = { like: search_params.assign_by };
+  
+  if (search_params.dispatchId === undefined || search_params.dispatchId === '')  
+    opt_dispatch_id = { ne: 'NULL' };
+  else
+    opt_dispatch_id = { like: search_params.dispatchId };
+  
+  if (search_params.invoiceId === undefined || search_params.invoiceId === '')  
+    opt_invoice_id = { ne: 'NULL' };
+  else
+    opt_invoice_id = { like: search_params.invoiceId };
+
+  if (search_params.urgency === undefined || search_params.urgency === '')  
+    opt_urgency = { ne: 'NULL' };
+  else
+    opt_urgency = { like: search_params.urgency };
+    
+  Ticket.findAll({
+    where: {
+      address: opt_address,
+      $or: [
+        { first_name: opt_name },
+        { last_name: opt_name }
+      ]
+    },
+  })
+  .then(function(tasks) {
+    res.status(200);
+    res.json(tasks);
+    res.end();
+  });
+});
 
 exports = module.exports = router;
