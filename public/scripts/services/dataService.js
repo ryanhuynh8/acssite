@@ -17,6 +17,12 @@ angular.module('theme.core.services')
                     return "none";
             });
         };
+        
+        var processTicketInfo = function(tickets){
+            angular.forEach(tickets, function(ticket, index){
+                ticket.Customer.name = ticket.Customer.first_name + ' ' + ticket.Customer.last_name;
+            });
+        };
 
         this.get = function(key) {
             return data[key];
@@ -84,12 +90,6 @@ angular.module('theme.core.services')
           .finally(function() {
               cb(result, err);
           });
-        };
-
-        var processTicketInfo = function(tickets){
-            angular.forEach(tickets, function(ticket, index){
-                ticket.Customer.name = ticket.Customer.first_name + ' ' + ticket.Customer.last_name;
-            });
         };
 
         this.getCustomerList = function(cb) {
@@ -262,9 +262,9 @@ angular.module('theme.core.services')
                 });
         };
 
-        this.findTicket = function(params, cab){
+        this.findTicket = function(params, cb){
             var result, err;
-            $http.post(HOST_URL + '/api/ticket/search'. params)
+            $http.post(HOST_URL + '/api/ticket/search', params)
                 .success(function(data) {
                     result = data;
                 })

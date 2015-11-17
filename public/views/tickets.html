@@ -21,82 +21,87 @@
     						<div class="form-group">
                                 <label class="col-sm-1 control-label">Customer Name</label>
                                 <div class="col-sm-3">
-                                    <input type="text" ng-model="customer.name" class="form-control" name="customerName">
+                                    <input type="text" ng-model="search_params.name" class="form-control" name="customerName">
                                 </div>
                                 <label class="col-sm-1 control-label">Phone</label>
                                 <div class="col-sm-3">
-                                    <input type="text" ng-model="customer.phone" class="form-control" name="customerPhone">
+                                    <input type="text" ng-model="search_params.phone" class="form-control" name="customerPhone">
                                 </div>
                                 <label class="col-sm-1 control-label">Street Number</label>
                                 <div class="col-sm-3">
-                                    <input type="text" ng-model="customer.address" class="form-control" name="customerAddress">
+                                    <input type="text" ng-model="search_params.address" class="form-control" name="customerAddress">
                                 </div>
     						</div>
-                            
+
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">From</label>
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.jobDate" name="jobDate" is-open="isOpenJobDate" close-text="Close"  />
+                                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="search_params.jobDateFrom" name="jobDate" is-open="isOpenJobDate" close-text="Close"  />
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
                                             </button>
                                         </div>
                                     </div>
-                                </div>    
+                                </div>
                                 <label class="col-sm-1 control-label">To</label>
                                 <div class="col-sm-3">
                                     <div class="input-group">
-                                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="ticket.jobDate" name="jobDate" is-open="isOpenJobDate" close-text="Close"  />
+                                        <input type="text" class="form-control datepicker" datepicker-popup="MM-dd-yyyy" min-date="minDate" ng-model="search_params.jobDateTo" name="jobDate" is-open="isOpenJobDate" close-text="Close"  />
                                         <div class="input-group-btn">
                                             <button type="button" class="btn btn-default" ng-click="openJobdate($event)"><i class="glyphicon glyphicon-calendar"></i>
                                             </button>
                                         </div>
                                     </div>
-                                </div>    
+                                </div>
                                 <label class="col-sm-1 control-label">Assign Tech</label>
                                 <div class="col-sm-3">
-                                    <select ng-model="ticket.status" name="status" ng-options="user.id as user.full_name for user in user_list" class="form-control" >
+                                    <select ng-model="search_params.assign_by" name="status" ng-options="user.id as user.full_name for user in user_list" class="form-control" >
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label class="col-sm-1 control-label">Dispatch ID</label>
                                 <div class="col-sm-3">
-                                    <input type="text" ng-model="customer.dispatchId" class="form-control" name="dispatchId">
+                                    <input type="text" ng-model="search_params.dispatchId" class="form-control" name="dispatchId">
                                 </div>
-                                <label class="col-sm-1 control-label">Invoce #</label> 
+                                <label class="col-sm-1 control-label">Invoce #</label>
                                 <div class="col-sm-3">
-                                    <input type="text" ng-model="customer.invoice" class="form-control" name="invoice">
+                                    <input type="text" ng-model="search_params.invoice" class="form-control" name="invoice">
                                 </div>
-                                <label class="col-sm-1 control-label">Urgency</label> 
+                                <label class="col-sm-1 control-label">Urgency</label>
                                 <div class="col-sm-3">
-                                    <select ng-model="customer.urgency" name="urgency" ng-options="user.id as user.full_name for user in user_list" class="form-control" >
+                                    <select ng-model="search_params.urgency" name="urgency" ng-options="user.id as user.full_name for user in user_list" class="form-control" >
                                     </select>
-                                </div>                                
+                                </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="col-sm-1"></div>
                                 <div class="col-sm-3">
                                     <button type="submit" class="btn btn-primary" ng-disabled="searchForm.$invalid">Search</button>
                                     <!-- <input type="submit" id="submit" value="Submit" /> -->
-                    
+
                                     <button class="btn btn-default" type="reset">Reset fields</button>
                                 </div>
                             </div>
-                            
+
     					</form>
     				</div>
-    
+
     			</panel>
-                
+
                 <panel heading="Ticket List" panel-class="panel-default">
                     <panel-controls>
     					<panel-control-collapse></panel-control-collapse>
     				</panel-controls>
     				<div id="mainGrid" ui-grid="gridOptions" class="grid">
+
+                    </div>
+                    <div class="panel-loading" ng-hide="dataLoaded">
+                       <div class="panel-loader-circular"></div>
+                    </div>
                 </panel>
     		</div>
     	</div>

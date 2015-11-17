@@ -164,8 +164,9 @@ angular.module('themeApp.controllers')
         '$http',
         '$location',
         '$bootbox',
+        '$filter',
         'dataService',
-        function($scope, $timeout, $http, $location, $bootbox, dataService) {
+        function($scope, $timeout, $http, $location, $bootbox, $filter, dataService) {
             $scope.dataLoaded = false;
             $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
 
@@ -232,21 +233,6 @@ angular.module('themeApp.controllers')
             };
             loadGrid();
 
-            var deleteTask = function(id) {
-                var item_to_delete = {
-                    id: id
-                };
-                $http.post(dataService.getApiUrl('/api/ticket/delete'), item_to_delete)
-                    .then(function(result) {
-                        if (result.data.message === 'success') {
-                            $scope.reset();
-                        }
-                    })
-                    .catch(function(err) {
-                        $bootbox.alert(err.data);
-                    });
-            };
-
             $scope.reset = function() {
                 $scope.search_params = {};
                 $scope.showResult = false;
@@ -262,8 +248,19 @@ angular.module('themeApp.controllers')
                 }
             };
 
-            $scope.quickSearch = function() {
-
+            $scope.quickSearch = function () {
+                $scope.dataLoaded = false;                
+                $scope.search_params.jobDateFrom = $filter('date')($scope.search_params.jobDateFrom, 'yyyy/MM/dd');
+                $scope.search_params.jobDateTo = $filter('date')($scope.search_params.jobDateTo, 'yyyy/MM/dd');
+                dataService.findTicket($scope.search_params, function(result, err) {
+                    $scope.gridOptions.data = result;
+                    $scope.dataLoaded = true;
+                    $scope.showResult = true;
+                    $scope.resultMsg = 'Found ' + result.length + ' record(s).';
+                    if (err !== undefined) {
+                        dataService.showDatabaseErrorMessage($bootbox);
+                    }
+                });
             }
         }
     ])
@@ -283,7 +280,7 @@ angular.module('themeApp.controllers')
                 if (dataService.get('ticket_load_mode') === 'edit')
                 {
                     dataService.set('ticket_load_mode', null);
-                    $scope.mode = 'edit';
+                    $scope.isEdit = true;
                     $scope.ticket = dataService.get('ticket_to_edit');
                     $scope.ticket.status = parseInt($scope.ticket.status);
                     $scope.ticket.problem = JSON.parse($scope.ticket.problem);
@@ -292,6 +289,7 @@ angular.module('themeApp.controllers')
                     $scope.disableEdit = true;
                     $scope.isCreateCustomer = false;
                     $scope.disabledEdit = true;
+                    $scope.mainButtonLabel = "Update ticket";
                 }
                 /* create new ticket mode */
                 else
@@ -301,12 +299,14 @@ angular.module('themeApp.controllers')
                     //$scope.selectedCustomer = {};
                     $scope.ticket = ticket;
                     $scope.isCreateCustomer = false;
+                    $scope.isEdit = true;
                     $scope.disabledEdit = false;
                     $scope.ticket.problem = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
                     dataService.getLastTicketId(function(result,err){
                         var n = result.last_id + 1;
                         $scope.ticket.invoice_id = 'R' + n;
                     });
+                    $scope.mainButtonLabel = "Create ticket";
                 }
                 $scope.customerNonExist = false;
                 $scope.showAlert = false;
