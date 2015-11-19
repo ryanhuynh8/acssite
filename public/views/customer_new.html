@@ -27,22 +27,13 @@
 				</div>
 			</div>
 
-			<!-- First name -->
-			<div class="form-group" ng-class="{'has-error': userForm.first_name.$invalid && !userForm.first_name.$pristine}">
-				<label class="col-sm-3 control-label">First Name</label>
+			<!-- Name -->
+			<div class="form-group" ng-class="{'has-error': userForm.name.$invalid && !userForm.name.$pristine}">
+				<label class="col-sm-3 control-label">Name</label>
 				<div class="col-sm-6">
-					<input type="text" class="form-control" name="first_name" ng-model="customer.first_name" required>
+					<input type="text" class="form-control" name="name" ng-model="customer.name" required>
 				</div>
-				<span class="help-block" ng-show="userForm.first_name.$invalid && !userForm.first_name.$pristine">This field is required.</span>
-			</div>
-
-			<!-- Last name -->
-			<div class="form-group" ng-class="{'has-error': userForm.last_name.$invalid && !userForm.last_name.$pristine}">
-				<label class="col-sm-3 control-label">Last Name</label>
-				<div class="col-sm-6">
-					<input type="text" class="form-control" name="last_name" ng-model="customer.last_name" required>
-				</div>
-				<span class="help-block" ng-show="userForm.last_name.$invalid && !userForm.last_name.$pristine">This field is required.</span>
+				<span class="help-block" ng-show="userForm.name.$invalid && !userForm.name.$pristine">This field is required.</span>
 			</div>
 
 			<!-- Address -->
@@ -141,7 +132,7 @@
 					<select class="form-control" ng-model="customer.builder_3" ng-options="builder.builder_id as builder.full_name for builder in builders"></select>
 				</div>
 			</div>
-						
+
 			<!-- Labels -->
 			<div class="form-group">
 				<label class="col-sm-3 control-label"></label>

@@ -167,8 +167,26 @@ angular.module('themeApp.controllers')
         '$filter',
         'dataService',
         function($scope, $timeout, $http, $location, $bootbox, $filter, dataService) {
-            $scope.dataLoaded = false;
-            $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
+
+            var init = function() {
+                $scope.dataLoaded = false;
+                $scope.search_params = {}; // to avoid the DOT notation quirk nature of javascript
+                $scope.datePickerStatus = [];
+                $scope.datePickerStatus.isOpen1 = false;
+                $scope.datePickerStatus.isOpen2 = false;
+            }
+
+            $scope.open1 = function ($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.datePickerStatus.isOpen1 = !$scope.datePickerStatus.isOpen1;
+            }
+
+            $scope.open2 = function ($event) {
+                $event.preventDefault();
+                $event.stopPropagation();
+                $scope.datePickerStatus.isOpen2 = !$scope.datePickerStatus.isOpen2;
+            }
 
             // populate the user list combobox
             dataService.getUserList(function(result, err) {
@@ -249,7 +267,7 @@ angular.module('themeApp.controllers')
             };
 
             $scope.quickSearch = function () {
-                $scope.dataLoaded = false;                
+                $scope.dataLoaded = false;
                 $scope.search_params.jobDateFrom = $filter('date')($scope.search_params.jobDateFrom, 'yyyy/MM/dd');
                 $scope.search_params.jobDateTo = $filter('date')($scope.search_params.jobDateTo, 'yyyy/MM/dd');
                 dataService.findTicket($scope.search_params, function(result, err) {
@@ -262,6 +280,7 @@ angular.module('themeApp.controllers')
                     }
                 });
             }
+            init();
         }
     ])
    .controller('ticketCreateController', [
@@ -286,10 +305,11 @@ angular.module('themeApp.controllers')
                     $scope.ticket.problem = JSON.parse($scope.ticket.problem);
                     $scope.customer = $scope.ticket.Customer;
                     $scope.customer.builder = $scope.ticket.builder_id;
-                    $scope.disableEdit = true;
                     $scope.isCreateCustomer = false;
                     $scope.disabledEdit = true;
                     $scope.mainButtonLabel = "Update ticket";
+                    $scope.ticket.officeNotes = JSON.parse($scope.ticket.office_note);
+                    $scope.ticket.jobNotes = JSON.parse($scope.ticket.job_note);
                 }
                 /* create new ticket mode */
                 else
@@ -298,8 +318,10 @@ angular.module('themeApp.controllers')
                     $scope.customers = [];
                     //$scope.selectedCustomer = {};
                     $scope.ticket = ticket;
+                    $scope.ticket.officeNotes = [];
+                    $scope.ticket.jobNotes = [];
                     $scope.isCreateCustomer = false;
-                    $scope.isEdit = true;
+                    $scope.isEdit = false;
                     $scope.disabledEdit = false;
                     $scope.ticket.problem = JSON.parse(JSON.stringify(ticketProblem.getList())); // deep cloning array of object - so hack-ish it makes a baby cry TvT
                     dataService.getLastTicketId(function(result,err){
@@ -365,9 +387,7 @@ angular.module('themeApp.controllers')
                         $scope.isCreateCustomer = false;
                         $scope.disabledEdit = true;
                         angular.forEach(result, function(customer, index){
-                            customer.full_name = customer.first_name + ' ' + customer.last_name;
-                            customer.full_description =  customer.full_name + ' at ' + customer.address;
-                            customer.name = customer.full_name;
+                            customer.full_description =  customer.name + ' at ' + customer.address;
                         });
                         $scope.customers = result;
                         $scope.builders = list;
@@ -406,39 +426,60 @@ angular.module('themeApp.controllers')
             $scope.officeNoteKeyPressed = function ($event) {
                 $event.stopPropagation();
                 if ($event.keyCode === 13) {
-                    $scope.ticket.office_note += 'foo ';
+                    $event.preventDefault();
+                    var newNote = {};
+                    newNote.text = $scope.ticket.office_note_input;
+                    newNote.time = moment().format('lll');
+                    $scope.ticket.officeNotes.push(newNote);
+                    $scope.ticket.office_note_input = '';
                 }
             };
 
-            $scope.submit = function() {
-                $scope.ticket.customer_id = $scope.customer.id;
-                $scope.ticket.problem = angular.toJson($scope.ticket.problem);
-                $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
-                $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');
-                /* create new customer if we are not using search */
-                if ($scope.isCreateCustomer) {
-                    $scope.ticket.customer = $scope.customer;
+            $scope.jobNoteKeyPressed = function ($event) {
+                $event.stopPropagation();
+                if ($event.keyCode === 13) {
+                    $event.preventDefault();
+                    var newNote = {};
+                    newNote.text = $scope.ticket.job_note_input;
+                    newNote.time = moment().format('lll');
+                    $scope.ticket.jobNotes.push(newNote);
+                    $scope.ticket.job_note_input = '';
                 }
-                $http.post(dataService.getApiUrl('/api/ticket/new'), $scope.ticket)
-                .then(function(result) {
-                    if (result.data.message !== 'success') {
-                        throw result.data;
-                    }
-                    // display successfully alert
-                    $scope.showAlert = true;
-                    $scope.alertType = 'success';
-                    $scope.alertMsg = 'New ticket added successfully. Redirecting to dashboard now...';
-                    $timeout(function() {
-                        $location.path('/');
-                    }, 2000);
-                })
-                .catch(function(err) {
-                    $scope.showAlert = true;
-                    $scope.alertType = 'danger';
-                    $scope.alertMsg = 'Error creating a new ticket!';
-                    console.log(err);
-                });
+            };
 
+            $scope.submit = function () {
+                if (!$scope.isEdit) {
+                    $scope.ticket.customer_id = $scope.customer.id;
+                    $scope.ticket.problem = angular.toJson($scope.ticket.problem);
+                    $scope.ticket.promised_date = $filter('date')($scope.ticket.promised_date, 'yyyy/MM/dd');
+                    $scope.ticket.job_date = $filter('date')($scope.ticket.job_date, 'yyyy/MM/dd');
+                    $scope.ticket.office_note = JSON.stringify($scope.ticket.officeNotes);
+                    $scope.ticket.job_note = JSON.stringify($scope.ticket.jobNotes);
+
+                    /* create new customer if we are not using search */
+                    if ($scope.isCreateCustomer) {
+                        $scope.ticket.customer = $scope.customer;
+                    }
+                    $http.post(dataService.getApiUrl('/api/ticket/new'), $scope.ticket)
+                        .then(function(result) {
+                            if (result.data.message !== 'success') {
+                                throw result.data;
+                            }
+                            // display successfully alert
+                            $scope.showAlert = true;
+                            $scope.alertType = 'success';
+                            $scope.alertMsg = 'New ticket added successfully. Redirecting to dashboard now...';
+                            $timeout(function() {
+                                $location.path('/');
+                            }, 2000);
+                        })
+                        .catch(function(err) {
+                            $scope.showAlert = true;
+                            $scope.alertType = 'danger';
+                            $scope.alertMsg = 'Error creating a new ticket!';
+                            console.log(err);
+                        });
+                }
             };
 
             $scope.resetSearch = function() {

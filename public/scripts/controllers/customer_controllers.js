@@ -26,7 +26,7 @@ angular.module('themeApp.controllers')
                 $scope.customer = {};
                 $scope.customer.units = [];
                 $scope.states = dataService.getListOfStates();
-                
+
                 dataService.getBuilderList(function(result, err) {
                     $scope.builders = result;
                     if (err !== undefined) {
@@ -79,15 +79,11 @@ angular.module('themeApp.controllers')
                     enableHorizontalScrollbar: 0,
                     minRowsToShow: 20,
                     columnDefs: [{
-                        field: 'first_name',
-                        displayName: 'First Name',
+                        field: 'name',
+                        displayName: 'Name',
                         width: 150
                     }, {
-                        field: 'last_name',
-                        displayName: 'Last Name',
-                        width: 150
-                         }, {
-                   field: 'address',
+                        field: 'address',
                         displayName: 'Address',
                         width: '*'
                     }, {

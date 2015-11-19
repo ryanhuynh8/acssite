@@ -17,12 +17,6 @@ angular.module('theme.core.services')
                     return "none";
             });
         };
-        
-        var processTicketInfo = function(tickets){
-            angular.forEach(tickets, function(ticket, index){
-                ticket.Customer.name = ticket.Customer.first_name + ' ' + ticket.Customer.last_name;
-            });
-        };
 
         this.get = function(key) {
             return data[key];
@@ -82,7 +76,6 @@ angular.module('theme.core.services')
           $http.get(HOST_URL + '/api/tickets')
           .success(function(data) {
               result = data;
-              processTicketInfo(result);
           })
           .catch(function(error) {
               err = error;

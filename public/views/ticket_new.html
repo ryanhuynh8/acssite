@@ -138,14 +138,22 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note" ng-keypress="officeNoteKeyPressed($event)"></textarea>
+                    <span ng-repeat="note in ticket.officeNotes">
+                        <b>{{ note.time }}</b>: {{note.text}}
+                        <br/>
+                    </span>
+                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note_input" ng-keypress="officeNoteKeyPressed($event)"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.job_note"></textarea>
+                    <span ng-repeat="note in ticket.jobNotes">
+                        <b>{{ note.time }}</b>: {{note.text}}
+                        <br/>
+                    </span>
+                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.job_note_input" ng-keypress="jobNoteKeyPressed($event)"></textarea>
                 </div>
             </div>
 
