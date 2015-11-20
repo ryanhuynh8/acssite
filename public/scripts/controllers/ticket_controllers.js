@@ -222,7 +222,7 @@ angular.module('themeApp.controllers')
                         display: 'Problems',
                         cellFilter: 'problemFilter',
                         cellTemplate: 'views/grid_template/cell.problem.text.template.html',
-                        width: 200
+                        width: 250
                     }, {
                         field: 'status',
                         displayName: 'Status',
@@ -316,7 +316,7 @@ angular.module('themeApp.controllers')
                 {
                     $scope.customer = {};
                     $scope.customers = [];
-                    //$scope.selectedCustomer = {};
+                    $scope.selectedCustomer = {};
                     $scope.ticket = ticket;
                     $scope.ticket.officeNotes = [];
                     $scope.ticket.jobNotes = [];

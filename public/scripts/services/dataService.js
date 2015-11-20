@@ -71,6 +71,21 @@ angular.module('theme.core.services')
                 });
         };
 
+        this.getBuilderIndex = function(builder_id, cb){
+            var result, err;
+            $http.get(HOST_URL + 'api/builder/index/' + builder_id)
+                .success(function(data){
+                    result = data;
+                })
+                .catch(function(error)
+                {
+                    err = error;
+                })
+                .finally(function(){
+                    cb(result, err);
+                });
+        }
+
         this.getAllTicket = function(cb) {
           var result, err;
           $http.get(HOST_URL + '/api/tickets')
