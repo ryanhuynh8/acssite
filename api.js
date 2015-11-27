@@ -667,8 +667,7 @@ router.post('/customer/update', function(req, res) {
   var updateCustomer = req.body;
   Customer.update({
     type: updateCustomer.type,
-    first_name: updateCustomer.first_name,
-    last_name: updateCustomer.last_name,
+    name: updateCustomer.name,
     address: updateCustomer.address,
     address2: updateCustomer.address2,
     city: updateCustomer.city,
@@ -786,10 +785,7 @@ router.post('/customer/search', function(req, res) {
   Customer.findAll({
     where: {
       address: opt_address,
-      $or: [
-        { first_name: opt_name },
-        { last_name: opt_name }
-      ]
+      name: opt_name
     },
   })
   .then(function(tasks) {
@@ -821,6 +817,26 @@ router.get('/builder/list', function(req, res) {
       res.json(builders);
       res.end();
     });
+});
+
+router.get('/builder/index/:id', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  
+  var builder_id = req.params.id;
+  if (builder_id == 20 || builder_id == 55) {
+    sq.query('UPDATE tbl_builders SET id_counter = id_counter + 1 WHERE builder_id = ' + builder_id)
+      .then(function() {
+        return Builder.findOne({where: {builder_id: builder_id}});
+      })
+      .then(function(builder)
+      {
+        res.json(builder.id_counter);
+        res.end();
+      });
+  } else {
+    res.json(1);
+    res.end();
+  }
 });
 
 router.get('/builder/:id', function(req, res) {
@@ -904,7 +920,7 @@ router.post('/ticket/new', function(req, res) {
     ticket.create_by = req.session.user_id;
     
     if (ticket.customer !== undefined) { // create a new customer at the same time
-      ticket.customer.first_name = ticket.customer.name;
+      ticket.customer.name = ticket.customer.name;
       Customer.create(ticket.customer)
       .then(function(result) {
         console.log(result);      
@@ -930,5 +946,93 @@ router.post('/ticket/new', function(req, res) {
     }
 });
 
+router.post('/ticket/search', function(req, res) {
+  if (!auth_require(req, res, 'all')) return;
+
+  var search_params = req.body;
+
+  // semi- query building
+  var opt_name = {};
+  var opt_phone = {};
+  var opt_address = {};
+  var opt_fromDate = {};
+  var opt_toDate = {};
+  var opt_assigned_by = {};
+  var opt_dispatch_id = {};
+  var opt_invoice_id = {};
+  var opt_urgency = {};  
+  
+  if (search_params.address === undefined || search_params.address === '')
+    opt_address = { ne: 'NULL' };
+  else
+    opt_address = { like: '%' + search_params.address + '%' };
+    
+  if (search_params.name === undefined || search_params.name === '')  
+    opt_name = { ne: 'NULL' };
+  else
+    opt_name = { like: '%' + search_params.name + '%' };
+    
+  if (search_params.phone === undefined || search_params.phone === '')  
+    opt_phone = { ne: 'NULL' };
+  else
+    opt_phone = { like: '%' + search_params.phone + '%' };
+  
+  if (search_params.jobDateFrom === undefined || search_params.jobDateFrom === '')  
+    opt_fromDate = '1/1/1';
+  else
+    opt_fromDate = search_params.jobDateFrom;  
+  
+  if (search_params.jobDateTo === undefined || search_params.jobDateTo === '')  
+    opt_toDate = '9/9/9999';
+  else
+    opt_toDate = search_params.jobDateTo;  
+  
+  if (search_params.assign_by === undefined || search_params.assign_by === '')  
+    opt_assigned_by = { ne: 'NULL' };
+  else
+    opt_assigned_by = { like: search_params.assign_by };
+  
+  if (search_params.dispatchId === undefined || search_params.dispatchId === '')  
+    opt_dispatch_id = { ne: 'NULL' };
+  else
+    opt_dispatch_id = { like: search_params.dispatchId };
+  
+  if (search_params.invoiceId === undefined || search_params.invoiceId === '')  
+    opt_invoice_id = { ne: 'NULL' };
+  else
+    opt_invoice_id = { like: search_params.invoiceId };
+
+  if (search_params.urgency === undefined || search_params.urgency === '')  
+    opt_urgency = { ne: 'NULL' };
+  else
+    opt_urgency = { like: search_params.urgency };
+    
+  Ticket.findAll({
+    include: [{
+        model: Customer,
+        where: {
+          name: opt_name,
+          phone1: opt_phone,
+          address: opt_address
+        }
+      }
+    ],
+    where: {
+      invoice_id: opt_invoice_id,
+      dispatch_id: opt_dispatch_id,
+      urgency: opt_urgency,
+      assign_tech: opt_assigned_by,
+      promised_date: {
+        $lt: opt_toDate,
+        $gt: opt_fromDate
+      }
+    },
+  })
+  .then(function(tasks) {
+    res.status(200);
+    res.json(tasks);
+    res.end();
+  });
+});
 
 exports = module.exports = router;
