@@ -667,8 +667,7 @@ router.post('/customer/update', function(req, res) {
   var updateCustomer = req.body;
   Customer.update({
     type: updateCustomer.type,
-    first_name: updateCustomer.first_name,
-    last_name: updateCustomer.last_name,
+    name: updateCustomer.name,
     address: updateCustomer.address,
     address2: updateCustomer.address2,
     city: updateCustomer.city,
@@ -786,10 +785,7 @@ router.post('/customer/search', function(req, res) {
   Customer.findAll({
     where: {
       address: opt_address,
-      $or: [
-        { first_name: opt_name },
-        { last_name: opt_name }
-      ]
+      name: opt_name
     },
   })
   .then(function(tasks) {
@@ -821,6 +817,26 @@ router.get('/builder/list', function(req, res) {
       res.json(builders);
       res.end();
     });
+});
+
+router.get('/builder/index/:id', function(req, res) {
+  if (!auth_require(req, res, 'admin')) return;
+  
+  var builder_id = req.params.id;
+  if (builder_id == 20 || builder_id == 55) {
+    sq.query('UPDATE tbl_builders SET id_counter = id_counter + 1 WHERE builder_id = ' + builder_id)
+      .then(function() {
+        return Builder.findOne({where: {builder_id: builder_id}});
+      })
+      .then(function(builder)
+      {
+        res.json(builder.id_counter);
+        res.end();
+      });
+  } else {
+    res.json(1);
+    res.end();
+  }
 });
 
 router.get('/builder/:id', function(req, res) {
@@ -904,7 +920,7 @@ router.post('/ticket/new', function(req, res) {
     ticket.create_by = req.session.user_id;
     
     if (ticket.customer !== undefined) { // create a new customer at the same time
-      ticket.customer.first_name = ticket.customer.name;
+      ticket.customer.name = ticket.customer.name;
       Customer.create(ticket.customer)
       .then(function(result) {
         console.log(result);      
@@ -962,14 +978,14 @@ router.post('/ticket/search', function(req, res) {
     opt_phone = { like: '%' + search_params.phone + '%' };
   
   if (search_params.jobDateFrom === undefined || search_params.jobDateFrom === '')  
-    opt_fromDate = { ne: 'NULL' };
+    opt_fromDate = '1/1/1';
   else
-    opt_fromDate = { like: search_params.jobDateFrom };  
+    opt_fromDate = search_params.jobDateFrom;  
   
   if (search_params.jobDateTo === undefined || search_params.jobDateTo === '')  
-    opt_fromDate = { ne: 'NULL' };
+    opt_toDate = '9/9/9999';
   else
-    opt_fromDate = { like: search_params.jobDateTo };  
+    opt_toDate = search_params.jobDateTo;  
   
   if (search_params.assign_by === undefined || search_params.assign_by === '')  
     opt_assigned_by = { ne: 'NULL' };
@@ -992,12 +1008,24 @@ router.post('/ticket/search', function(req, res) {
     opt_urgency = { like: search_params.urgency };
     
   Ticket.findAll({
+    include: [{
+        model: Customer,
+        where: {
+          name: opt_name,
+          phone1: opt_phone,
+          address: opt_address
+        }
+      }
+    ],
     where: {
-      address: opt_address,
-      $or: [
-        { first_name: opt_name },
-        { last_name: opt_name }
-      ]
+      invoice_id: opt_invoice_id,
+      dispatch_id: opt_dispatch_id,
+      urgency: opt_urgency,
+      assign_tech: opt_assigned_by,
+      promised_date: {
+        $lt: opt_toDate,
+        $gt: opt_fromDate
+      }
     },
   })
   .then(function(tasks) {

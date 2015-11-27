@@ -12,11 +12,7 @@ var Customer = module.exports = sq.define('Customer', {
     type: Sequelize.INTEGER(11),
     allowNull: false,
   },
-  first_name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  last_name: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
   },
