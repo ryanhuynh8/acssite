@@ -73,7 +73,7 @@ angular.module('theme.core.services')
 
         this.getBuilderIndex = function(builder_id, cb){
             var result, err;
-            $http.get(HOST_URL + 'api/builder/index/' + builder_id)
+            $http.get(HOST_URL + '/api/builder/index/' + builder_id)
                 .success(function(data){
                     result = data;
                 })

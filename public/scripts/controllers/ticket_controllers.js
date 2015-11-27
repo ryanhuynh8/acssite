@@ -418,7 +418,12 @@ angular.module('themeApp.controllers')
                     if (builder.builder_id === $scope.customer.builder)
                     {
                         $scope.ticket.office_id = builder.office_number;
-                        $scope.ticket.dispatch_id = builder.id_counter + 1;
+                        dataService.getBuilderIndex(builder.builder_id, function(result, err){
+                            $scope.ticket.dispatch_id = result;
+                            if (err !== undefined) {
+                                dataService.showDatabaseErrorMessage($bootbox);
+                            }
+                        });
                     }
                 })
             };
