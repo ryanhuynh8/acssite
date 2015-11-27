@@ -104,21 +104,21 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">Invoice #</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="ticket.invoice_id" class="form-control" name="invoice_id" required>
+                    <input type="text" ng-model="ticket.invoice_id" class="form-control" name="invoice_id" ng-disabled="true" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">Office #</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="ticket.office_id" class="form-control" name="office_id" required>
+                    <input type="text" ng-model="ticket.office_id" class="form-control" name="office_id" ng-disabled="true" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">Dispatch ID</label>
                 <div class="col-sm-5">
-                    <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" required>
+                    <input type="text" ng-model="ticket.dispatch_id" class="form-control" name="dispatchId" ng-disabled="true"required>
                 </div>
             </div>
 
@@ -138,14 +138,22 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="officeNote">Office Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note" ng-keypress="officeNoteKeyPressed($event)"></textarea>
+                    <span ng-repeat="note in ticket.officeNotes">
+                        <b>{{ note.time }}</b>: {{note.text}}
+                        <br/>
+                    </span>
+                    <textarea rows="2" class="form-control" name="officeNote" ng-model="ticket.office_note_input" ng-keypress="officeNoteKeyPressed($event)"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-1 control-label" for="jobNote">Job Notes</label>
                 <div class="col-sm-5">
-                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.job_note"></textarea>
+                    <span ng-repeat="note in ticket.jobNotes">
+                        <b>{{ note.time }}</b>: {{note.text}}
+                        <br/>
+                    </span>
+                    <textarea rows="2" class="form-control" name="jobNote" ng-model="ticket.job_note_input" ng-keypress="jobNoteKeyPressed($event)"></textarea>
                 </div>
             </div>
 
@@ -240,7 +248,7 @@
            <div class="form-group">
                 <div class="col-sm-1"></div>
                 <div class="col-sm-3">
-                    <button type="submit" class="btn btn-primary" ng-disabled="mainform.$invalid">Create ticket</button>
+                    <button type="submit" class="btn btn-primary" ng-disabled="mainform.$invalid">{{ mainButtonLabel }}</button>
                     <!-- <input type="submit" id="submit" value="Submit" /> -->
 
                     <button class="btn btn-default" type="reset">Reset fields</button>
